@@ -1,0 +1,178 @@
+/* Global styles. Color VALUES come from src/lib/palette.js — the custom
+   properties below are emitted into :root by +layout.svelte so palette.js
+   stays the single source of truth. This file only consumes them. */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: auto; /* scrollytelling: never smooth-scroll programmatically */
+}
+
+body {
+	margin: 0;
+	background: var(--ocean);
+	color: var(--ink-dark-primary);
+	font-family: 'Public Sans', system-ui, sans-serif;
+	font-size: 1rem;
+	line-height: 1.55;
+	-webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.display {
+	font-family: Fraunces, Georgia, serif;
+	font-weight: 700;
+	line-height: 1.1;
+	margin: 0 0 0.5em;
+}
+
+p {
+	margin: 0 0 1em;
+	max-width: 34em;
+}
+
+a {
+	color: inherit;
+}
+
+/* ── scene scaffolding ──────────────────────────────────────────────────── */
+.scene {
+	position: relative;
+}
+
+.scene .pin {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	height: 100svh;
+	overflow: hidden;
+}
+
+.surface-dark {
+	background: var(--ocean);
+	color: var(--ink-dark-primary);
+}
+
+.surface-light {
+	background: var(--paper);
+	color: var(--ink-light-primary);
+}
+
+.surface-light ::selection {
+	background: var(--accent-light);
+	color: var(--paper);
+}
+
+/* the ocean → land handover between scenes 4 and 5 */
+.shore-transition {
+	height: 50vh;
+	background: linear-gradient(to bottom, var(--ocean), var(--paper));
+}
+
+/* ── scene prose (a11y equivalent / reader mode) ────────────────────────── */
+.scene-prose {
+	position: relative;
+	z-index: 5;
+	margin: 0 auto;
+	max-width: 44rem;
+	padding: 2.5rem 1.5rem;
+}
+
+.scene-prose.revealed {
+	border-left: 3px solid var(--accent-dark);
+	background: color-mix(in srgb, currentColor 6%, transparent);
+	margin: 1.5rem auto;
+}
+
+.sr-only {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ── shared bits ────────────────────────────────────────────────────────── */
+.big-numeral {
+	font-family: Fraunces, Georgia, serif;
+	font-weight: 900;
+	font-size: clamp(3.5rem, 14vw, 9rem);
+	line-height: 1;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+}
+
+.kicker {
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	font-size: 0.72rem;
+	font-weight: 600;
+	opacity: 0.75;
+}
+
+.data-table-details {
+	font-size: 0.8rem;
+	max-width: 44rem;
+}
+
+.data-table-details summary {
+	cursor: pointer;
+	opacity: 0.75;
+}
+
+.data-table-details table {
+	border-collapse: collapse;
+	width: 100%;
+	margin-top: 0.5rem;
+}
+
+.data-table-details th,
+.data-table-details td {
+	text-align: left;
+	padding: 0.25rem 0.6rem 0.25rem 0;
+	border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+	font-variant-numeric: tabular-nums;
+}
+
+/* chart text is ink, never series color */
+.chart text {
+	font-family: 'Public Sans', system-ui, sans-serif;
+}
+
+/* ── print: scene 7 only, one clean page ────────────────────────────────── */
+@media print {
+	.no-print {
+		display: none !important;
+	}
+
+	body {
+		background: #fff;
+		color: #000;
+	}
+
+	.scene.printable {
+		height: auto !important;
+		background: #fff !important;
+		color: #000 !important;
+	}
+
+	.scene.printable .pin {
+		position: static;
+		height: auto;
+		overflow: visible;
+	}
+
+	@page {
+		margin: 12mm;
+	}
+}

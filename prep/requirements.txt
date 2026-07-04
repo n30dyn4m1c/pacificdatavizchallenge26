@@ -1,0 +1,12 @@
+# Python pipeline dependencies (pipeline is a stub — see make_scene_data.py)
+xarray>=2024.1
+netCDF4>=1.6
+numpy>=1.26
+pandas>=2.1
+requests>=2.31
+# geo
+geopandas>=0.14
+shapely>=2.0
+topojson>=1.7
+# raster sampling for the transect
+rasterio>=1.3
