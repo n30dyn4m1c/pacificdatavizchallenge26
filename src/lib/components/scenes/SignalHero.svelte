@@ -163,7 +163,7 @@
 		</div>
 	{/if}
 
-	<div class="title-block" style:opacity={Math.max(0, 1 - progress * 5)}>
+	<div class="title-block" style:opacity={Math.max(0, 1 - progress * 11)}>
 		<p class="kicker">Pacific Data Viz Challenge 2026 · Papua New Guinea</p>
 		<h1 class="display">The Ocean<br />Knows First</h1>
 		<p class="standfirst">

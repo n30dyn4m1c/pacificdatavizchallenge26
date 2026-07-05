@@ -2,23 +2,32 @@
 	/**
 	 * Scene 2 — We've Been Here Before. Pinned ONI overlay chart: scrolling
 	 * draws 1997–98 and 2015–16 as gray ghosts, then the current event in
-	 * the accent color, overshooting both.
+	 * the accent color, overshooting both. Part 2: step-paced narration
+	 * (one idea per step) and an optional ghost-emphasis CompareToggle.
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
+	import SceneSteps from '$lib/components/SceneSteps.svelte';
+	import CompareToggle from '$lib/components/beats/CompareToggle.svelte';
 	import OniChart from '$lib/components/OniChart.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 
-	const captions = [
-		{ at: [0.04, 0.32], text: 'My father remembers 1997 — the year the big river got so low the barges stopped, and the frost took the gardens at Tambul.' },
-		{ at: [0.3, 0.58], text: '2015 again: the same shape, the same wait, the same hungry months. We have seen this curve twice in living memory.' },
-		{ at: [0.56, 1], text: 'Now look at the red line. It is the same curve a third time — except this one is still climbing, and it is already ahead of both.' }
+	const steps = [
+		{ at: [0.04, 0.16], text: 'My father remembers 1997.' },
+		{ at: [0.16, 0.3], text: 'The big river fell until the barges stopped.', sub: 'The frost that year took the gardens at Tambul.' },
+		{ at: [0.3, 0.44], text: '2015 traced the same shape.' },
+		{ at: [0.44, 0.56], text: 'The same wait. The same hungry months.' },
+		{ at: [0.56, 0.72], text: 'Now watch the red line.' },
+		{ at: [0.72, 1], text: 'The same curve, a third time.', sub: 'And this one is still climbing — already ahead of both.' }
 	];
+
+	// ghost emphasis is optional enrichment; the base chart never depends on it
+	let emphasis = $state('1997–98');
 </script>
 
 <ScrollScene
 	id="2-history"
 	title="Past El Niño events compared with the current one"
-	heightVh={340}
+	heightVh={560}
 	surface="dark"
 	dataUrl="/data/scene2_oni_history.json"
 >
@@ -48,27 +57,35 @@
 
 	{#snippet children({ progress, data })}
 		<div class="wrap">
-			<header>
-				<p class="kicker">Oceanic Niño Index · three events, one curve</p>
-				<h2 class="display">We’ve been here before.</h2>
+			<header class="head-row">
+				<div>
+					<p class="kicker">Oceanic Niño Index · three events, one curve</p>
+					<h2 class="display">We’ve been here before.</h2>
+				</div>
+				{#if progress > 0.52}
+					<div class="toggle-slot">
+						<CompareToggle
+							label="Compare a past event up close"
+							options={[
+								{ value: '1997–98', label: '1997–98' },
+								{ value: '2015–16', label: '2015–16' }
+							]}
+							bind:value={emphasis}
+						/>
+					</div>
+				{/if}
 			</header>
 			{#if data}
 				<OniChart
 					events={data.events}
 					{progress}
 					mode="dark"
+					emphasis={progress > 0.52 ? emphasis : null}
 					ariaLabel="Line chart overlaying the Oceanic Niño Index of the 1997–98, 2015–16 and current El Niño events. The current event is forecast to peak above both."
 				/>
 			{/if}
-			<div class="captions">
-				{#each captions as c, i (i)}
-					<p
-						class="caption"
-						style:opacity={progress >= c.at[0] && progress < c.at[1] ? 1 : 0}
-					>
-						{c.text}
-					</p>
-				{/each}
+			<div class="steps-row">
+				<SceneSteps {steps} {progress} width="34rem" />
 			</div>
 		</div>
 	{/snippet}
@@ -86,22 +103,28 @@
 		gap: 0.75rem;
 	}
 
+	.head-row {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
 	h2.display {
 		font-size: clamp(1.8rem, 5vw, 3rem);
+		margin-bottom: 0;
 	}
 
-	.captions {
-		position: relative;
-		min-height: 4.5rem;
+	.steps-row {
+		min-height: 6.5rem;
+		display: flex;
+		align-items: flex-start;
 	}
 
-	.caption {
-		position: absolute;
-		inset: 0;
-		margin: 0 auto;
-		max-width: 40em;
-		color: var(--ink-dark-secondary);
-		transition: opacity 0.35s;
-		font-size: 0.95rem;
+	@media (max-width: 700px) {
+		.toggle-slot {
+			display: none; /* narrow screens: chart + steps first; table has the data */
+		}
 	}
 </style>

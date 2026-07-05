@@ -1,164 +1,257 @@
 <script>
 	/**
-	 * Scene 5 — One Garden. Human scale: largely typographic, with a canvas
-	 * frost effect creeping over an illustrated kaukau mound. Ends with the
-	 * two knowledge systems side by side, presented as equals.
+	 * Scene 5 — One Garden, rebuilt as a pop-up book. A large layered SVG
+	 * cross-section of a kaukau mound at ~2,300 m (MoundIllustration,
+	 * lazy-loaded) with two scroll phases: night falls (sky darkens, the
+	 * temperature readout drops) and, once the readout crosses the frost
+	 * threshold, the frost lands (crystal creep + leaf burn + soil cracks).
+	 *
+	 * Five <Hotspot> dots carry phase-appropriate enrichment; the steps
+	 * alone tell the complete story — every hotspot is optional.
 	 */
+	import { onDestroy } from 'svelte';
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
+	import SceneSteps from '$lib/components/SceneSteps.svelte';
+	import Hotspot from '$lib/components/beats/Hotspot.svelte';
 	import FrostCanvas from './FrostCanvas.svelte';
+	import { lag } from '$lib/state.svelte.js';
+
+	const steps = [
+		{ at: [0.02, 0.09], text: 'This is my mound. Kaukau, at 2,300 metres.' },
+		{ at: [0.09, 0.16], text: 'I planted it in March, when the ocean was already warm.' },
+		{ at: [0.16, 0.24], text: 'The old people were already talking.' },
+		{ at: [0.24, 0.32], text: 'Dusk. The sky is clear in every direction.' },
+		{ at: [0.32, 0.4], text: 'Clear is the danger.', sub: 'Cloud is a blanket, and tonight there is none.' },
+		{ at: [0.4, 0.48], text: 'The day’s heat leaves the ground — straight up, into space.' },
+		{ at: [0.48, 0.56], text: 'Watch the number.' },
+		{ at: [0.56, 0.64], text: 'By 4 a.m., frost. In a garden too warm for frost.' },
+		{ at: [0.64, 0.72], text: 'One night. That is all it takes.' },
+		{ at: [0.72, 0.8], text: 'The vines are black by noon.', sub: 'The tubers below survived — but nothing feeds them now.' },
+		{ at: [0.8, 0.88], text: 'The vines we would cut to replant died in the same hour.', sub: 'The next harvest went with them.' },
+		{ at: [0.88, 0.97], text: 'The tanket at the garden edge warned us weeks ago.', sub: 'The ocean warned us months ago. Both were right.' }
+	];
+
+	// hotspot anchors, % of the 1000×700 illustration stage
+	const HS_POS = {
+		leaves: { x: 63, y: 47 },
+		soil: { x: 36, y: 58 },
+		tuber: { x: 50, y: 71 },
+		sky: { x: 82, y: 16 },
+		indicator: { x: 13, y: 49 }
+	};
+
+	// one open card at a time across the whole stage
+	const hsGroup = $state({ open: null });
+
+	// lazy-load the illustration chunk as the scene's data arrives
+	let Mound = $state(null);
+	function onData() {
+		import('./MoundIllustration.svelte').then((m) => (Mound = m.default));
+	}
+
+	// ── phase mapping ────────────────────────────────────────────────────
+	// night falls over 0 → 0.5; the frost phase begins once the readout
+	// crosses the threshold (~0.52) and sweeps to ~0.82
+	const NIGHT_END = 0.5;
+	const FROST_START = 0.52;
+	const FROST_SPAN = 0.3;
+	// the readout crosses 0 °C exactly when the frost phase begins:
+	// temps index 8 (= 0 °C) lands at 8/12 · TEMP_SPAN = 0.52
+	const TEMP_SPAN = 0.78;
+	const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+	// idle invite: hotspots pulse only after ~2 s without scroll movement
+	let pulse = $state(false);
+	let idleTimer = 0;
+	function onProgress(p, active) {
+		lag.carried5 = active;
+		lag.extra5 = p >= 0.8 ? 1 : 0;
+		pulse = false;
+		clearTimeout(idleTimer);
+		if (active) idleTimer = setTimeout(() => (pulse = true), 2000);
+	}
+	onDestroy(() => clearTimeout(idleTimer));
 </script>
 
 <ScrollScene
 	id="5-garden"
-	title="One garden — a frost night at 2,400 metres"
-	heightVh={380}
+	title="One garden — a frost night at 2,300 metres"
+	heightVh={900}
 	surface="light"
 	dataUrl="/data/scene5_garden.json"
+	ondata={onData}
+	onprogress={onProgress}
 >
-	{#snippet prose()}
+	{#snippet prose({ data })}
 		<h2>One garden</h2>
 		<p>
-			This is what the numbers land on: one mounded garden of kaukau at 2,400 metres. On a clear
-			dry-season night under El Niño skies, the day’s heat escapes straight upward, and by 4 a.m.
-			the leaves are stiff and silvered. One such night takes the leaves; three take the harvest.
-			The people who garden here read the warning signs in fog, leaf and creek — and satellites
-			read the same story from orbit. Neither list replaces the other; the calendar that works is
-			built from both.
+			This is what the numbers land on: one mounded garden of kaukau at 2,300 metres. On a clear
+			dry-season night under El Niño skies there is no cloud blanket, so the day’s heat radiates
+			straight upward and by 4 a.m. the ground has frozen at an elevation that normally never
+			freezes. One such night kills the vines; the tubers below survive it, but with the canopy
+			dead nothing feeds them — and because kaukau takes five to nine months from planting, the
+			frost also kills the vines needed to replant. It takes this harvest and the next one. Weeks
+			without rain then bake the mounds hard, so even replanting must wait. The people who garden
+			here read the warning in fog, leaf and creek — the tanket at the garden edge — and
+			satellites read the same story from orbit. Neither list replaces the other.
 		</p>
+		{#if data}
+			<table>
+				<caption>Traditional and satellite indicators of the same warning</caption>
+				<thead>
+					<tr><th scope="col">What the garden says</th><th scope="col">What the satellite says</th></tr>
+				</thead>
+				<tbody>
+					{#each data.indicators as pair, i (i)}
+						<tr><td>{pair.traditional}</td><td>{pair.satellite}</td></tr>
+					{/each}
+				</tbody>
+			</table>
+		{/if}
 	{/snippet}
 
 	{#snippet children({ progress, active, data })}
+		{@const night = clamp01(progress / NIGHT_END)}
+		{@const frost = clamp01((progress - FROST_START) / FROST_SPAN)}
+		{@const frosted = frost >= 0.5}
+		{@const temps = data?.phase?.night_temps_c ?? [11, -3]}
+		{@const temp = temps[Math.min(temps.length - 1, Math.floor(clamp01(progress / TEMP_SPAN) * temps.length))]}
 		<div class="garden">
-			<div class="phase mound-phase" style:opacity={progress < 0.72 ? 1 : 0}>
-				<div class="copy">
-					<p class="kicker">Above 2,200 metres · one night, one garden</p>
-					<p class="lede">
-						I planted this mound in March, when the ocean was already warm and the old people
-						were already talking.
-					</p>
-					<p class="quiet" style:opacity={progress > 0.3 ? 1 : 0}>
-						The sky stays clear. The heat leaves the ground at dusk.
-					</p>
-					<p class="quiet" style:opacity={progress > 0.5 ? 1 : 0}>
-						By morning the vines are silver. One night. That is all frost needs.
-					</p>
-				</div>
-				<div class="mound">
-					<FrostCanvas {progress} {active} />
-				</div>
+			<div class="copy-col">
+				<p class="kicker">Above 2,200 metres · one night, one garden</p>
+				<SceneSteps {steps} {progress} width="24rem" />
 			</div>
 
-			{#if data}
-				<div class="phase panel-phase" style:opacity={progress >= 0.72 ? 1 : 0}>
-					<h2 class="display">Two ways of knowing. One warning.</h2>
-					<div class="indicators">
-						<div class="col-head">What the garden says</div>
-						<div class="col-head">What the satellite says</div>
-						{#each data.indicators as pair, i (i)}
-							<div class="cell traditional">{pair.traditional}</div>
-							<div class="cell satellite">{pair.satellite}</div>
-						{/each}
-					</div>
-					<p class="equal-note">Presented as equals, because they are.</p>
+			<div class="stage" class:night={night > 0.6}>
+				{#if Mound}
+					<Mound {night} {frost} />
+				{/if}
+
+				<!-- frost-crystal creep, clipped to the mound area -->
+				<div class="frost-region">
+					<FrostCanvas {progress} {active} start={FROST_START} span={FROST_SPAN} />
 				</div>
-			{/if}
+
+				<!-- temperature readout: the scene's clock -->
+				<div class="temp-readout" class:freezing={temp <= (data?.phase?.frost_threshold_c ?? 0)}>
+					<span class="temp-label">{data?.phase?.elevation_m ?? 2300} m · air</span>
+					<span class="temp-val">{temp > 0 ? '+' : ''}{temp} °C</span>
+				</div>
+
+				<!-- pop-up-book hotspots (optional enrichment, both phases) -->
+				{#if data?.hotspots}
+					{#each data.hotspots as h (h.id)}
+						{@const pos = HS_POS[h.id]}
+						{@const copy = frosted ? h.frosted : h.healthy}
+						{#if pos}
+							<Hotspot
+								id="hs-{h.id}"
+								x={pos.x}
+								y={pos.y}
+								label={h.label}
+								group={hsGroup}
+								{pulse}
+							>
+								<h4>{copy.title}</h4>
+								<p>{copy.body}</p>
+							</Hotspot>
+						{/if}
+					{/each}
+				{/if}
+
+				<p class="sr-only">
+					Illustrated cross-section of a kaukau mound: night falls, the temperature drops
+					below freezing, frost overtakes the vines and the soil surface cracks.
+				</p>
+			</div>
 		</div>
 	{/snippet}
 </ScrollScene>
 
 <style>
 	.garden {
-		position: relative;
 		height: 100%;
-		max-width: 68rem;
+		max-width: 76rem;
 		margin: 0 auto;
-		padding: 1.5rem;
-	}
-
-	.phase {
-		position: absolute;
-		inset: 1.5rem;
-		transition: opacity 0.45s;
-	}
-
-	.mound-phase {
+		padding: 1.5rem 1.25rem;
 		display: grid;
-		grid-template-columns: minmax(16rem, 1fr) minmax(0, 1.2fr);
+		grid-template-columns: minmax(15rem, 24rem) minmax(0, 1fr);
 		gap: 2rem;
 		align-items: center;
 	}
 
-	.lede {
-		font-family: Fraunces, Georgia, serif;
-		font-size: clamp(1.3rem, 3vw, 2rem);
-		line-height: 1.25;
+	.copy-col {
+		align-self: start;
+		padding-top: 8vh;
 	}
 
-	.quiet {
-		color: var(--ink-light-secondary);
-		transition: opacity 0.5s;
+	.stage {
+		position: relative;
+		aspect-ratio: 10 / 7;
+		max-height: 82vh;
+		width: 100%;
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 12px 44px rgba(0, 0, 0, 0.18);
 	}
 
-	.mound {
-		height: min(52vh, 30rem);
+	.frost-region {
+		position: absolute;
+		left: 16%;
+		right: 16%;
+		top: 40%;
+		bottom: 30%;
+		pointer-events: none;
 	}
 
-	.panel-phase {
+	.temp-readout {
+		position: absolute;
+		top: 0.9rem;
+		left: 0.9rem;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		gap: 1.25rem;
-	}
-
-	.panel-phase h2 {
-		font-size: clamp(1.6rem, 4.5vw, 2.6rem);
-	}
-
-	.indicators {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1px;
-		background: var(--ink-light-grid);
-		border: 1px solid var(--ink-light-grid);
+		padding: 0.45rem 0.7rem;
 		border-radius: 8px;
-		overflow: hidden;
+		background: rgba(6, 10, 18, 0.55);
+		color: #f4f2ec;
+		backdrop-filter: blur(3px);
+		transition: color 0.4s;
 	}
 
-	.col-head {
-		background: var(--paper);
-		font-weight: 600;
-		font-size: 0.75rem;
+	.temp-label {
+		font-size: 0.6rem;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		padding: 0.7rem 0.9rem;
-		color: var(--ink-light-secondary);
+		opacity: 0.75;
 	}
 
-	.cell {
-		background: var(--paper-raised);
-		padding: 0.8rem 0.9rem;
-		font-size: 0.9rem;
+	.temp-val {
+		font-family: Fraunces, Georgia, serif;
+		font-weight: 900;
+		font-size: 1.35rem;
+		font-variant-numeric: tabular-nums;
 	}
 
-	.equal-note {
-		font-size: 0.8rem;
-		color: var(--ink-light-muted);
-		font-style: italic;
+	.temp-readout.freezing .temp-val {
+		color: #a8d4f8; /* the anomaly scale's cool pole */
 	}
 
-	@media (max-width: 700px) {
-		.mound-phase {
+	@media (max-width: 800px) {
+		.garden {
 			grid-template-columns: 1fr;
-			gap: 0.5rem;
+			gap: 0.75rem;
 			align-content: start;
+			padding-top: 1rem;
 		}
 
-		.mound {
-			height: 36vh;
+		.copy-col {
+			padding-top: 0;
+			min-height: 9.5rem;
 		}
 
-		.indicators {
-			font-size: 0.85rem;
+		.stage {
+			max-height: 52vh;
+			aspect-ratio: 10 / 7;
 		}
 	}
 </style>

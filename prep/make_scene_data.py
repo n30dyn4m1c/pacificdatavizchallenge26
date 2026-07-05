@@ -109,15 +109,35 @@ def make_scene4_lag() -> None:
 
 
 def make_scene5_garden() -> None:
-    """scene5_garden.json — paired traditional/satellite indicators.
+    """scene5_garden.json — the pop-up-book mound: indicators, phase, hotspots.
 
-    Input: NARI & provincial DAL documentation; each traditional indicator
-           is paired with the satellite product observing the same thing.
+    Inputs: NARI & provincial DAL documentation (indicators + hotspot copy,
+            each traditional indicator paired with the satellite product
+            observing the same thing); a representative Highlands frost-night
+            station record for the temperature curve (e.g. Tambul).
 
     Output contract:
-    { "indicators": [{"traditional": str, "satellite": str}, ...] }  # 4–6 pairs
+    {
+      "indicators": [{"traditional": str, "satellite": str}, ...],  # 4-6 pairs
+      "phase": {
+        "elevation_m": int,          # garden elevation of the illustration
+        "frost_threshold_c": float,  # readout value that triggers the frost phase
+        "night_temps_c": [float]     # air temp, evenly sampled dusk -> 4 a.m.
+      },
+      "hotspots": [
+        {"id": "leaves"|"soil"|"tuber"|"sky"|"indicator",
+         "label": str,                       # accessible name of the dot
+         "healthy": {"title": str, "body": str},   # phase-1 card copy
+         "frosted": {"title": str, "body": str}}   # phase-2 card copy
+      ]
+    }
+    Hotspot ids are fixed: the front end anchors them to coordinates in the
+    hand-authored SVG. The "indicator" hotspot's copy must cite a VERIFIED
+    local early-warning indicator (see the TODO markers in the synthetic
+    copy) and is presented with the same weight as the satellite data.
+    Synthetic values carry "_synthetic": true until this pipeline lands.
     """
-    raise NotImplementedError("TODO: sourced indicator pairs")
+    raise NotImplementedError("TODO: sourced indicators, station night curve, verified hotspot copy")
 
 
 def make_scene6_forecast() -> None:
@@ -132,10 +152,18 @@ def make_scene6_forecast() -> None:
     {
       "current": {"name": str, "series": [{"month": str, "oni": float}]},
       "plume": [{"month": "Jul 26", "p10": 1.6, "p50": 1.9, "p90": 2.2}, ...],
+      "scenarios": {                    # the scene's CompareToggle reads these;
+        "strong":   {"label": str, "peak_oni": float, "caption": str,
+                     "plume": [...same shape as top-level plume...]},
+        "moderate": {"label": str, "peak_oni": float, "caption": str,
+                     "plume": [...]}
+      },                                # top-level plume == scenarios.strong.plume
       "provinces": [{"name": str, "impact_type": "drought"|"frost",
                      "window_start": "YYYY-MM", "window_end": "YYYY-MM",
                      "confidence": "high"|"medium"|"low"}, ...]
     }
+    Scenario plumes come from the IRI/CPC plume member spread (e.g. members
+    above/below the median peak); synthetic ones carry "_synthetic": true.
     png_provinces.json: GeoJSON FeatureCollection; properties.name must
     match scene 6/7 province names exactly.
     """
@@ -151,7 +179,14 @@ def make_scene7_calendar() -> None:
 
     Output contract:
     { "provinces": [{"name": str, "actions": [{"month": "Jul 26",
-      "action": str, "trigger": str, "lead_agency": str}, ...]}, ...] }
+      "action": str, "trigger": str, "lead_agency": str,
+      "oni_threshold": float | None}, ...]}, ...] }
+
+    "oni_threshold" is the ONI value the trigger references (None when the
+    trigger is a different index — CHIRPS percentile, gauge level, confirmed
+    frost report). The front end uses it to draw the connecting line from a
+    selected action back to the threshold on the ONI rail. Actions whose
+    thresholds are not yet co-drafted carry "_synthetic": true.
     """
     raise NotImplementedError("TODO: co-drafted action tables")
 

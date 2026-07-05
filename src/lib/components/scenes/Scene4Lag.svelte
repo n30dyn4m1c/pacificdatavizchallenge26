@@ -8,12 +8,46 @@
 	import { scaleLinear } from 'd3-scale';
 	import { line as d3line, curveMonotoneX } from 'd3-shape';
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
+	import SceneSteps from '$lib/components/SceneSteps.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import { ink, impact, series } from '$lib/palette.js';
+	import { lag } from '$lib/state.svelte.js';
 
-	const VH_PER_MONTH = 55;
+	// Part 2: MORE scroll per month — the wait must be felt, so each month
+	// gets a constant, generous 70vh of runway
+	const VH_PER_MONTH = 70;
 	const inkC = ink.dark;
 	const imp = impact.dark;
+
+	// steps are anchored to month indices (i/24 of scene progress): the copy
+	// lands exactly when its month does
+	const M = (i) => i / 24;
+	const steps = [
+		{ at: [M(0.5), M(3)], text: 'June 2025. The ocean is still cool.', sub: 'The gardens are full.' },
+		{ at: [M(3), M(6)], text: 'The water warms. Here, nothing changes.' },
+		{ at: [M(6), M(8)], text: 'December. The signal crosses the line.' },
+		{ at: [M(8), M(10)], text: 'Still nothing.', sub: 'This is what a warning feels like: like nothing.' },
+		{ at: [M(10), M(12)], text: 'The rains begin to thin over the lowlands.' },
+		{ at: [M(12), M(14)], text: 'Month six: the rivers drop.', sub: 'The drought has arrived downstairs.' },
+		{ at: [M(14), M(15)], text: 'August. The first killing frost in the high gardens.' },
+		{ at: [M(15), M(17)], text: 'A month later, the worst of it.' },
+		{ at: [M(17), M(19)], text: 'And the ocean has not even peaked.' },
+		{ at: [M(19), M(22)], text: 'Every one of those months was usable.' },
+		{ at: [M(22), 1], text: 'Eight months between signal and frost.', sub: 'Hold that number.' }
+	];
+
+	// feed the persistent lag ticker (a fixed element owned by +page.svelte);
+	// it appears once the signal has crossed and follows the reader from here
+	let months4 = null;
+	function feedLag(p, active) {
+		lag.inScene4 = active;
+		if (months4) {
+			const mi = Math.min(months4.length - 1, Math.floor(p * months4.length));
+			lag.baseMonths = months4[mi].months_since_onset;
+		}
+		// scrolled back above the scene → the clock hasn't started yet
+		if (!active && p <= 0.001) lag.baseMonths = -1;
+	}
 
 	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 	const label = (date) => {
@@ -47,6 +81,8 @@
 	heightVh={24 * VH_PER_MONTH}
 	surface="dark"
 	dataUrl="/data/scene4_lag.json"
+	ondata={(d) => (months4 = d.months)}
+	onprogress={feedLag}
 >
 	{#snippet prose({ data })}
 		<h2>The lag</h2>
@@ -98,6 +134,10 @@
 					</svg>
 					<span class="mini-caption">the ocean signal, Jun 2025 → May 2027</span>
 				</aside>
+
+				<div class="steps-row">
+					<SceneSteps {steps} {progress} width="30rem" />
+				</div>
 
 				<div class="bands" bind:clientWidth={w}>
 					<svg
@@ -212,12 +252,9 @@
 					</svg>
 				</div>
 
-				{#if cur.months_since_onset >= 0}
-					<div class="ticker" aria-live="off">
-						<span class="ticker-n">T + {cur.months_since_onset}</span>
-						<span class="ticker-label">months since the ocean signal</span>
-					</div>
-				{/if}
+				<!-- the T+n ticker is now the persistent fixed element owned by
+				     +page.svelte (LagTicker) — it starts here and follows the
+				     reader through scenes 5 and 6 -->
 			</div>
 		{:else}
 			<div class="lag-layout"><p class="kicker">Loading the months…</p></div>
@@ -276,45 +313,22 @@
 		text-align: right;
 	}
 
+	.steps-row {
+		min-height: 6.75rem;
+		margin-top: 0.75rem;
+	}
+
 	.bands {
 		flex: 1;
 		display: flex;
 		align-items: center;
-		margin-top: 1rem;
+		margin-top: 0.25rem;
 	}
 
 	.bands svg {
 		width: 100%;
 		height: auto;
 		max-height: 72vh;
-	}
-
-	.ticker {
-		position: absolute;
-		bottom: 1.1rem;
-		left: 1.25rem;
-		display: flex;
-		align-items: baseline;
-		gap: 0.5rem;
-		padding: 0.5rem 0.85rem;
-		border: 1px solid var(--ink-dark-axis);
-		border-radius: 999px;
-		background: color-mix(in srgb, var(--ocean) 70%, transparent);
-	}
-
-	.ticker-n {
-		font-family: Fraunces, Georgia, serif;
-		font-weight: 900;
-		font-size: 1.15rem;
-		font-variant-numeric: tabular-nums;
-		color: var(--accent-dark);
-	}
-
-	.ticker-label {
-		font-size: 0.7rem;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--ink-dark-secondary);
 	}
 
 	@media (max-width: 700px) {

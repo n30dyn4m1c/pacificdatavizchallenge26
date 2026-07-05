@@ -10,7 +10,7 @@
 	import { line as d3line, area as d3area, curveMonotoneX } from 'd3-shape';
 	import { series as seriesColors, ink } from '$lib/palette.js';
 
-	let { events, progress = 1, mode = 'dark', plume = null, ariaLabel } = $props();
+	let { events, progress = 1, mode = 'dark', plume = null, emphasis = null, ariaLabel } = $props();
 
 	const H = 420;
 	const PAD = { l: 46, r: 96, t: 18, b: 34 };
@@ -58,6 +58,14 @@
 	// ghosts — color follows the entity, not its slot count
 	const seriesColor = (i) =>
 		i === events.length - 1 ? colors.accent : [colors.ghost1, colors.ghost2][i] ?? colors.ghost2;
+
+	// optional ghost emphasis (CompareToggle enrichment): the chosen ghost is
+	// drawn heavier and its peak annotated — additive, never dimming the rest
+	const peakOf = (ev) =>
+		ev.series.reduce((best, d, i) => (d.oni > best.oni ? { ...d, i } : best), {
+			...ev.series[0],
+			i: 0
+		});
 
 	// plume band (forecast months follow the observed months of the last event)
 	const plumeArea = $derived.by(() => {
@@ -148,12 +156,27 @@
 					d={lineGen(parts[i].observed)}
 					fill="none"
 					stroke={seriesColor(i)}
-					stroke-width={isCurrent ? 2.5 : 1.75}
+					stroke-width={isCurrent || emphasis === ev.name ? 2.5 : 1.75}
 					stroke-linecap="round"
 					pathLength="1"
 					stroke-dasharray="1"
 					stroke-dashoffset={1 - f}
+					style="transition: stroke-width 0.3s"
 				/>
+				{#if !isCurrent && emphasis === ev.name && f >= 1}
+					{@const pk = peakOf(ev)}
+					<circle cx={x(pk.i)} cy={y(pk.oni)} r="4.5" fill={seriesColor(i)} />
+					<text
+						x={x(pk.i)}
+						y={y(pk.oni) - 12}
+						text-anchor="middle"
+						font-size="11.5"
+						font-weight="600"
+						fill={inkC.primary}
+					>
+						peak +{pk.oni.toFixed(1)} · {pk.month}
+					</text>
+				{/if}
 				{#if parts[i].forecast.length && !plume}
 					<path
 						d={lineGen(parts[i].forecast)}

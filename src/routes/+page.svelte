@@ -11,16 +11,9 @@
 	import Scene5Garden from '$lib/components/scenes/Scene5Garden.svelte';
 	import Scene6Forecast from '$lib/components/scenes/Scene6Forecast.svelte';
 	import Scene7Calendar from '$lib/components/scenes/Scene7Calendar.svelte';
-
-	const scenes = [
-		{ component: Scene1Signal, divider: false },
-		{ component: Scene2History, divider: false },
-		{ component: Scene3Descent, divider: false },
-		{ component: Scene4Lag, divider: 'shore' }, // ocean → land handover follows
-		{ component: Scene5Garden, divider: false },
-		{ component: Scene6Forecast, divider: false },
-		{ component: Scene7Calendar, divider: false }
-	];
+	import PauseBeat from '$lib/components/beats/PauseBeat.svelte';
+	import LagTicker from '$lib/components/LagTicker.svelte';
+	import TransitionMotif from '$lib/components/TransitionMotif.svelte';
 </script>
 
 <svelte:head>
@@ -31,13 +24,57 @@
 	/>
 </svelte:head>
 
+<!-- fixed connective tissue: the lag clock and the anomaly-scale motif -->
+<LagTicker />
+<TransitionMotif />
+
 <main>
-	{#each scenes as s, i (i)}
-		<s.component />
-		{#if s.divider === 'shore'}
-			<div class="shore-transition no-print" aria-hidden="true"></div>
-		{/if}
-	{/each}
+	<Scene1Signal />
+
+	<!-- pause beat 1 of 2 (hard cap): the +1.7 °C reveal gets a rest -->
+	<PauseBeat
+		id="pause-signal"
+		surface="dark"
+		kicker="+1.7 °C and rising"
+		statement="The ocean knows first."
+		exploreLabel="What is this number? →"
+	>
+		<h4>Niño 3.4, in one breath</h4>
+		<p>
+			The number is the sea-surface temperature anomaly of the Niño 3.4 region — a box of
+			equatorial Pacific straddling the date line. Average it over three months and you get the
+			Oceanic Niño Index (ONI): above +0.5 °C, El Niño conditions; above +1.5 °C, a strong
+			event. It is the single most-watched number in seasonal climate forecasting — and it moves
+			months before the weather over Papua New Guinea does.
+		</p>
+	</PauseBeat>
+
+	<Scene2History />
+	<Scene3Descent />
+	<Scene4Lag />
+
+	<div class="shore-transition no-print" aria-hidden="true"></div>
+
+	<!-- pause beat 2 of 2: the lag has landed; rest before the garden -->
+	<PauseBeat
+		id="pause-lag"
+		surface="light"
+		kicker="T + 8 · the frost has landed"
+		statement="Eight months of warning. Not one of them needs to be wasted."
+		exploreLabel="What fits in eight months? →"
+	>
+		<h4>Anticipatory action, briefly</h4>
+		<p>
+			Acting on a forecast instead of a disaster: pre-positioning frost-hardy vine cuttings,
+			agreeing river-corridor relief routes while the barges still run, staging seed and water
+			storage before prices spike. Every action is cheaper, faster and more dignified before
+			the shock than after it — the lag is the budget line that pays for all of it.
+		</p>
+	</PauseBeat>
+
+	<Scene5Garden />
+	<Scene6Forecast />
+	<Scene7Calendar />
 </main>
 
 <footer class="colophon surface-light no-print">

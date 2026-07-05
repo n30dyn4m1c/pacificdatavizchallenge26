@@ -32,6 +32,29 @@ so the wait is felt.
   `d3-shape`, `d3-array`) — Svelte owns the DOM.
 - Particles (frost): Canvas 2D, deterministic/seeded, scroll-driven, only
   drawn while the scene is on screen.
+- Pacing: every pinned scene narrates through `SceneSteps` — one idea per
+  step, one step at full visual weight, generous scroll distance (scene 4
+  gives each of its 24 months a constant 70vh). A thin scene-progress rail
+  sits on the left edge of every pinned scene.
+- Interaction beats (`src/lib/components/beats/`): a small library of
+  OPTIONAL enrichment — `TapReveal` (inline accordion pill), `Hotspot`
+  (the pop-up-book dot + card primitive), `CompareToggle` (segmented
+  series swap), `PauseBeat` (two, and only two, full-width rests). One
+  visual language (`.beat-*` classes in `app.css`), 44 px tap targets,
+  full keyboard operability, Esc/tap-outside dismiss, `aria-expanded` /
+  `aria-controls` wiring, and one shared idle pulse that stops under
+  `prefers-reduced-motion`. **The scroll alone tells the complete story**
+  — append `?notap=1` to hide every affordance and proof-read the
+  scroll-only experience.
+- Scene 5 is a pop-up-book explorable: a hand-authored layered SVG
+  cross-section of a kaukau mound (`MoundIllustration.svelte`, ~2.4 KB
+  gzipped in its own lazy chunk), scroll-driven from dusk through a clear
+  El Niño night into frost, with five phase-aware hotspots fed from
+  `scene5_garden.json`.
+- Sticky connective tissue: the scene-4 "T + n months" ticker persists as
+  a fixed element through scenes 5–6 and dismisses itself at scene 7; the
+  anomaly color scale surfaces as a thin gradient bar around scene
+  handovers (`TransitionMotif`).
 - `src/lib/palette.js` is the **single source of truth for every color**,
   including the diverging SST anomaly scale shared by the shader (generated
   GLSL) and all charts. Arms validated for monotone lightness and surface
@@ -41,12 +64,16 @@ so the wait is felt.
 
 - Every scene has a prose equivalent: always in the accessibility tree,
   visually revealed by the "Read scene text" toggle.
-- `prefers-reduced-motion` freezes shader time and all self-running motion;
-  scroll-driven scrubbing (user-initiated) remains.
+- `prefers-reduced-motion` freezes shader time and all self-running motion
+  (including every beat's idle pulse; the frost creep becomes a simple
+  crossfade); scroll-driven scrubbing (user-initiated) remains.
 - Charts have `role="img"` labels and a collapsible data-table fallback.
-- Scene 7 ships a print stylesheet: the calendar alone prints to one page.
-- Budget: total JS ≈ 68 KB gzipped (< 200 KB budget); per-scene JSON ≤ 32 KB,
-  fetched lazily as scenes approach.
+- Scene 7 ships a print stylesheet: the calendar alone prints to one page
+  (the mini-map selector, ONI rail and buttons are `no-print`).
+- Budget: total JS ≈ 80 KB gzipped (< 200 KB budget); per-scene JSON ≤ 32 KB,
+  fetched lazily as scenes approach; the scene-5 illustration is < 80 KB.
+- `grep -r '_synthetic' static/data` lists every value still waiting on the
+  real pipeline or source verification (see `/prep`).
 
 ## Develop
 

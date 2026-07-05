@@ -7,13 +7,24 @@
 	 * shape the prep pipeline will emit.
 	 */
 	import { base } from '$app/paths';
+	import { tweened } from 'svelte/motion';
+	import { cubicOut } from 'svelte/easing';
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
+	import SceneSteps from '$lib/components/SceneSteps.svelte';
+	import CompareToggle from '$lib/components/beats/CompareToggle.svelte';
 	import OniChart from '$lib/components/OniChart.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import { ink, impact } from '$lib/palette.js';
+	import { ui, lag } from '$lib/state.svelte.js';
 
 	const inkC = ink.light;
 	const imp = impact.light;
+
+	const steps = [
+		{ at: [0.03, 0.14], text: 'This is not history. This is the event we are in.' },
+		{ at: [0.14, 0.26], text: 'Observed to June. Forecast beyond.' },
+		{ at: [0.26, 0.42], text: 'The plume peaks in December — above both events my father remembers.' }
+	];
 
 	let geo = $state(null);
 	async function loadGeo() {
@@ -23,6 +34,45 @@
 		} catch {
 			geo = { features: [] };
 		}
+	}
+
+	// ── forecast-scenario toggle (optional enrichment) ─────────────────────
+	// default is the narratively-correct scenario: "strong", the current
+	// forecast. Under ?notap=1 the toggle disappears and the chart simply
+	// shows it. Swapping tweens the plume band between the two shapes.
+	let scenario = $state('strong');
+	const plumeT = tweened(null, {
+		easing: cubicOut,
+		interpolate: (a, b) => {
+			if (!a || a.length !== b.length) return () => b;
+			return (t) =>
+				b.map((d, i) => ({
+					month: d.month,
+					p10: a[i].p10 + (d.p10 - a[i].p10) * t,
+					p50: a[i].p50 + (d.p50 - a[i].p50) * t,
+					p90: a[i].p90 + (d.p90 - a[i].p90) * t
+				}));
+		}
+	});
+
+	let scenarios = $state(null);
+	function onData(d) {
+		scenarios = d.scenarios ?? null;
+		plumeT.set(d.scenarios?.strong.plume ?? d.plume, { duration: 0 });
+		loadGeo();
+	}
+
+	$effect(() => {
+		if (scenarios?.[scenario]) {
+			plumeT.set(scenarios[scenario].plume, { duration: ui.reducedMotion ? 0 : 600 });
+		}
+	});
+
+	// the reader carries the lag clock through this scene
+	function feedLag(p, active) {
+		if (active) lag.dismissed = false;
+		lag.carried6 = active;
+		lag.extra6 = p >= 0.5 ? 1 : 0;
 	}
 
 	// equirectangular-ish projection for the placeholder polygons
@@ -48,7 +98,8 @@
 	heightVh={520}
 	surface="light"
 	dataUrl="/data/scene6_forecast.json"
-	ondata={loadGeo}
+	ondata={onData}
+	onprogress={feedLag}
 >
 	{#snippet prose({ data })}
 		<h2>Now: 2026</h2>
@@ -72,21 +123,39 @@
 		{#if data}
 			<div class="stage">
 				<!-- phase A: the plume -->
-				<div class="phase" style:opacity={progress < 0.46 ? 1 : 0}>
-					<header>
-						<p class="kicker">The event we are actually in · observed + forecast plume</p>
-						<h2 class="display">Now: 2026.</h2>
+				<div class="phase" style:opacity={progress < 0.46 ? 1 : 0} inert={progress >= 0.46}>
+					<header class="head-row">
+						<div>
+							<p class="kicker">The event we are actually in · observed + forecast plume</p>
+							<h2 class="display">Now: 2026.</h2>
+						</div>
+						{#if scenarios && progress > 0.2}
+							<div class="toggle-col">
+								<CompareToggle
+									label="Compare forecast scenarios"
+									options={[
+										{ value: 'strong', label: scenarios.strong.label },
+										{ value: 'moderate', label: scenarios.moderate.label }
+									]}
+									bind:value={scenario}
+								/>
+								<p class="scenario-caption">{scenarios[scenario].caption}</p>
+							</div>
+						{/if}
 					</header>
 					<OniChart
 						events={[data.current]}
 						progress={Math.min(1, progress * 3)}
 						mode="light"
-						plume={data.plume}
+						plume={$plumeT ?? data.plume}
 						ariaLabel="The current event's observed Oceanic Niño Index with the forecast plume: median peaking near +2.8 °C in December 2026, with a p10–p90 range."
 					/>
 					<p class="plume-note">
 						Shaded band: 10th–90th percentile of the forecast plume. Dashed: median.
 					</p>
+					<div class="steps-row">
+						<SceneSteps {steps} {progress} width="34rem" />
+					</div>
 				</div>
 
 				<!-- phase B: province impact windows -->
@@ -155,6 +224,33 @@
 
 	h2.display {
 		font-size: clamp(1.8rem, 5vw, 3rem);
+	}
+
+	.head-row {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.toggle-col {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 0.35rem;
+		max-width: 22rem;
+	}
+
+	.scenario-caption {
+		font-size: 0.75rem;
+		color: var(--ink-light-muted);
+		text-align: right;
+		margin: 0;
+	}
+
+	.steps-row {
+		min-height: 5.5rem;
 	}
 
 	.plume-note {
