@@ -26,6 +26,9 @@
 		ui.reducedMotion = mq.matches;
 		const onChange = (e) => (ui.reducedMotion = e.matches);
 		mq.addEventListener('change', onChange);
+		// ?notap=1 — proof-read the scroll-only experience: every optional
+		// interactive affordance across the piece renders nothing.
+		ui.noTap = new URLSearchParams(window.location.search).get('notap') === '1';
 		return () => mq.removeEventListener('change', onChange);
 	});
 </script>
@@ -34,13 +37,15 @@
 	{@html `<style>${rootVars}</style>`}
 </svelte:head>
 
-<button
-	class="reader-toggle no-print"
-	aria-pressed={ui.readerMode}
-	onclick={() => (ui.readerMode = !ui.readerMode)}
->
-	{ui.readerMode ? 'Hide' : 'Read'} scene text
-</button>
+{#if !ui.noTap}
+	<button
+		class="reader-toggle no-print"
+		aria-pressed={ui.readerMode}
+		onclick={() => (ui.readerMode = !ui.readerMode)}
+	>
+		{ui.readerMode ? 'Hide' : 'Read'} scene text
+	</button>
+{/if}
 
 {@render children()}
 

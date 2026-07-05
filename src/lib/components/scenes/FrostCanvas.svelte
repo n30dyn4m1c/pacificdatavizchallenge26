@@ -2,11 +2,16 @@
 	/**
 	 * Canvas-2D frost crystallization for Scene 5. Deterministic (seeded):
 	 * ~500 branch segments are precomputed with a "birth" progress; drawing
-	 * is purely scroll-driven (no rAF loop — nothing animates on its own,
-	 * so prefers-reduced-motion needs no special casing beyond CSS). The
-	 * canvas only redraws while the scene is active.
+	 * is purely scroll-driven (no rAF loop — nothing animates on its own).
+	 * The canvas only redraws while the scene is active.
+	 *
+	 * `start`/`span` map scene progress → frost sweep. Under
+	 * prefers-reduced-motion the branch-growth creep is replaced by a
+	 * simple crossfade: the finished pattern fades in as one layer.
 	 */
-	let { progress = 0, active = false } = $props();
+	import { ui } from '$lib/state.svelte.js';
+
+	let { progress = 0, active = false, start = 0.22, span = 0.5 } = $props();
 
 	let canvas = $state(null);
 	let box = $state(null);
@@ -56,12 +61,13 @@
 		return segs;
 	})();
 
-	// frost sweeps the mound over progress 0.22 → 0.72 of the scene
-	const frostP = $derived(Math.max(0, Math.min(1, (progress - 0.22) / 0.5)));
+	// frost sweeps the mound over progress start → start+span of the scene
+	const frostP = $derived(Math.max(0, Math.min(1, (progress - start) / span)));
 
 	$effect(() => {
 		if (!canvas || !active) return;
 		void frostP;
+		void ui.reducedMotion;
 		const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 		const cw = Math.round(w * dpr);
 		const ch = Math.round(h * dpr);
@@ -72,10 +78,15 @@
 		}
 		const ctx = canvas.getContext('2d');
 		ctx.clearRect(0, 0, cw, ch);
+		// reduced motion: no creeping growth — the finished pattern
+		// crossfades in as a single layer instead
+		const reduced = ui.reducedMotion;
+		canvas.style.opacity = reduced ? String(frostP) : '1';
 		// frost wears the anomaly scale's cool arm (see palette.js)
 		ctx.lineCap = 'round';
 		for (const s of segments) {
-			if (s.birth > frostP) continue;
+			if (!reduced && s.birth > frostP) continue;
+			if (reduced && frostP === 0) continue;
 			ctx.strokeStyle = s.d < 2 ? 'rgba(168, 212, 248, 0.85)' : 'rgba(95, 168, 238, 0.5)';
 			ctx.lineWidth = (s.d < 2 ? 1.6 : 1) * dpr;
 			ctx.beginPath();
@@ -86,37 +97,18 @@
 	});
 </script>
 
+<!-- overlay layer: the scene positions this box over its illustration -->
 <div class="frost-box" bind:this={box} bind:clientWidth={w} bind:clientHeight={h}>
-	<!-- the kaukau mound (illustrative, not data) -->
-	<svg viewBox="0 0 100 70" aria-hidden="true" preserveAspectRatio="xMidYMax meet">
-		<!-- soil mound -->
-		<path d="M 8 66 Q 14 40 50 38 Q 86 40 92 66 Z" fill="#4c3d2c" />
-		<path d="M 8 66 Q 14 40 50 38 Q 86 40 92 66" fill="none" stroke="#5d4c37" stroke-width="1.2" />
-		<!-- kaukau vines -->
-		{#each [[24, 47], [37, 41], [50, 39], [63, 41], [76, 47]] as [vx, vy], i (i)}
-			<g transform="translate({vx} {vy})">
-				<path d="M0 0 C -3 -5, -7 -6, -9 -4 C -6 -1, -2 0, 0 0" fill="#5f7a44" />
-				<path d="M0 0 C 3 -5, 7 -6, 9 -4 C 6 -1, 2 0, 0 0" fill="#54703c" />
-				<path d="M0 0 C -1 -6, 1 -9, 3 -10 C 4 -7, 2 -2, 0 0" fill="#6b874e" />
-			</g>
-		{/each}
-	</svg>
 	<canvas bind:this={canvas} aria-hidden="true"></canvas>
-	<p class="sr-only">
-		Illustration of a kaukau (sweet potato) mound being overtaken by frost as the story
-		progresses.
-	</p>
 </div>
 
 <style>
 	.frost-box {
-		position: relative;
-		width: 100%;
-		height: 100%;
-		min-height: 240px;
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
 	}
 
-	svg,
 	canvas {
 		position: absolute;
 		inset: 0;

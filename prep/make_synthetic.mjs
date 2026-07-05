@@ -165,35 +165,134 @@ write('scene4_lag.json', {
 	}))
 });
 
-// ── scene 5: one garden — paired indicators ────────────────────────────────
+// ── scene 5: one garden — the pop-up-book mound ────────────────────────────
+// Part 2 contract: the scene reads its phase thresholds, the night
+// temperature curve and every hotspot's copy from here. Values that must
+// come from the real pipeline (or be verified with local sources) carry
+// "_synthetic": true so the remaining work is greppable.
 write('scene5_garden.json', {
-	note: 'SYNTHETIC placeholder pairs — to be replaced with sourced indicators (NARI, provincial DAL).',
+	note: 'SYNTHETIC placeholder — indicators, night curve and hotspot copy to be replaced/verified (NARI, provincial DAL, station records).',
 	indicators: [
 		{ traditional: 'Morning fog sits low in the valley and burns off before the pigs are fed', satellite: 'Night-time land-surface temperature dips below 4 °C (MODIS/VIIRS LST)' },
 		{ traditional: 'The tanket (cordyline) leaves curl and pale at the garden edge', satellite: 'NDVI anomaly turns negative over the 2,200 m band (Sentinel-2)' },
 		{ traditional: 'Creek levels drop and the stones stay dry by mid-morning', satellite: 'CHIRPS 30-day rainfall sits below the 20th percentile' },
 		{ traditional: 'Old people say: when the dry wind comes early, plant the swamp gardens', satellite: 'ONI holds above +1.5 °C for a third consecutive month' }
+	],
+	phase: {
+		_synthetic: true, // curve + threshold from a real frost-night station record
+		elevation_m: 2300,
+		frost_threshold_c: 0,
+		// air temperature over the night-falls scrub (evenly sampled dusk → 4 a.m.)
+		night_temps_c: [11, 9, 7, 5, 4, 3, 2, 1, 0, -1, -2, -3]
+	},
+	hotspots: [
+		{
+			_synthetic: true,
+			id: 'leaves',
+			label: 'The vine leaves',
+			healthy: {
+				title: 'A living blanket',
+				body: 'The vines close over the mound like a roof. They hold the day’s warmth against the soil and shade out the weeds — the canopy is the mound’s first defence against a cold sky.'
+			},
+			frosted: {
+				title: 'Frost burn',
+				body: 'The leaves go first: silvered by dawn, black by noon, dry in three days. The tuber below can survive the night — but with the canopy dead there is nothing left to feed it. The plant starves from the top down.'
+			}
+		},
+		{
+			_synthetic: true,
+			id: 'soil',
+			label: 'The mounded soil',
+			healthy: {
+				title: 'Why we mound',
+				body: 'We heap the soil and fold old vines inside to rot and warm it. A mound drains, and cold air slides off it downhill — a few hand-widths of height buys a degree on a bad night.'
+			},
+			frosted: {
+				title: 'Bricked ground',
+				body: 'Weeks without rain bake the mound hard, and it cracks. Replanting needs soft, wet soil — so even after the frost passes, the bricked ground makes us wait. The waiting is the hunger.'
+			}
+		},
+		{
+			_synthetic: true,
+			id: 'tuber',
+			label: 'The tuber, below ground',
+			healthy: {
+				title: 'A slow clock',
+				body: 'From planting to harvest, kaukau takes five to nine months. What you eat tonight was decided the better part of a year ago.'
+			},
+			frosted: {
+				title: 'Two harvests die tonight',
+				body: 'The frost kills the vines we would cut to replant. So it does not just take this harvest — it takes the next one, months away. That is the lag, landing in one garden.'
+			}
+		},
+		{
+			_synthetic: true,
+			id: 'sky',
+			label: 'The night sky',
+			healthy: {
+				title: 'Cloud is a blanket',
+				body: 'The secret: it is the CLEAR nights that kill. El Niño dries the sky, the day’s heat radiates straight out to space, and ground that never freezes — freezes.'
+			},
+			frosted: {
+				title: 'No blanket came',
+				body: 'No cloud last night. The heat left for space and the frost line walked downhill, into gardens that had never seen it.'
+			}
+		},
+		{
+			_synthetic: true,
+			id: 'indicator',
+			label: 'The early-warning plant',
+			healthy: {
+				title: 'What the old people watch',
+				body: 'Long before any satellite, the garden gives its own warning: the tanket (cordyline) at the garden edge pales and curls when the dry is coming. When it shows, the planting moves to the swamp gardens. [TODO: verify the specific indicator and its reading with Highlands sources before publication.]'
+			},
+			frosted: {
+				title: 'It had already told us',
+				body: 'The tanket showed weeks ago — the same warning the ocean gave months ago, read from a leaf instead of a satellite. Both were right. [TODO: verify the specific indicator and its reading with Highlands sources before publication.]'
+			}
+		}
 	]
 });
 
 // ── scene 6: current forecast + province impact windows ────────────────────
 const plumeMonths = 12; // Jul 2026 – Jun 2027
+const plumeFor = (mids) =>
+	Array.from({ length: plumeMonths }, (_, i) => {
+		const mid = mids[i];
+		const spread = 0.25 + i * 0.09;
+		return {
+			month: monthLabel(2026, 6 + i),
+			p10: +(mid - spread).toFixed(2),
+			p50: +mid.toFixed(2),
+			p90: +(mid + spread).toFixed(2)
+		};
+	});
+const strongMids = oniNow.slice(6, 6 + plumeMonths);
+// moderate scenario: same shape, peaking near +1.8 instead of +2.8
+const moderateMids = strongMids.map((v) => Math.min(v, 0.5 + v * 0.47));
+const strongPlume = plumeFor(strongMids);
 write('scene6_forecast.json', {
 	note: 'SYNTHETIC plume + windows — replaced by IRI/CPC plume and NDC hazard tables in prep.',
 	current: {
 		name: '2026–27 (current + forecast)',
 		series: oniNow.slice(0, OBSERVED_THROUGH + 1).map((oni, i) => ({ month: monthLabel(2026, i), oni }))
 	},
-	plume: Array.from({ length: plumeMonths }, (_, i) => {
-		const mid = oniNow[6 + i];
-		const spread = 0.25 + i * 0.09;
-		return {
-			month: monthLabel(2026, 6 + i),
-			p10: +(mid - spread).toFixed(2),
-			p50: mid,
-			p90: +(mid + spread).toFixed(2)
-		};
-	}),
+	plume: strongPlume, // == scenarios.strong.plume (kept for the base contract)
+	scenarios: {
+		_synthetic: true, // both plumes from the real IRI/CPC scenario spreads
+		strong: {
+			label: 'if strong',
+			peak_oni: Math.max(...strongMids),
+			caption: 'The current forecast: a strong event peaking near +2.8 °C in December.',
+			plume: strongPlume
+		},
+		moderate: {
+			label: 'if moderate',
+			peak_oni: +Math.max(...moderateMids).toFixed(1),
+			caption: 'If the event stalls moderate, the frost window narrows to the highest gardens.',
+			plume: plumeFor(moderateMids)
+		}
+	},
 	provinces: [
 		{ name: 'Western', impact_type: 'drought', window_start: '2026-08', window_end: '2027-01', confidence: 'high' },
 		{ name: 'Gulf', impact_type: 'drought', window_start: '2026-09', window_end: '2027-01', confidence: 'medium' },
@@ -230,7 +329,20 @@ function poly(name, ring) {
 }
 
 // ── scene 7: the anticipatory-action calendar ───────────────────────────────
-const cal = (name, actions) => ({ name, actions });
+// Part 2: every action carries `oni_threshold` (the ONI value its trigger
+// references, or null when the trigger is a different index) so the front
+// end can draw the trigger → threshold connecting line. Parsed from the
+// trigger text here; the real pipeline sets it explicitly. Thresholds are
+// flagged _synthetic until co-drafted values land.
+const cal = (name, actions) => ({
+	name,
+	actions: actions.map((a) => {
+		const m = a.trigger.match(/ONI ≥ \+(\d+(?:\.\d+)?)/);
+		return m
+			? { ...a, oni_threshold: +m[1], _synthetic: true }
+			: { ...a, oni_threshold: null };
+	})
+});
 write('scene7_calendar.json', {
 	note: 'SYNTHETIC placeholder calendar — actions to be co-drafted with NDC / provincial DALs.',
 	provinces: [

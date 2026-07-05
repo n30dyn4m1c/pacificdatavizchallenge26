@@ -57,11 +57,21 @@ a {
 .surface-dark {
 	background: var(--ocean);
 	color: var(--ink-dark-primary);
+	--beat-accent: var(--accent-dark);
+	--beat-surface: var(--ocean-raised);
+	--beat-ink: var(--ink-dark-primary);
+	--beat-ink-2: var(--ink-dark-secondary);
+	--beat-line: var(--ink-dark-axis);
 }
 
 .surface-light {
 	background: var(--paper);
 	color: var(--ink-light-primary);
+	--beat-accent: var(--accent-light);
+	--beat-surface: var(--paper-raised);
+	--beat-ink: var(--ink-light-primary);
+	--beat-ink-2: var(--ink-light-secondary);
+	--beat-line: var(--ink-light-axis);
 }
 
 .surface-light ::selection {
@@ -147,6 +157,121 @@ a {
 /* chart text is ink, never series color */
 .chart text {
 	font-family: 'Public Sans', system-ui, sans-serif;
+}
+
+/* ── interaction beats: one visual language for every optional affordance ──
+   All four beat components (TapReveal, Hotspot, CompareToggle, PauseBeat)
+   consume these classes and the per-surface --beat-* custom properties.
+   The narrative NEVER depends on any of them: they are enrichment only,
+   and every one of them renders nothing under ?notap=1. */
+
+.beat-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5em;
+	min-height: 44px; /* tap target floor */
+	min-width: 44px;
+	font: 600 0.8rem/1.2 'Public Sans', system-ui, sans-serif;
+	letter-spacing: 0.03em;
+	color: var(--beat-ink);
+	background: color-mix(in srgb, var(--beat-surface) 82%, transparent);
+	border: 1px solid color-mix(in srgb, var(--beat-accent) 55%, transparent);
+	border-radius: 999px;
+	padding: 0.6rem 1.1rem;
+	cursor: pointer;
+	transition: border-color 0.25s, background-color 0.25s;
+}
+
+.beat-pill:hover {
+	border-color: var(--beat-accent);
+}
+
+.beat-pill[aria-expanded='true'] {
+	border-color: var(--beat-accent);
+	background: color-mix(in srgb, var(--beat-accent) 14%, var(--beat-surface));
+}
+
+.beat-card {
+	background: var(--beat-surface);
+	color: var(--beat-ink);
+	border: 1px solid var(--beat-line);
+	border-left: 3px solid var(--beat-accent);
+	border-radius: 10px;
+	padding: 1rem 1.15rem;
+	font-size: 0.9rem;
+	line-height: 1.5;
+	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+}
+
+.beat-card h4 {
+	font-family: Fraunces, Georgia, serif;
+	font-size: 1.05rem;
+	margin: 0 0 0.4em;
+}
+
+.beat-card p {
+	margin: 0 0 0.6em;
+	color: var(--beat-ink-2);
+}
+
+.beat-card p:last-child {
+	margin-bottom: 0;
+}
+
+/* one shared idle animation for every interactive affordance */
+@keyframes beat-pulse {
+	0%,
+	100% {
+		box-shadow: 0 0 0 0 color-mix(in srgb, var(--beat-accent) 45%, transparent);
+	}
+	55% {
+		box-shadow: 0 0 0 9px color-mix(in srgb, var(--beat-accent) 0%, transparent);
+	}
+}
+
+.beat-idle-pulse {
+	animation: beat-pulse 2.8s ease-in-out infinite;
+}
+
+/* visible focus ring on every beat control */
+.beat-pill:focus-visible,
+.beat-focus:focus-visible {
+	outline: 2px solid var(--beat-accent);
+	outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.beat-idle-pulse {
+		animation: none;
+	}
+}
+
+/* ── steps: one idea per step, only one at full visual weight ─────────────── */
+.step {
+	transition: opacity 0.45s ease, transform 0.45s ease;
+	will-change: opacity, transform;
+}
+
+.step[data-state='before'] {
+	opacity: 0;
+	transform: translateY(14px);
+}
+
+.step[data-state='active'] {
+	opacity: 1;
+	transform: none;
+}
+
+.step[data-state='after'] {
+	opacity: 0.12;
+	transform: scale(0.97) translateY(-8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.step {
+		transition: opacity 0.45s ease;
+		transform: none !important;
+	}
 }
 
 /* ── print: scene 7 only, one clean page ────────────────────────────────── */

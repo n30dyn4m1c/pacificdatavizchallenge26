@@ -7,7 +7,21 @@
 	import { scaleLinear } from 'd3-scale';
 	import { area as d3area, line as d3line, curveBasis } from 'd3-shape';
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
+	import SceneSteps from '$lib/components/SceneSteps.svelte';
+	import TapReveal from '$lib/components/beats/TapReveal.svelte';
 	import { ink } from '$lib/palette.js';
+
+	// windows track the pan: the viewport centre is in the lowlands until
+	// ~0.45, the foothills until ~0.8, the high valleys after
+	const steps = [
+		{ at: [0.02, 0.12], text: 'Leave the coast with me and head inland.' },
+		{ at: [0.12, 0.26], text: 'First, the Fly River lowlands — barely above the tide.' },
+		{ at: [0.26, 0.42], text: 'Out here, rivers are the roads.' },
+		{ at: [0.42, 0.62], text: 'Now climb, into the valleys where the kaukau grows.' },
+		{ at: [0.62, 0.78], text: 'Higher. Past 2,200 metres the gardens enter frost country.' },
+		{ at: [0.78, 0.9], text: 'Up here, one clear night is all it takes.' },
+		{ at: [0.9, 1], text: 'Elevation decides which disaster finds you.' }
+	];
 
 	const inkC = ink.dark;
 
@@ -52,7 +66,7 @@
 <ScrollScene
 	id="3-descent"
 	title="Elevation transect from the Coral Sea to the Highlands"
-	heightVh={420}
+	heightVh={680}
 	surface="dark"
 	dataUrl="/data/scene3_transect.json"
 >
@@ -90,10 +104,11 @@
 					</defs>
 					<!-- sea -->
 					<rect x="0" y={yEl(0)} width={xKm(20)} height={HW - yEl(0)} fill="url(#seafill)" />
-					<!-- elevation contour guides (labels hug the left, mobile-safe) -->
+					<!-- elevation contour guides (labels hug the right edge, clear
+					     of the step column on the left) -->
 					{#each contours as c (c.elev)}
 						<line x1="0" x2={WORLD} y1={yEl(c.elev)} y2={yEl(c.elev)} stroke={inkC.grid} stroke-dasharray="2 6" />
-						<text x={vx + 16} y={yEl(c.elev) - 8} font-size="13" fill={inkC.muted}>
+						<text x={vx + WIN - 16} y={yEl(c.elev) - 8} text-anchor="end" font-size="13" fill={inkC.muted}>
 							{c.label}
 						</text>
 					{/each}
@@ -127,6 +142,29 @@
 							: `≈ ${Math.round(elevAt(data.profile, progress) / 10) * 10} m`}
 					</span>
 				</div>
+
+				<div class="steps-anchor">
+					<SceneSteps {steps} {progress} width="26rem" />
+					<!-- inert while faded out, so the invisible button is never focusable -->
+					<div class="reveal-slot" class:hidden={progress <= 0.42} inert={progress <= 0.42}>
+						<TapReveal id="s3-crops" label="What grows where →">
+							<h4>Three gardens, three altitudes</h4>
+							<p>
+								On the floodplain: sago from the swamps, bananas and gardens on the river
+								levees — fed by the river, starved when it drops.
+							</p>
+							<p>
+								In the valleys between 1,400 and 2,200 metres: the kaukau belt, the staple
+								food of the Highlands, mounded on every slope.
+							</p>
+							<p>
+								Above 2,200 metres: the highest gardens push kaukau to its cold limit. They
+								feed the ridgetop settlements — and they are first in line when a clear
+								night comes.
+							</p>
+						</TapReveal>
+					</div>
+				</div>
 			</div>
 		{/if}
 	{/snippet}
@@ -157,5 +195,26 @@
 		font-size: clamp(1.6rem, 5vw, 2.6rem);
 		font-weight: 900;
 		font-variant-numeric: tabular-nums;
+	}
+
+	.steps-anchor {
+		position: absolute;
+		left: clamp(1.25rem, 5vw, 4rem);
+		top: 16vh;
+		right: 6rem;
+	}
+
+	.steps-anchor :global(.step-text) {
+		text-shadow: 0 1px 16px rgba(0, 0, 0, 0.7);
+	}
+
+	.reveal-slot {
+		margin-top: 0.75rem;
+		transition: opacity 0.4s;
+	}
+
+	.reveal-slot.hidden {
+		opacity: 0;
+		pointer-events: none;
 	}
 </style>

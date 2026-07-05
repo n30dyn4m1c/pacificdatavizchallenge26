@@ -27,6 +27,7 @@
 		dataUrl = null,
 		printable = false,
 		ondata = null,
+		onprogress = null,
 		children,
 		prose = null
 	} = $props();
@@ -42,6 +43,7 @@
 		const r = el.getBoundingClientRect();
 		const total = r.height - window.innerHeight;
 		progress = total > 0 ? Math.max(0, Math.min(1, -r.top / total)) : 1;
+		onprogress?.(progress, active);
 	}
 
 	onMount(() => {
@@ -52,7 +54,10 @@
 				active = true;
 				computeProgress(); // a jump landing mid-scene must not read stale progress
 			})
-			.onStepExit(() => (active = false))
+			.onStepExit(() => {
+				active = false;
+				onprogress?.(progress, active);
+			})
 			.onStepProgress(computeProgress);
 		// safety net: scrollama can drop a progress event on large jumps
 		// (keyboard paging, anchor jumps); recompute on scroll while active
@@ -118,6 +123,10 @@
 	{#if pin}
 		<div class="pin">
 			{@render children({ progress, active, data })}
+			<!-- thin scene-progress rail: sensed, not read -->
+			<div class="scene-progress no-print" class:shown={active} aria-hidden="true">
+				<div class="scene-progress-fill" style:transform="scaleY({progress})"></div>
+			</div>
 		</div>
 	{:else}
 		{@render children({ progress, active, data })}
@@ -130,6 +139,32 @@
 </section>
 
 <style>
+	.scene-progress {
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 3px;
+		height: 34vh;
+		border-radius: 2px;
+		background: color-mix(in srgb, currentColor 12%, transparent);
+		opacity: 0;
+		transition: opacity 0.4s;
+		pointer-events: none;
+	}
+
+	.scene-progress.shown {
+		opacity: 0.7;
+	}
+
+	.scene-progress-fill {
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
+		background: color-mix(in srgb, currentColor 45%, transparent);
+		transform-origin: top;
+	}
+
 	.data-error {
 		position: absolute;
 		bottom: 1rem;
