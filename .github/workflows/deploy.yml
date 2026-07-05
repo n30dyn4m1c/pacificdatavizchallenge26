@@ -1,21 +1,29 @@
 name: Deploy to GitHub Pages
 
+# Publishes the static build by force-pushing build/ to the gh-pages
+# branch (Pages source: "Deploy from a branch" → gh-pages / root).
+#
+# This replaces the actions/upload-pages-artifact + actions/deploy-pages
+# flow: from 2026-07-05 the Pages artifact pipeline repeatedly failed
+# server-side ("Deployment failed, try again later") with a verified-good
+# artifact and correct settings. The branch route bypasses that pipeline
+# entirely. If GitHub's artifact pipeline recovers, the previous workflow
+# can be restored from git history (pre-2026-07-05 versions of this file).
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,16 +40,17 @@ jobs:
           BASE_PATH: /${{ github.event.repository.name }}
         run: npm run build
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: build
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish build/ to the gh-pages branch
+        run: |
+          cd build
+          # static/.nojekyll ships in the build already; keep the guarantee
+          # explicit so Pages never runs Jekyll over the output
+          touch .nojekyll
+          git init -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Deploy ${GITHUB_SHA::8}"
+          git push --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+            gh-pages
