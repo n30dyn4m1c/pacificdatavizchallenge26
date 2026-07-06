@@ -184,20 +184,9 @@ sup.cite a:focus-visible {
 	opacity: 1;
 }
 
-/* Tok Pisin echo lines — the display face, receded; lang="tpi" on each.
-   Every string is a TODO-VERIFY placeholder collected in
-   prep/manual/tokpisin_strings.json for editorial sign-off. */
-.tpi-echo {
-	font-family: Fraunces, Georgia, serif;
-	font-weight: 700;
-	font-style: italic;
-	opacity: 0.62;
-	margin: -0.35em 0 0.9em;
-}
-
 /* ── interaction beats: one visual language for every optional affordance ──
-   All four beat components (TapReveal, Hotspot, CompareToggle, PauseBeat)
-   consume these classes and the per-surface --beat-* custom properties.
+   The beat components (TapReveal, Hotspot, PauseBeat) consume these classes
+   and the per-surface --beat-* custom properties.
    The narrative NEVER depends on any of them: they are enrichment only,
    and every one of them renders nothing under ?notap=1. */
 

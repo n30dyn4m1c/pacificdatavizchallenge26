@@ -1,47 +1,36 @@
 <script>
 	/**
-	 * Scene 5 — One Garden, rebuilt as a pop-up book. A large layered SVG
-	 * cross-section of a kaukau mound at ~2,300 m (MoundIllustration,
-	 * lazy-loaded) with two scroll phases: night falls (sky darkens, the
-	 * temperature readout drops) and, once the readout crosses the frost
-	 * threshold, the frost lands (crystal creep + leaf burn + soil cracks).
+	 * Scene 5 — One garden (ILLUSTRATIVE). A large layered SVG cross-section of
+	 * a kaukau mound at ~2,300 m (MoundIllustration, lazy-loaded) with two
+	 * scroll phases: night falls (sky darkens, the temperature readout drops)
+	 * and, once the readout crosses freezing, the frost lands (crystal creep +
+	 * leaf burn + soil cracks).
 	 *
-	 * Five <Hotspot> dots carry phase-appropriate enrichment; the steps
-	 * alone tell the complete story — every hotspot is optional.
+	 * This scene is a diagram, not data: it explains the well-understood
+	 * mechanism of radiative frost so the record's numbers land on something
+	 * human. It carries no data claim and cites no source. Five <Hotspot> dots
+	 * add optional enrichment; the steps alone tell the complete story.
 	 */
 	import { onDestroy } from 'svelte';
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import SceneSteps from '$lib/components/SceneSteps.svelte';
 	import Hotspot from '$lib/components/beats/Hotspot.svelte';
-	import Cite from '$lib/components/Cite.svelte';
 	import FrostCanvas from './FrostCanvas.svelte';
-	import { lag } from '$lib/state.svelte.js';
 
-	// two of the steps are VERIFIED reporting (the kaukau food-energy share
-	// and the June frost at Gembogl) — their copy ships in the scene JSON's
-	// `reported` block, authored in prep/manual/reported_copy.json with the
-	// sources in _meta. One idea per step, as everywhere.
-	let reported = $state(null);
-	const steps = $derived([
-		{ at: [0.02, 0.075], text: 'This is my mound. Kaukau, at 2,300 metres.' },
-		...(reported?.kaukau_energy
-			? [{ at: [0.075, 0.135], text: reported.kaukau_energy.text, sub: reported.kaukau_energy.sub }]
-			: []),
-		{ at: [0.135, 0.19], text: 'I planted it in March, when the ocean was already warm.' },
-		{ at: [0.19, 0.24], text: 'The old people were already talking.' },
+	const steps = [
+		{ at: [0.02, 0.09], text: 'One garden: a mounded plot of kaukau, high in the mountains.' },
+		{ at: [0.09, 0.16], text: 'Sweet potato — kaukau — is the staple of the Highlands.' },
+		{ at: [0.16, 0.23], text: 'Planted months ago; dug months from now.', sub: 'A garden is a slow clock.' },
 		{ at: [0.24, 0.32], text: 'Dusk. The sky is clear in every direction.' },
 		{ at: [0.32, 0.4], text: 'Clear is the danger.', sub: 'Cloud is a blanket, and tonight there is none.' },
 		{ at: [0.4, 0.48], text: 'The day’s heat leaves the ground — straight up, into space.' },
 		{ at: [0.48, 0.56], text: 'Watch the number.' },
-		{ at: [0.56, 0.625], text: 'By 4 a.m., frost. In a garden too warm for frost.' },
-		...(reported?.gembogl_frost
-			? [{ at: [0.625, 0.695], text: reported.gembogl_frost.text, sub: reported.gembogl_frost.sub }]
-			: []),
-		{ at: [0.695, 0.755], text: 'One night. That is all it takes.' },
-		{ at: [0.755, 0.82], text: 'The vines are black by noon.', sub: 'The tubers below survived — but nothing feeds them now.' },
-		{ at: [0.82, 0.89], text: 'The vines we would cut to replant died in the same hour.', sub: 'The next harvest went with them.' },
-		{ at: [0.89, 0.97], text: 'The tanket at the garden edge warned us weeks ago.', sub: 'The ocean warned us months ago. Both were right.' }
-	]);
+		{ at: [0.56, 0.66], text: 'By 4 a.m., frost — in a garden that should be too warm for it.' },
+		{ at: [0.66, 0.75], text: 'One clear night. That is all it takes.' },
+		{ at: [0.75, 0.83], text: 'The vines are black by noon.', sub: 'The tubers below survived — but nothing feeds them now.' },
+		{ at: [0.83, 0.9], text: 'The cuttings needed to replant died in the same hour.', sub: 'So the loss reaches into next season too.' },
+		{ at: [0.9, 0.97], text: 'The garden’s own signs and the instruments tell one story.' }
+	];
 
 	// hotspot anchors, % of the 1000×700 illustration stage
 	const HS_POS = {
@@ -57,19 +46,14 @@
 
 	// lazy-load the illustration chunk as the scene's data arrives
 	let Mound = $state(null);
-	function onData(d) {
-		reported = d?.reported ?? null;
+	function onData() {
 		import('./MoundIllustration.svelte').then((m) => (Mound = m.default));
 	}
 
 	// ── phase mapping ────────────────────────────────────────────────────
-	// night falls over 0 → 0.5; the frost phase begins once the readout
-	// crosses the threshold (~0.52) and sweeps to ~0.82
 	const NIGHT_END = 0.5;
 	const FROST_START = 0.52;
 	const FROST_SPAN = 0.3;
-	// the readout crosses 0 °C exactly when the frost phase begins:
-	// temps index 8 (= 0 °C) lands at 8/12 · TEMP_SPAN = 0.52
 	const TEMP_SPAN = 0.78;
 	const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
@@ -77,8 +61,6 @@
 	let pulse = $state(false);
 	let idleTimer = 0;
 	function onProgress(p, active) {
-		lag.carried5 = active;
-		lag.extra5 = p >= 0.8 ? 1 : 0;
 		pulse = false;
 		clearTimeout(idleTimer);
 		if (active) idleTimer = setTimeout(() => (pulse = true), 2000);
@@ -88,7 +70,7 @@
 
 <ScrollScene
 	id="5-garden"
-	title="One garden — a frost night at 2,300 metres"
+	title="One garden — an illustrated frost night at 2,300 metres"
 	heightVh={900}
 	surface="light"
 	dataUrl="/data/scene5_garden.json"
@@ -98,30 +80,22 @@
 	{#snippet prose({ data })}
 		<h2>One garden</h2>
 		<p>
-			This is what the numbers land on: one mounded garden of kaukau at 2,300 metres — and kaukau
-			is about 43&nbsp;% of all the food energy Papua New Guinea eats{#if data?._meta?.kaukau_energy}<Cite
-					href={data._meta.kaukau_energy.source_url}
-					label={data._meta.kaukau_energy.source}
-				/>{/if}. On a clear dry-season night under El Niño skies there is no cloud blanket, so the
-			day’s heat radiates straight upward and by 4 a.m. the ground has frozen at an elevation that
-			normally never freezes. This is no longer hypothetical: in June 2026, frost was reported
-			covering garden plots at Gembogl, in Chimbu — the frost season opening while the event was
-			still strengthening{#if data?._meta?.gembogl_frost}<Cite
-					href={data._meta.gembogl_frost.source_url}
-					label={data._meta.gembogl_frost.source}
-					n={2}
-				/>{/if}. One such night kills the vines; the tubers below survive it, but with the canopy
-			dead nothing feeds them — and because kaukau takes five to nine months from planting, the
-			frost also kills the vines needed to replant. It takes this harvest and the next one. Weeks
-			without rain then bake the mounds hard, so even replanting must wait. The people who garden
-			here read the warning in fog, leaf and creek — the tanket at the garden edge — and
-			satellites read the same story from orbit. Neither list replaces the other.
+			This scene is an illustration, not a measurement — a diagram of a well-understood mechanism,
+			so the record's numbers land on something human. Kaukau (sweet potato) is the staple of the
+			Papua New Guinea Highlands, grown on mounded gardens up to and past 2,200 metres. On a clear,
+			dry, windless night the ground radiates the day's heat straight up to space and can cool far
+			below the air a few metres above it; by dawn a garden that normally never freezes can be
+			frosted. One such night kills the vines. The tubers below survive, but with the canopy dead
+			little feeds them — and because the cuttings needed to replant die in the same frost, the
+			loss reaches into the next season. The people who garden here read the coming cold in fog,
+			leaf and creek; satellites read the same conditions from orbit. Neither list replaces the
+			other.
 		</p>
-		{#if data}
+		{#if data?.indicators}
 			<table>
-				<caption>Traditional and satellite indicators of the same warning</caption>
+				<caption>Two ways of reading the same warning (illustrative)</caption>
 				<thead>
-					<tr><th scope="col">What the garden says</th><th scope="col">What the satellite says</th></tr>
+					<tr><th scope="col">What the garden shows</th><th scope="col">What an instrument shows</th></tr>
 				</thead>
 				<tbody>
 					{#each data.indicators as pair, i (i)}
@@ -140,9 +114,7 @@
 		{@const temp = temps[Math.min(temps.length - 1, Math.floor(clamp01(progress / TEMP_SPAN) * temps.length))]}
 		<div class="garden">
 			<div class="copy-col">
-				<p class="kicker">Above 2,200 metres · one night, one garden</p>
-				<!-- TODO-VERIFY: Tok Pisin placeholder — prep/manual/tokpisin_strings.json#scene5-opener -->
-				<p class="tpi-echo" lang="tpi">Wanpela nait, wanpela gaden.</p>
+				<p class="kicker">Above 2,200 metres · one illustrated night</p>
 				<SceneSteps {steps} {progress} width="24rem" />
 			</div>
 
@@ -156,9 +128,9 @@
 					<FrostCanvas {progress} {active} start={FROST_START} span={FROST_SPAN} />
 				</div>
 
-				<!-- temperature readout: the scene's clock -->
+				<!-- temperature readout: the scene's clock (schematic) -->
 				<div class="temp-readout" class:freezing={temp <= (data?.phase?.frost_threshold_c ?? 0)}>
-					<span class="temp-label">{data?.phase?.elevation_m ?? 2300} m · air</span>
+					<span class="temp-label">{data?.phase?.elevation_m ?? 2300} m · air (illustrative)</span>
 					<span class="temp-val">{temp > 0 ? '+' : ''}{temp} °C</span>
 				</div>
 
@@ -168,14 +140,7 @@
 						{@const pos = HS_POS[h.id]}
 						{@const copy = frosted ? h.frosted : h.healthy}
 						{#if pos}
-							<Hotspot
-								id="hs-{h.id}"
-								x={pos.x}
-								y={pos.y}
-								label={h.label}
-								group={hsGroup}
-								{pulse}
-							>
+							<Hotspot id="hs-{h.id}" x={pos.x} y={pos.y} label={h.label} group={hsGroup} {pulse}>
 								<h4>{copy.title}</h4>
 								<p>{copy.body}</p>
 							</Hotspot>
@@ -184,8 +149,8 @@
 				{/if}
 
 				<p class="sr-only">
-					Illustrated cross-section of a kaukau mound: night falls, the temperature drops
-					below freezing, frost overtakes the vines and the soil surface cracks.
+					Illustrated cross-section of a kaukau mound: night falls, the temperature drops below
+					freezing, frost overtakes the vines and the soil surface cracks.
 				</p>
 			</div>
 		</div>

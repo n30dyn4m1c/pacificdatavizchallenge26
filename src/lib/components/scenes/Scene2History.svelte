@@ -1,55 +1,57 @@
 <script>
 	/**
-	 * Scene 2 — We've Been Here Before. Pinned ONI overlay chart: scrolling
-	 * draws 1997–98 and 2015–16 as gray ghosts, then the current event in
-	 * the accent color, overshooting both. Part 2: step-paced narration
-	 * (one idea per step) and an optional ghost-emphasis CompareToggle.
+	 * Scene 2 — Sea and land, in step. A pinned annual line chart: scrolling
+	 * draws Papua New Guinea's sea-surface and land-surface temperature
+	 * anomalies together across 1850–2025, over a ghost of the Pacific-wide
+	 * average. Both national traces climb to their record in 2025. All series
+	 * are the real SPC record (static/data/scene2_temps.json).
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import SceneSteps from '$lib/components/SceneSteps.svelte';
-	import CompareToggle from '$lib/components/beats/CompareToggle.svelte';
-	import OniChart from '$lib/components/OniChart.svelte';
+	import AnnualLines from '$lib/components/AnnualLines.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 
 	const steps = [
-		{ at: [0.04, 0.16], text: 'My father remembers 1997.' },
-		{ at: [0.16, 0.3], text: 'The big river fell until the barges stopped.', sub: 'The frost that year took the gardens at Tambul.' },
-		{ at: [0.3, 0.44], text: '2015 traced the same shape.' },
-		{ at: [0.44, 0.56], text: 'The same wait. The same hungry months.' },
-		{ at: [0.56, 0.72], text: 'Now watch the red line.' },
-		{ at: [0.72, 1], text: 'The same curve, a third time.', sub: 'And this one is still climbing — already ahead of both.' }
+		{ at: [0.04, 0.2], text: 'The sea is not warming alone.' },
+		{ at: [0.2, 0.4], text: 'On land, Papua New Guinea’s surface temperature tracks the same climb.' },
+		{ at: [0.4, 0.6], text: 'For most of the record, both hover near the old normal.' },
+		{ at: [0.6, 0.8], text: 'Then, together, they lift away from it.' },
+		{ at: [0.8, 1], text: 'Both reach their highest point in 2025.', sub: 'Sea and land, +1.1 °C above the long-term average.' }
 	];
 
-	// ghost emphasis is optional enrichment; the base chart never depends on it
-	let emphasis = $state('1997–98');
+	const fmt = (v) => (v > 0 ? '+' : '') + v.toFixed(2);
+	const at = (s, yr) => s.values.find((d) => d.year === yr);
 </script>
 
 <ScrollScene
 	id="2-history"
-	title="Past El Niño events compared with the current one"
+	title="Papua New Guinea sea- and land-surface temperature anomalies, 1850–2025"
 	heightVh={560}
 	surface="dark"
-	dataUrl="/data/scene2_oni_history.json"
+	dataUrl="/data/scene2_temps.json"
 >
 	{#snippet prose({ data })}
-		<h2>We’ve been here before</h2>
+		<h2>Sea and land, in step</h2>
 		<p>
-			The Oceanic Niño Index traces of 1997–98 and 2015–16 — the two El Niño events that brought
-			Papua New Guinea its worst droughts and frosts in living memory — rise, peak near the end
-			of the calendar year, and decay by the following winter. The current event (synthetic
-			placeholder data) follows the same track but is forecast to peak higher than both, at
-			+2.8 °C in December 2026.
+			The Pacific Community reports Papua New Guinea's sea-surface and land-surface temperature
+			anomalies as two annual series, both running 1850–2025. They move together: near the
+			long-term average for most of the record, then lifting away from it through the late 20th
+			and early 21st centuries. Both reach their highest values in 2025, about +1.1 °C above the
+			long-term average. A ghost line shows the Pacific-wide sea-surface average across the 21
+			other reporting countries and territories, for context.
 		</p>
 		{#if data}
+			{@const sst = data.series.find((s) => s.key === 'sst')}
+			{@const land = data.series.find((s) => s.key === 'land')}
+			{@const region = data.series.find((s) => s.key === 'region')}
 			<DataTable
-				caption="Oceanic Niño Index by month for the three events"
-				columns={['Month of event', ...data.events.map((e) => e.name)]}
-				rows={data.events[0].series.map((d, i) => [
-					d.month.split(' ')[0] + (i >= 12 ? ' (yr 2)' : ''),
-					...data.events.map((e) => {
-						const p = e.series[i];
-						return p ? (p.oni > 0 ? '+' : '') + p.oni.toFixed(1) + (p.forecast ? ' f' : '') : '—';
-					})
+				caption="Annual temperature anomalies (°C) by year, selected years"
+				columns={['Year', 'PNG sea surface', 'PNG land surface', 'Pacific sea-surface average']}
+				rows={[1850, 1900, 1950, 1980, 2000, 2010, 2020, 2025].map((yr) => [
+					yr,
+					at(sst, yr) ? fmt(at(sst, yr).value) : '—',
+					at(land, yr) ? fmt(at(land, yr).value) : '—',
+					at(region, yr) ? fmt(at(region, yr).value) : '—'
 				])}
 			/>
 		{/if}
@@ -57,33 +59,19 @@
 
 	{#snippet children({ progress, data })}
 		<div class="wrap">
-			<header class="head-row">
-				<div>
-					<p class="kicker">Oceanic Niño Index · three events, one curve</p>
-					<h2 class="display">We’ve been here before.</h2>
-					<!-- TODO-VERIFY: Tok Pisin placeholder — prep/manual/tokpisin_strings.json#scene2-opener -->
-					<p class="tpi-echo" lang="tpi">Yumi bin lukim dispela bipo.</p>
-				</div>
-				{#if progress > 0.52}
-					<div class="toggle-slot">
-						<CompareToggle
-							label="Compare a past event up close"
-							options={[
-								{ value: '1997–98', label: '1997–98' },
-								{ value: '2015–16', label: '2015–16' }
-							]}
-							bind:value={emphasis}
-						/>
-					</div>
-				{/if}
+			<header>
+				<p class="kicker">Papua New Guinea · annual temperature anomaly vs the long-term average</p>
+				<h2 class="display">Sea and land, in step.</h2>
 			</header>
 			{#if data}
-				<OniChart
-					events={data.events}
+				<AnnualLines
+					series={data.series}
 					{progress}
 					mode="dark"
-					emphasis={progress > 0.52 ? emphasis : null}
-					ariaLabel="Line chart overlaying the Oceanic Niño Index of the 1997–98, 2015–16 and current El Niño events. The current event is forecast to peak above both."
+					unit="°C"
+					height={340}
+					yDomain={[-1.6, 1.6]}
+					ariaLabel="Line chart of Papua New Guinea sea-surface and land-surface temperature anomalies from 1850 to 2025, over the Pacific-wide sea-surface average. All three rise through the late 20th century; the two national series reach about +1.1 °C in 2025."
 				/>
 			{/if}
 			<div class="steps-row">
@@ -105,14 +93,6 @@
 		gap: 0.75rem;
 	}
 
-	.head-row {
-		display: flex;
-		align-items: flex-end;
-		justify-content: space-between;
-		gap: 1rem;
-		flex-wrap: wrap;
-	}
-
 	h2.display {
 		font-size: clamp(1.8rem, 5vw, 3rem);
 		margin-bottom: 0;
@@ -122,11 +102,5 @@
 		min-height: 6.5rem;
 		display: flex;
 		align-items: flex-start;
-	}
-
-	@media (max-width: 700px) {
-		.toggle-slot {
-			display: none; /* narrow screens: chart + steps first; table has the data */
-		}
 	}
 </style>

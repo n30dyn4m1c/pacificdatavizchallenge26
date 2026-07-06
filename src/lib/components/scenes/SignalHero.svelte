@@ -17,14 +17,8 @@
 	let webglOk = $state(true);
 	let glReady = $state(false);
 
-	// scrub reaches the latest month at 80% progress; the last 20% pins there
+	// scrub reaches the latest year at 80% progress; the last 20% pins there
 	const timeP = $derived(Math.min(1, progress / 0.8));
-
-	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-	const label = (date) => {
-		const [y, m] = date.split('-');
-		return `${MONTHS[+m - 1]} ${y}`;
-	};
 
 	let gl = null;
 	let uni = {};
@@ -165,30 +159,29 @@
 
 	<div class="title-block" style:opacity={Math.max(0, 1 - progress * 11)}>
 		<p class="kicker">Pacific Data Viz Challenge 2026 · Papua New Guinea</p>
-		<h1 class="display">The Ocean<br />Knows First</h1>
-		<!-- TODO-VERIFY: Tok Pisin placeholder — prep/manual/tokpisin_strings.json#title -->
-		<p class="title-tpi display" lang="tpi">Solwara i Save Pastaim</p>
+		<h1 class="display">The Warming<br />Sea</h1>
 		<p class="standfirst">
-			How a warming stripe of Pacific seawater becomes, months later, drought on the Fly River
-			and frost in the highland gardens — and why those months are a gift.
+			A hundred and seventy-five years of Papua New Guinea’s ocean, one number a year — and how
+			far it has climbed. Data: the Pacific Community’s climate-change indicators, on the Pacific
+			Data Hub.
 		</p>
 		<span class="scroll-hint">scroll ↓</span>
 	</div>
 
 	{#if data}
-		{@const m = data.months[Math.round(timeP * (data.months.length - 1))]}
+		{@const yr = data.years[Math.round(timeP * (data.years.length - 1))]}
 		<div class="date-readout" style:opacity={progress > 0.04 && progress < 0.78 ? 1 : 0}>
-			<span class="kicker">Niño 3.4 region · sea-surface temperature anomaly</span>
-			<span class="date display">{label(m.date)}</span>
-			<span class="val">{m.oni > 0 ? '+' : ''}{m.oni.toFixed(1)} °C</span>
+			<span class="kicker">Papua New Guinea · annual sea-surface-temperature anomaly</span>
+			<span class="date display">{yr.year}</span>
+			<span class="val">{yr.value > 0 ? '+' : ''}{yr.value.toFixed(1)} °C vs the long-term average</span>
 		</div>
 
 		<div class="latest" style:opacity={Math.max(0, (progress - 0.82) / 0.12)}>
 			<span class="big-numeral" style="color:var(--accent-dark)">
-				+{data.latest.oni.toFixed(1)} °C
+				+{data.latest.value.toFixed(1)} °C
 			</span>
 			<span class="latest-caption">
-				{label(data.latest.date)} — and rising. A strong El Niño is under way.
+				{data.latest.year} — the warmest year in the record, and the sea is still climbing.
 			</span>
 		</div>
 	{/if}
@@ -234,16 +227,6 @@
 		font-weight: 900;
 		margin: 0.4em 0;
 		text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
-	}
-
-	/* the Tok Pisin companion line: same display face, receded a register */
-	.title-tpi {
-		font-size: clamp(1.05rem, 3.2vw, 1.9rem);
-		font-weight: 700;
-		font-style: italic;
-		color: var(--ink-dark-secondary);
-		text-shadow: 0 1px 18px rgba(0, 0, 0, 0.6);
-		margin: -0.3em 0 1em;
 	}
 
 	.standfirst {
