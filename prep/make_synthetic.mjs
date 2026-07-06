@@ -10,12 +10,13 @@
  * Writes: static/data/*.json and static/posters/*.png (the no-WebGL fallback
  * posters for scene 1, rendered through the same palette as the shader).
  */
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
 import { fieldColor } from '../src/lib/palette.js';
 
 const DATA = new URL('../static/data/', import.meta.url).pathname;
 const POSTERS = new URL('../static/posters/', import.meta.url).pathname;
+const MANUAL = new URL('./manual/', import.meta.url).pathname;
 mkdirSync(DATA, { recursive: true });
 mkdirSync(POSTERS, { recursive: true });
 
@@ -23,6 +24,30 @@ const write = (name, obj) => {
 	writeFileSync(DATA + name, JSON.stringify(obj));
 	console.log('wrote', name);
 };
+
+// ── hand-maintained editorial inputs (NOT synthetic — kept across pipeline
+// swaps; see prep/README.md "Manual inputs") ─────────────────────────────────
+// dews_status.csv: the official PNG-NWS/NARI three-tier drought early-warning
+// status per province, re-keyed from each monthly Drought Update bulletin.
+const dewsRows = readFileSync(MANUAL + 'dews_status.csv', 'utf8')
+	.trim()
+	.split('\n')
+	.slice(1)
+	.map((l) => {
+		const [province, status, bulletin_date, source_url] = l.split(',');
+		return { province, status, bulletin_date, source_url };
+	});
+const dews = {
+	bulletin_date: dewsRows[0].bulletin_date,
+	source: 'PNG-NWS / NARI monthly Drought Update',
+	source_url: dewsRows[0].source_url,
+	// provinces not listed in a bulletin carry no advisory ("none")
+	provinces: Object.fromEntries(dewsRows.map((r) => [r.province, r.status]))
+};
+
+// reported_copy.json: verified reporting woven into scene copy, sources in _meta.
+const reported = JSON.parse(readFileSync(MANUAL + 'reported_copy.json', 'utf8')).items;
+const srcMeta = (item) => ({ source: item.source, source_url: item.source_url });
 
 // ── ONI series ──────────────────────────────────────────────────────────────
 // Ghost events approximate the shape of the real ONI record; the current
@@ -171,7 +196,15 @@ write('scene4_lag.json', {
 // come from the real pipeline (or be verified with local sources) carry
 // "_synthetic": true so the remaining work is greppable.
 write('scene5_garden.json', {
-	note: 'SYNTHETIC placeholder — indicators, night curve and hotspot copy to be replaced/verified (NARI, provincial DAL, station records).',
+	note: 'SYNTHETIC placeholder — indicators, night curve and hotspot copy to be replaced/verified (NARI, provincial DAL, station records). The "reported" block is VERIFIED copy from prep/manual/reported_copy.json.',
+	reported: {
+		gembogl_frost: { text: reported.gembogl_frost.text, sub: reported.gembogl_frost.sub },
+		kaukau_energy: { text: reported.kaukau_energy.text, sub: reported.kaukau_energy.sub }
+	},
+	_meta: {
+		gembogl_frost: srcMeta(reported.gembogl_frost),
+		kaukau_energy: srcMeta(reported.kaukau_energy)
+	},
 	indicators: [
 		{ traditional: 'Morning fog sits low in the valley and burns off before the pigs are fed', satellite: 'Night-time land-surface temperature dips below 4 °C (MODIS/VIIRS LST)' },
 		{ traditional: 'The tanket (cordyline) leaves curl and pale at the garden edge', satellite: 'NDVI anomaly turns negative over the 2,200 m band (Sentinel-2)' },
@@ -272,7 +305,13 @@ const strongMids = oniNow.slice(6, 6 + plumeMonths);
 const moderateMids = strongMids.map((v) => Math.min(v, 0.5 + v * 0.47));
 const strongPlume = plumeFor(strongMids);
 write('scene6_forecast.json', {
-	note: 'SYNTHETIC plume + windows — replaced by IRI/CPC plume and NDC hazard tables in prep.',
+	note: 'SYNTHETIC plume + windows — replaced by IRI/CPC plume and NDC hazard tables in prep. The "dews" and "mandate" blocks are REAL (prep/manual/), not synthetic.',
+	dews,
+	mandate: { text: reported.pm_directive.text },
+	_meta: {
+		dews: { source: dews.source, bulletin_date: dews.bulletin_date, source_url: dews.source_url },
+		mandate: srcMeta(reported.pm_directive)
+	},
 	current: {
 		name: '2026–27 (current + forecast)',
 		series: oniNow.slice(0, OBSERVED_THROUGH + 1).map((oni, i) => ({ month: monthLabel(2026, i), oni }))
@@ -344,7 +383,13 @@ const cal = (name, actions) => ({
 	})
 });
 write('scene7_calendar.json', {
-	note: 'SYNTHETIC placeholder calendar — actions to be co-drafted with NDC / provincial DALs.',
+	note: 'SYNTHETIC placeholder calendar — actions to be co-drafted with NDC / provincial DALs. The "dews" and "governance" blocks are REAL (prep/manual/), not synthetic.',
+	dews,
+	governance: { text: reported.trust_accounts.text },
+	_meta: {
+		dews: { source: dews.source, bulletin_date: dews.bulletin_date, source_url: dews.source_url },
+		governance: srcMeta(reported.trust_accounts)
+	},
 	provinces: [
 		cal('Enga', [
 			{ month: 'Jul 26', action: 'Pre-position kaukau vine cuttings of frost-hardy varieties at ward level', trigger: 'ONI ≥ +1.5 for 2 consecutive months', lead_agency: 'NARI / Provincial DAL' },

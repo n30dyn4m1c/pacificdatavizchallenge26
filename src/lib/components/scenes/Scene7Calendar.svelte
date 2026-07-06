@@ -1,21 +1,38 @@
 <script>
 	/**
-	 * Scene 7 — The Calendar. The payoff: an interactive anticipatory-action
-	 * calendar. Part 2: the province selector is a tappable mini-map (the
-	 * same provinces file scene 6 draws) with a dropdown fallback; selecting
-	 * a month highlights its trigger and draws a thin line back to the ONI
-	 * threshold it references on a small rail. Scroll-only readers see the
-	 * first province's full calendar; print gets one clean page.
+	 * Scene 7 — "You are here". The ending, redesigned for a reader INSIDE
+	 * the event (August 2026 onward): the calendar computes the current
+	 * month client-side (Pacific/Port_Moresby; dev override ?now=YYYY-MM-DD)
+	 * and renders every action in one of three states relative to it —
+	 * window CLOSED (greyed but visible, labelled plainly), window OPEN
+	 * (accent, top of the province's list) or window AHEAD (normal weight).
+	 * Closed windows are never hidden: their visibility is what makes the
+	 * open ones urgent.
+	 *
+	 * The province selector is a tappable mini-map with a dropdown fallback;
+	 * a shared link (?province=<slug>#scene-7-calendar) preselects the
+	 * province. Selecting an action draws a line back to the ONI threshold
+	 * it references. The selected province's official PNG-NWS/NARI DEWS
+	 * status sits beside its name. Print gets one clean page in grayscale.
 	 */
 	import { base } from '$app/paths';
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
+	import Cite from '$lib/components/Cite.svelte';
+	import { dews as dewsColors, dewsLabel } from '$lib/palette.js';
 	import { ui, lag } from '$lib/state.svelte.js';
+
+	const dewsC = dewsColors.light;
 
 	let selected = $state(0);
 	let selectedAction = $state(null);
 
 	let geo = $state(null);
-	async function onData() {
+	async function onData(data) {
+		// a shared link lands here with the sender's province preselected
+		if (ui.province) {
+			const i = data.provinces.findIndex((p) => slug(p.name) === ui.province.toLowerCase());
+			if (i !== -1) selected = i;
+		}
 		if (geo) return;
 		try {
 			geo = await (await fetch(`${base}/data/png_provinces.json`)).json();
@@ -27,6 +44,89 @@
 	// the calendar takes over as the time object: dismiss the lag ticker
 	function onProgress(_p, active) {
 		if (active) lag.dismissed = true;
+	}
+
+	// ── "now", client-side ───────────────────────────────────────────────
+	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+	/** absolute month index of an action month like "Jul 26" */
+	const monthIdx = (str) => {
+		const [mon, yy] = str.split(' ');
+		return (2000 + +yy) * 12 + MONTHS.indexOf(mon);
+	};
+	const monthFull = (str) => MONTHS_FULL[MONTHS.indexOf(str.split(' ')[0])];
+
+	// null until +layout.svelte has read the clock → SSR/prerender renders
+	// every window as "ahead", never falsely closed
+	const nowIdx = $derived(ui.now ? ui.now.y * 12 + (ui.now.m - 1) : null);
+	const nowLabel = $derived(ui.now ? `${MONTHS_FULL[ui.now.m - 1]} ${ui.now.y}` : 'today');
+
+	const windowState = (a) => {
+		if (nowIdx == null) return 'ahead';
+		const mi = monthIdx(a.month);
+		return mi < nowIdx ? 'closed' : mi === nowIdx ? 'open' : 'ahead';
+	};
+
+	// open windows first (the focus), then ahead, then closed — each group
+	// chronological. Original indices survive for the threshold line + toggle.
+	const STATE_ORDER = { open: 0, ahead: 1, closed: 2 };
+	const decorate = (prov) =>
+		prov.actions
+			.map((a, i) => ({ ...a, state: windowState(a), origIdx: i }))
+			.sort((x, y) => STATE_ORDER[x.state] - STATE_ORDER[y.state] || monthIdx(x.month) - monthIdx(y.month));
+
+	// beat 3 of the lead-in: what is actually open in the selected province
+	function statusLine(list) {
+		const open = list.filter((a) => a.state === 'open').length;
+		if (open) return `${open} action window${open > 1 ? 's are' : ' is'} open right now`;
+		const next = list.find((a) => a.state === 'ahead');
+		if (next) return `the next window opens in ${monthFull(next.month)}`;
+		return 'every drafted window has closed — what remains is response';
+	}
+
+	const bulletinLabel = (d) => {
+		if (!d) return '';
+		const [y, m] = d.split('-');
+		return `${MONTHS_FULL[+m - 1]} ${y}`;
+	};
+
+	// ── share: the primary CTA ───────────────────────────────────────────
+	const slug = (name) => name.toLowerCase().replace(/\s+/g, '-');
+	let toast = $state('');
+	let toastTimer = 0;
+
+	function shareUrl(prov) {
+		const url = new URL(window.location.href);
+		url.searchParams.delete('now'); // dev params never travel
+		url.searchParams.delete('notap');
+		url.searchParams.set('province', slug(prov.name));
+		url.hash = 'scene-7-calendar';
+		return url.toString();
+	}
+
+	async function share(prov) {
+		const url = shareUrl(prov);
+		if (navigator.share) {
+			try {
+				await navigator.share({
+					title: document.title,
+					text: `Anticipatory-action calendar for ${prov.name} — open and closed windows as of ${nowLabel}`,
+					url
+				});
+				return;
+			} catch (e) {
+				if (e.name === 'AbortError') return; // user cancelled: no fallback
+			}
+		}
+		try {
+			await navigator.clipboard.writeText(url);
+			toast = 'Link copied — send it on.';
+		} catch {
+			toast = `Copy this link: ${url}`;
+		}
+		clearTimeout(toastTimer);
+		toastTimer = setTimeout(() => (toast = ''), 4000);
 	}
 
 	// same equirectangular-ish projection as scene 6
@@ -103,25 +203,34 @@
 
 <ScrollScene
 	id="7-calendar"
-	title="Anticipatory-action calendar by province"
+	title="You are here — the anticipatory-action calendar by province"
 	surface="light"
 	pin={false}
 	printable={true}
 	dataUrl="/data/scene7_calendar.json"
 	ondata={(d) => {
 		dataRef = d;
-		onData();
+		onData(d);
 	}}
 	onprogress={onProgress}
 >
-	{#snippet prose()}
-		<h2>The calendar</h2>
+	{#snippet prose({ data })}
+		<h2>You are here</h2>
 		<p>
-			Everything above exists for this page. Because the ocean signals months ahead, each
-			province can hold a calendar of actions with explicit triggers: not “respond to the
-			disaster” but “when the index crosses this line, do this, and this agency leads.” Choose a
-			province, read its months, print it, and put it on the wall of the provincial disaster
-			office. (Placeholder actions — to be co-drafted with the National Disaster Centre and
+			Everything above exists for this page — and the page is being read from inside the event,
+			not before it. The calendar computes the current month where you are reading it (Papua New
+			Guinea time) and shows, for each province, which action windows have already closed, which
+			are open right now, and which are still ahead. Closed windows stay visible — their
+			visibility is what makes the open ones urgent. Beside each province's name is its current
+			official status from the PNG-NWS/NARI monthly Drought Update.
+			{#if data?.governance}
+				{data.governance.text}<Cite
+					href={data._meta?.governance?.source_url}
+					label={data._meta?.governance?.source}
+				/>
+			{/if}
+			Choose a province, read its months, print it, and send it to the provincial disaster
+			coordinator. (Placeholder actions — to be co-drafted with the National Disaster Centre and
 			provincial Divisions of Agriculture and Livestock.)
 		</p>
 	{/snippet}
@@ -130,16 +239,31 @@
 		<div class="calendar">
 			<header class="cal-head">
 				<p class="kicker">The payoff · a tool, not a chart</p>
-				<h2 class="display">The calendar was printed<br />before the disaster.</h2>
-				<p class="cal-intro no-print">
-					The months between signal and consequence are working months. Pick a province — each
-					action is tied to a trigger you can verify and an agency that leads.
-				</p>
+				<h2 class="display">You are here.</h2>
+				<!-- TODO-VERIFY: Tok Pisin placeholder — prep/manual/tokpisin_strings.json#scene7-opener -->
+				<p class="tpi-echo" lang="tpi">Yu stap hia nau.</p>
 			</header>
 
 			{#if data}
 				{@const prov = data.provinces[selected]}
 				{@const marks = railMarks(prov)}
+				{@const list = decorate(prov)}
+				{@const tier = data.dews?.provinces?.[prov.name]}
+
+				<!-- the lead-in: three short steps, then the governance fact -->
+				<ol class="you-are-here no-print">
+					<li>The ocean signal was there by June 2026 — everything above is how I watched it arrive.</li>
+					<li>It is now <strong>{nowLabel}</strong>. We are inside the event, not ahead of it.</li>
+					<li>In <strong>{prov.name}</strong>, {statusLine(list)}.</li>
+				</ol>
+				{#if data.governance}
+					<p class="governance no-print">
+						{data.governance.text}<Cite
+							href={data._meta?.governance?.source_url}
+							label={data._meta?.governance?.source}
+						/>
+					</p>
+				{/if}
 
 				{#if !ui.noTap}
 					<div class="selector no-print">
@@ -203,7 +327,17 @@
 				<section class="grid-wrap" aria-label="Actions for {prov.name}" bind:this={wrapEl}>
 					<h3 class="prov-title display">
 						{prov.name}
-						<span>· anticipatory-action calendar · strong El Niño 2026–27</span>
+						{#if tier}
+							<span
+								class="dews-chip"
+								style:border-color={dewsC[tier]}
+								style:color={dewsC[tier]}
+								title="PNG-NWS/NARI Drought Update, {bulletinLabel(data.dews?.bulletin_date)}"
+							>
+								{dewsLabel[tier]}
+							</span>
+						{/if}
+						<span>· anticipatory-action calendar · as of {nowLabel}</span>
 					</h3>
 
 					{#if !ui.noTap && marks.length}
@@ -232,29 +366,41 @@
 					{/if}
 
 					<div class="action-grid">
-						{#each prov.actions as a, i (a.month + a.action)}
+						{#each list as a (a.month + a.action)}
 							{#if ui.noTap}
-								<article class="action">
-									<div class="month display">{a.month}</div>
+								<article class="action st-{a.state}">
+									<div class="month display">
+										{a.month}
+										{#if a.state === 'open'}<span class="open-tag">open now</span>{/if}
+									</div>
 									<div class="body">
 										<p class="what">{a.action}</p>
 										<p class="trigger"><span class="t-label">trigger</span> {a.trigger}</p>
 										<p class="agency">{a.lead_agency}</p>
+										{#if a.state === 'closed'}
+											<p class="closed-note">This window closed in {monthFull(a.month)}.</p>
+										{/if}
 									</div>
 								</article>
 							{:else}
 								<button
-									class="action selectable beat-focus"
-									class:on={selectedAction === i}
-									data-action-idx={i}
-									aria-pressed={selectedAction === i}
-									onclick={() => toggleAction(data, i)}
+									class="action selectable beat-focus st-{a.state}"
+									class:on={selectedAction === a.origIdx}
+									data-action-idx={a.origIdx}
+									aria-pressed={selectedAction === a.origIdx}
+									onclick={() => toggleAction(data, a.origIdx)}
 								>
-									<div class="month display">{a.month}</div>
+									<div class="month display">
+										{a.month}
+										{#if a.state === 'open'}<span class="open-tag">open now</span>{/if}
+									</div>
 									<div class="body">
 										<p class="what">{a.action}</p>
 										<p class="trigger"><span class="t-label">trigger</span> {a.trigger}</p>
 										<p class="agency">{a.lead_agency}</p>
+										{#if a.state === 'closed'}
+											<p class="closed-note">This window closed in {monthFull(a.month)}.</p>
+										{/if}
 									</div>
 								</button>
 							{/if}
@@ -282,13 +428,30 @@
 				</section>
 
 				{#if !ui.noTap}
-					<div class="print-row no-print">
+					<div class="cta-row no-print">
+						<button class="cta-primary" onclick={() => share(prov)}>
+							Send this to your provincial disaster coordinator
+						</button>
 						<button class="print-btn" onclick={() => window.print()}>
 							Print this province’s calendar
 						</button>
-						<span class="print-note">prints to a single clean page</span>
 					</div>
+					{#if toast}
+						<p class="toast no-print" role="status">{toast}</p>
+					{/if}
 				{/if}
+
+				<!-- the official handoff -->
+				<p class="official">
+					For official status:
+					<a href={data.dews?.source_url} target="_blank" rel="noopener noreferrer"
+						>PNG-NWS / NARI monthly Drought Update ({bulletinLabel(data.dews?.bulletin_date)})</a
+					>
+					·
+					<a href="https://www.pngmet.gov.pg/" target="_blank" rel="noopener noreferrer"
+						>PNG National Weather Service</a
+					>
+				</p>
 			{/if}
 
 			<footer class="cal-foot">
@@ -312,8 +475,46 @@
 		font-size: clamp(1.9rem, 5.5vw, 3.2rem);
 	}
 
-	.cal-intro {
+	/* ── the "you are here" lead-in: three short steps ────────────────── */
+	.you-are-here {
+		list-style: none;
+		counter-reset: beat;
+		margin: 0 0 1rem;
+		padding: 0;
+		max-width: 38rem;
+	}
+
+	.you-are-here li {
+		counter-increment: beat;
+		position: relative;
+		padding: 0.35rem 0 0.35rem 2.2rem;
+		font-family: Fraunces, Georgia, serif;
+		font-size: 1.08rem;
+		line-height: 1.4;
+	}
+
+	.you-are-here li::before {
+		content: counter(beat);
+		position: absolute;
+		left: 0;
+		top: 0.45rem;
+		width: 1.45rem;
+		height: 1.45rem;
+		display: grid;
+		place-items: center;
+		font: 700 0.75rem/1 'Public Sans', system-ui, sans-serif;
+		color: var(--paper-raised);
+		background: var(--accent-light);
+		border-radius: 50%;
+	}
+
+	.governance {
+		max-width: 38rem;
+		font-size: 0.88rem;
 		color: var(--ink-light-secondary);
+		border-left: 3px solid var(--ink-light-axis);
+		padding-left: 0.8rem;
+		margin: 0 0 1.5rem;
 	}
 
 	/* ── selector: mini-map + dropdown fallback ───────────────────────── */
@@ -467,6 +668,18 @@
 		color: var(--ink-light-muted);
 	}
 
+	.prov-title .dews-chip {
+		display: inline-block;
+		vertical-align: middle;
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.07em;
+		padding: 0.22rem 0.5rem;
+		border: 1.5px solid;
+		border-radius: 4px;
+		margin: 0 0.4rem 0.2rem 0.2rem;
+	}
+
 	.action-grid {
 		display: grid;
 		gap: 0.75rem;
@@ -514,6 +727,40 @@
 		color: var(--accent-light);
 	}
 
+	/* ── window states relative to the current month ──────────────────── */
+	.action.st-open {
+		border: 2px solid var(--accent-light);
+		background: color-mix(in srgb, var(--accent-light) 6%, var(--paper-raised));
+	}
+
+	.open-tag {
+		display: block;
+		width: fit-content;
+		font: 700 0.6rem/1 'Public Sans', system-ui, sans-serif;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--paper-raised);
+		background: var(--accent-light);
+		border-radius: 4px;
+		padding: 0.25rem 0.4rem;
+		margin-top: 0.4rem;
+	}
+
+	.action.st-closed {
+		opacity: 0.6;
+	}
+
+	.action.st-closed .month {
+		color: var(--ink-light-muted);
+	}
+
+	.closed-note {
+		font-size: 0.75rem;
+		font-style: italic;
+		color: var(--ink-light-muted);
+		margin: 0.3em 0 0;
+	}
+
 	.what {
 		font-weight: 600;
 		margin-bottom: 0.35em;
@@ -550,17 +797,19 @@
 		pointer-events: none;
 	}
 
-	.print-row {
+	/* ── CTAs: share first, print second, official handoff last ──────── */
+	.cta-row {
 		display: flex;
 		align-items: center;
 		gap: 1rem;
-		margin: 2rem 0;
+		flex-wrap: wrap;
+		margin: 2rem 0 0.5rem;
 	}
 
-	.print-btn {
-		font: 600 0.85rem/1 'Public Sans', system-ui, sans-serif;
+	.cta-primary {
+		font: 600 0.9rem/1.2 'Public Sans', system-ui, sans-serif;
 		min-height: 44px;
-		padding: 0.75rem 1.25rem;
+		padding: 0.75rem 1.4rem;
 		border-radius: 6px;
 		border: none;
 		background: var(--accent-light);
@@ -568,9 +817,34 @@
 		cursor: pointer;
 	}
 
-	.print-note {
-		font-size: 0.75rem;
-		color: var(--ink-light-muted);
+	.print-btn {
+		font: 600 0.85rem/1.2 'Public Sans', system-ui, sans-serif;
+		min-height: 44px;
+		padding: 0.7rem 1.2rem;
+		border-radius: 6px;
+		border: 1.5px solid var(--ink-light-axis);
+		background: var(--paper-raised);
+		color: var(--ink-light-primary);
+		cursor: pointer;
+	}
+
+	.cta-primary:focus-visible,
+	.print-btn:focus-visible {
+		outline: 2px solid var(--accent-light);
+		outline-offset: 3px;
+	}
+
+	.toast {
+		font-size: 0.8rem;
+		color: var(--ink-light-secondary);
+		overflow-wrap: anywhere;
+		margin: 0 0 0.5em;
+	}
+
+	.official {
+		font-size: 0.8rem;
+		color: var(--ink-light-secondary);
+		margin-top: 1rem;
 	}
 
 	.cal-foot {
@@ -594,6 +868,43 @@
 
 		button.action.on {
 			border-color: #999;
+		}
+
+		/* the three window states, legible in grayscale */
+		.action.st-open {
+			border: 2.5px solid #000;
+			background: #fff;
+		}
+
+		.open-tag {
+			color: #fff;
+			background: #000;
+		}
+
+		.action.st-closed {
+			opacity: 1;
+			color: #777;
+			border-style: dashed;
+		}
+
+		.action.st-closed .month,
+		.action.st-closed .agency,
+		.action.st-closed .trigger,
+		.closed-note {
+			color: #777;
+		}
+
+		.prov-title .dews-chip {
+			color: #000 !important;
+			border-color: #000 !important;
+		}
+
+		.tpi-echo {
+			display: none;
+		}
+
+		.official {
+			color: #000;
 		}
 
 		.action-grid {

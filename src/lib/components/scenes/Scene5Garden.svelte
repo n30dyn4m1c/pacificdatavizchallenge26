@@ -13,23 +13,35 @@
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import SceneSteps from '$lib/components/SceneSteps.svelte';
 	import Hotspot from '$lib/components/beats/Hotspot.svelte';
+	import Cite from '$lib/components/Cite.svelte';
 	import FrostCanvas from './FrostCanvas.svelte';
 	import { lag } from '$lib/state.svelte.js';
 
-	const steps = [
-		{ at: [0.02, 0.09], text: 'This is my mound. Kaukau, at 2,300 metres.' },
-		{ at: [0.09, 0.16], text: 'I planted it in March, when the ocean was already warm.' },
-		{ at: [0.16, 0.24], text: 'The old people were already talking.' },
+	// two of the steps are VERIFIED reporting (the kaukau food-energy share
+	// and the June frost at Gembogl) — their copy ships in the scene JSON's
+	// `reported` block, authored in prep/manual/reported_copy.json with the
+	// sources in _meta. One idea per step, as everywhere.
+	let reported = $state(null);
+	const steps = $derived([
+		{ at: [0.02, 0.075], text: 'This is my mound. Kaukau, at 2,300 metres.' },
+		...(reported?.kaukau_energy
+			? [{ at: [0.075, 0.135], text: reported.kaukau_energy.text, sub: reported.kaukau_energy.sub }]
+			: []),
+		{ at: [0.135, 0.19], text: 'I planted it in March, when the ocean was already warm.' },
+		{ at: [0.19, 0.24], text: 'The old people were already talking.' },
 		{ at: [0.24, 0.32], text: 'Dusk. The sky is clear in every direction.' },
 		{ at: [0.32, 0.4], text: 'Clear is the danger.', sub: 'Cloud is a blanket, and tonight there is none.' },
 		{ at: [0.4, 0.48], text: 'The day’s heat leaves the ground — straight up, into space.' },
 		{ at: [0.48, 0.56], text: 'Watch the number.' },
-		{ at: [0.56, 0.64], text: 'By 4 a.m., frost. In a garden too warm for frost.' },
-		{ at: [0.64, 0.72], text: 'One night. That is all it takes.' },
-		{ at: [0.72, 0.8], text: 'The vines are black by noon.', sub: 'The tubers below survived — but nothing feeds them now.' },
-		{ at: [0.8, 0.88], text: 'The vines we would cut to replant died in the same hour.', sub: 'The next harvest went with them.' },
-		{ at: [0.88, 0.97], text: 'The tanket at the garden edge warned us weeks ago.', sub: 'The ocean warned us months ago. Both were right.' }
-	];
+		{ at: [0.56, 0.625], text: 'By 4 a.m., frost. In a garden too warm for frost.' },
+		...(reported?.gembogl_frost
+			? [{ at: [0.625, 0.695], text: reported.gembogl_frost.text, sub: reported.gembogl_frost.sub }]
+			: []),
+		{ at: [0.695, 0.755], text: 'One night. That is all it takes.' },
+		{ at: [0.755, 0.82], text: 'The vines are black by noon.', sub: 'The tubers below survived — but nothing feeds them now.' },
+		{ at: [0.82, 0.89], text: 'The vines we would cut to replant died in the same hour.', sub: 'The next harvest went with them.' },
+		{ at: [0.89, 0.97], text: 'The tanket at the garden edge warned us weeks ago.', sub: 'The ocean warned us months ago. Both were right.' }
+	]);
 
 	// hotspot anchors, % of the 1000×700 illustration stage
 	const HS_POS = {
@@ -45,7 +57,8 @@
 
 	// lazy-load the illustration chunk as the scene's data arrives
 	let Mound = $state(null);
-	function onData() {
+	function onData(d) {
+		reported = d?.reported ?? null;
 		import('./MoundIllustration.svelte').then((m) => (Mound = m.default));
 	}
 
@@ -85,10 +98,19 @@
 	{#snippet prose({ data })}
 		<h2>One garden</h2>
 		<p>
-			This is what the numbers land on: one mounded garden of kaukau at 2,300 metres. On a clear
-			dry-season night under El Niño skies there is no cloud blanket, so the day’s heat radiates
-			straight upward and by 4 a.m. the ground has frozen at an elevation that normally never
-			freezes. One such night kills the vines; the tubers below survive it, but with the canopy
+			This is what the numbers land on: one mounded garden of kaukau at 2,300 metres — and kaukau
+			is about 43&nbsp;% of all the food energy Papua New Guinea eats{#if data?._meta?.kaukau_energy}<Cite
+					href={data._meta.kaukau_energy.source_url}
+					label={data._meta.kaukau_energy.source}
+				/>{/if}. On a clear dry-season night under El Niño skies there is no cloud blanket, so the
+			day’s heat radiates straight upward and by 4 a.m. the ground has frozen at an elevation that
+			normally never freezes. This is no longer hypothetical: in June 2026, frost was reported
+			covering garden plots at Gembogl, in Chimbu — the frost season opening while the event was
+			still strengthening{#if data?._meta?.gembogl_frost}<Cite
+					href={data._meta.gembogl_frost.source_url}
+					label={data._meta.gembogl_frost.source}
+					n={2}
+				/>{/if}. One such night kills the vines; the tubers below survive it, but with the canopy
 			dead nothing feeds them — and because kaukau takes five to nine months from planting, the
 			frost also kills the vines needed to replant. It takes this harvest and the next one. Weeks
 			without rain then bake the mounds hard, so even replanting must wait. The people who garden
@@ -119,6 +141,8 @@
 		<div class="garden">
 			<div class="copy-col">
 				<p class="kicker">Above 2,200 metres · one night, one garden</p>
+				<!-- TODO-VERIFY: Tok Pisin placeholder — prep/manual/tokpisin_strings.json#scene5-opener -->
+				<p class="tpi-echo" lang="tpi">Wanpela nait, wanpela gaden.</p>
 				<SceneSteps {steps} {progress} width="24rem" />
 			</div>
 

@@ -145,3 +145,21 @@ export const impact = {
 	dark: { drought: '#f2775c', frost: '#a8d4f8' },
 	light: { drought: '#c74331', frost: '#2a78d6' }
 };
+
+/**
+ * The official PNG-NWS/NARI Drought Early Warning System tiers, in NARI's
+ * own vocabulary and escalation order. Colors are the anomaly scale's warm
+ * arm read as an ordinal ramp (watch → critical = deepening severity), so
+ * the choropleth stays inside the piece's one palette. `none` renders as
+ * the raised surface, not a tier color.
+ */
+export const DEWS_TIERS = ['watch', 'alert', 'critical'];
+export const dewsLabel = {
+	watch: 'Drought Watch',
+	alert: 'Drought Alert',
+	critical: 'Drought Critical'
+};
+export const dews = {
+	light: { watch: '#f2775c', alert: '#c74331', critical: '#8a3524' },
+	dark: { watch: '#ffb096', alert: '#f2775c', critical: '#c74331' }
+};
