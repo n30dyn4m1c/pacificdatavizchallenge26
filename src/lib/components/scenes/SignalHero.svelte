@@ -166,6 +166,8 @@
 	<div class="title-block" style:opacity={Math.max(0, 1 - progress * 11)}>
 		<p class="kicker">Pacific Data Viz Challenge 2026 · Papua New Guinea</p>
 		<h1 class="display">The Ocean<br />Knows First</h1>
+		<!-- TODO-VERIFY: Tok Pisin placeholder — prep/manual/tokpisin_strings.json#title -->
+		<p class="title-tpi display" lang="tpi">Solwara i Save Pastaim</p>
 		<p class="standfirst">
 			How a warming stripe of Pacific seawater becomes, months later, drought on the Fly River
 			and frost in the highland gardens — and why those months are a gift.
@@ -232,6 +234,16 @@
 		font-weight: 900;
 		margin: 0.4em 0;
 		text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
+	}
+
+	/* the Tok Pisin companion line: same display face, receded a register */
+	.title-tpi {
+		font-size: clamp(1.05rem, 3.2vw, 1.9rem);
+		font-weight: 700;
+		font-style: italic;
+		color: var(--ink-dark-secondary);
+		text-shadow: 0 1px 18px rgba(0, 0, 0, 0.6);
+		margin: -0.3em 0 1em;
 	}
 
 	.standfirst {

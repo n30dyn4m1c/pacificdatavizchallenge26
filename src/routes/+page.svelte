@@ -14,6 +14,7 @@
 	import PauseBeat from '$lib/components/beats/PauseBeat.svelte';
 	import LagTicker from '$lib/components/LagTicker.svelte';
 	import TransitionMotif from '$lib/components/TransitionMotif.svelte';
+	import OniBand from '$lib/components/OniBand.svelte';
 </script>
 
 <svelte:head>
@@ -53,7 +54,11 @@
 	<Scene3Descent />
 	<Scene4Lag />
 
-	<div class="shore-transition no-print" aria-hidden="true"></div>
+	<!-- the ocean → land handover carries the divider motif: the ONI record
+	     itself as a thin geometric strip (no imagery anywhere in the piece) -->
+	<div class="shore-transition no-print" aria-hidden="true">
+		<OniBand />
+	</div>
 
 	<!-- pause beat 2 of 2: the lag has landed; rest before the garden -->
 	<PauseBeat
@@ -78,15 +83,18 @@
 </main>
 
 <footer class="colophon surface-light no-print">
+	<div class="colophon-band"><OniBand /></div>
 	<p>
 		<strong>The Ocean Knows First</strong> · an entry for the Pacific Data Viz Challenge 2026
 		(interactive category).
 	</p>
 	<p>
-		All data currently shown is <strong>synthetic placeholder data</strong> generated to the
-		documented contracts in <code>/prep</code>; the production pipeline replaces it with OISST /
-		ERSST sea-surface temperatures, the CPC Oceanic Niño Index, CHIRPS rainfall, and NDC /
-		provincial hazard records. No cookies, no tracking, fully static.
+		Chart and calendar data currently shown is <strong>synthetic placeholder data</strong>
+		generated to the documented contracts in <code>/prep</code>; the production pipeline replaces
+		it with OISST / ERSST sea-surface temperatures, the CPC Oceanic Niño Index, CHIRPS rainfall,
+		and NDC / provincial hazard records. The province drought statuses are real — the official
+		PNG-NWS / NARI monthly Drought Update — as are the sourced reported facts (superscript
+		links). No cookies, no tracking, fully static.
 	</p>
 </footer>
 
@@ -100,5 +108,10 @@
 	.colophon p {
 		max-width: 44rem;
 		margin: 0 auto 0.75em;
+	}
+
+	.colophon-band {
+		color: var(--ink-light-axis);
+		margin-bottom: 1.75rem;
 	}
 </style>

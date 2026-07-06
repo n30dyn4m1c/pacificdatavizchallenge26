@@ -61,6 +61,8 @@
 				<div>
 					<p class="kicker">Oceanic Niño Index · three events, one curve</p>
 					<h2 class="display">We’ve been here before.</h2>
+					<!-- TODO-VERIFY: Tok Pisin placeholder — prep/manual/tokpisin_strings.json#scene2-opener -->
+					<p class="tpi-echo" lang="tpi">Yumi bin lukim dispela bipo.</p>
 				</div>
 				{#if progress > 0.52}
 					<div class="toggle-slot">

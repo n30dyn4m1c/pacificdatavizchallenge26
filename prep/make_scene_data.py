@@ -114,10 +114,17 @@ def make_scene5_garden() -> None:
     Inputs: NARI & provincial DAL documentation (indicators + hotspot copy,
             each traditional indicator paired with the satellite product
             observing the same thing); a representative Highlands frost-night
-            station record for the temperature curve (e.g. Tambul).
+            station record for the temperature curve (e.g. Tambul);
+            prep/manual/reported_copy.json for the VERIFIED reported steps.
 
     Output contract:
     {
+      "reported": {                    # verified reporting, from prep/manual/
+        "gembogl_frost": {"text": str, "sub": str},   # step at frost trigger
+        "kaukau_energy": {"text": str, "sub": str}    # the 43 % stat step
+      },
+      "_meta": {"gembogl_frost": {"source": str, "source_url": str},
+                "kaukau_energy": {...}},
       "indicators": [{"traditional": str, "satellite": str}, ...],  # 4-6 pairs
       "phase": {
         "elevation_m": int,          # garden elevation of the illustration
@@ -146,10 +153,21 @@ def make_scene6_forecast() -> None:
     Inputs: IRI/CPC ENSO prediction plume; NDC hazard mapping; historical
             lags from scene 4 project the windows. Province boundaries from
             PNG NSO or GADM, simplified with mapshaper to < 30 KB.
+            prep/manual/dews_status.csv (official PNG-NWS/NARI Drought Update
+            status per province, re-keyed each monthly bulletin) and
+            prep/manual/reported_copy.json (the PM-directive mandate line).
 
     Output contracts:
     scene6_forecast.json:
     {
+      "dews": {                        # official three-tier DEWS status
+        "bulletin_date": "YYYY-MM",
+        "source": "PNG-NWS / NARI monthly Drought Update",
+        "source_url": str,
+        "provinces": {"Chimbu": "watch"|"alert"|"critical", ...}
+      },                               # provinces absent from the bulletin = no advisory
+      "mandate": {"text": str},        # one sentence, source in _meta.mandate
+      "_meta": {"dews": {...}, "mandate": {"source": str, "source_url": str}},
       "current": {"name": str, "series": [{"month": str, "oni": float}]},
       "plume": [{"month": "Jul 26", "p10": 1.6, "p50": 1.9, "p90": 2.2}, ...],
       "scenarios": {                    # the scene's CompareToggle reads these;
@@ -175,12 +193,22 @@ def make_scene7_calendar() -> None:
 
     Input: co-drafted with NDC and provincial DALs. Every action must have
            a trigger that references a verifiable index (ONI, CHIRPS
-           percentile, gauge level, confirmed frost report).
+           percentile, gauge level, confirmed frost report). Also merges
+           prep/manual/dews_status.csv (same "dews" block as scene 6, so the
+           calendar can show the selected province's official status) and
+           prep/manual/reported_copy.json (the trust-accounts governance line).
 
     Output contract:
-    { "provinces": [{"name": str, "actions": [{"month": "Jul 26",
+    { "dews": {...same shape as scene6_forecast.json...},
+      "governance": {"text": str},     # one step, source in _meta.governance
+      "_meta": {"dews": {...}, "governance": {"source": str, "source_url": str}},
+      "provinces": [{"name": str, "actions": [{"month": "Jul 26",
       "action": str, "trigger": str, "lead_agency": str,
       "oni_threshold": float | None}, ...]}, ...] }
+
+    NOTE the front end computes each action's window state (closed/open/ahead)
+    client-side from the device clock in Pacific/Port_Moresby — "now" has NO
+    pipeline dependency by design; a stale deploy must not freeze time.
 
     "oni_threshold" is the ONI value the trigger references (None when the
     trigger is a different index — CHIRPS percentile, gauge level, confirmed

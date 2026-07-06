@@ -10,7 +10,19 @@ export const ui = $state({
 	 * scroll-only narrative can be proof-read on its own. The scroll must
 	 * always tell the complete story — notap only removes enrichment.
 	 */
-	noTap: false
+	noTap: false,
+	/**
+	 * The reader's current month in Pacific/Port_Moresby time, {y, m(1-12)}.
+	 * Computed CLIENT-SIDE in +layout.svelte — the "you are here" marker has
+	 * no pipeline dependency. Dev override: ?now=YYYY-MM-DD. Null until mount
+	 * (prerendered HTML treats every window as "ahead", never falsely closed).
+	 */
+	now: null,
+	/**
+	 * ?province=<slug> from a shared link (e.g. ?province=chimbu): scene 7
+	 * preselects this province when its data arrives.
+	 */
+	province: null
 });
 
 /**

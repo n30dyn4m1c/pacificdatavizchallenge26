@@ -79,10 +79,16 @@ a {
 	color: var(--paper);
 }
 
-/* the ocean → land handover between scenes 4 and 5 */
+/* the ocean → land handover between scenes 4 and 5; carries the OniBand
+   divider motif, seated in the gradient's paper end so the neutral reads */
 .shore-transition {
 	height: 50vh;
 	background: linear-gradient(to bottom, var(--ocean), var(--paper));
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	padding-bottom: 8vh;
+	color: var(--ink-light-secondary);
 }
 
 /* ── scene prose (a11y equivalent / reader mode) ────────────────────────── */
@@ -157,6 +163,36 @@ a {
 /* chart text is ink, never series color */
 .chart text {
 	font-family: 'Public Sans', system-ui, sans-serif;
+}
+
+/* superscript source links (Cite.svelte) — quiet but clickable */
+sup.cite {
+	font-size: 0.68em;
+	line-height: 0;
+	margin-left: 0.15em;
+}
+
+sup.cite a {
+	text-decoration: none;
+	opacity: 0.65;
+	border-bottom: 1px dotted currentColor;
+	padding: 0.1em 0.15em;
+}
+
+sup.cite a:hover,
+sup.cite a:focus-visible {
+	opacity: 1;
+}
+
+/* Tok Pisin echo lines — the display face, receded; lang="tpi" on each.
+   Every string is a TODO-VERIFY placeholder collected in
+   prep/manual/tokpisin_strings.json for editorial sign-off. */
+.tpi-echo {
+	font-family: Fraunces, Georgia, serif;
+	font-weight: 700;
+	font-style: italic;
+	opacity: 0.62;
+	margin: -0.35em 0 0.9em;
 }
 
 /* ── interaction beats: one visual language for every optional affordance ──

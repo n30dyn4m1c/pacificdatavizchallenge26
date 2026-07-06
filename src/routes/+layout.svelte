@@ -28,7 +28,24 @@
 		mq.addEventListener('change', onChange);
 		// ?notap=1 — proof-read the scroll-only experience: every optional
 		// interactive affordance across the piece renders nothing.
-		ui.noTap = new URLSearchParams(window.location.search).get('notap') === '1';
+		const params = new URLSearchParams(window.location.search);
+		ui.noTap = params.get('notap') === '1';
+		// the reader's current month, in PNG time — drives scene 7's window
+		// states. ?now=YYYY-MM-DD simulates a date (dev/QA only).
+		const nowParam = params.get('now');
+		const nowDate = /^\d{4}-\d{2}-\d{2}$/.test(nowParam ?? '')
+			? new Date(nowParam + 'T12:00:00Z')
+			: new Date();
+		const [y, m] = new Intl.DateTimeFormat('en-CA', {
+			timeZone: 'Pacific/Port_Moresby',
+			year: 'numeric',
+			month: '2-digit'
+		})
+			.format(nowDate)
+			.split('-');
+		ui.now = { y: +y, m: +m };
+		// ?province=<slug> from a shared link — scene 7 preselects it
+		ui.province = params.get('province');
 		return () => mq.removeEventListener('change', onChange);
 	});
 </script>
