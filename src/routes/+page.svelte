@@ -2,7 +2,9 @@
 	/**
 	 * Scene manifest — the ordered spine of the piece. Each entry is a
 	 * self-contained scene component built on the ScrollScene abstraction;
-	 * dividers mark the surface handovers (ocean → land).
+	 * the divider marks the surface handover (ocean → land). Every chart reads
+	 * the real Pacific Community climate-change record (static/data/), the
+	 * official Pacific Data Viz Challenge 2026 dataset.
 	 */
 	import Scene1Signal from '$lib/components/scenes/Scene1Signal.svelte';
 	import Scene2History from '$lib/components/scenes/Scene2History.svelte';
@@ -12,41 +14,39 @@
 	import Scene6Forecast from '$lib/components/scenes/Scene6Forecast.svelte';
 	import Scene7Calendar from '$lib/components/scenes/Scene7Calendar.svelte';
 	import PauseBeat from '$lib/components/beats/PauseBeat.svelte';
-	import LagTicker from '$lib/components/LagTicker.svelte';
 	import TransitionMotif from '$lib/components/TransitionMotif.svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
 </script>
 
 <svelte:head>
-	<title>The Ocean Knows First — El Niño, drought and frost in Papua New Guinea</title>
+	<title>The Warming Sea — Papua New Guinea's climate record, 1850–2025</title>
 	<meta
 		name="description"
-		content="Scroll through the months between a Pacific ocean signal and its consequences in Papua New Guinea — and the anticipatory actions those months make possible. Pacific Data Viz Challenge 2026."
+		content="A scrollytelling read of Papua New Guinea's official climate record — 175 years of a warming ocean, its driest El Niño years, and who warms it versus who wears it. Built on the Pacific Community's climate-change dataset, the official Pacific Data Viz Challenge 2026 data on the Pacific Data Hub."
 	/>
 </svelte:head>
 
-<!-- fixed connective tissue: the lag clock and the anomaly-scale motif -->
-<LagTicker />
+<!-- fixed connective tissue: the anomaly-scale motif at scene handovers -->
 <TransitionMotif />
 
 <main>
 	<Scene1Signal />
 
-	<!-- pause beat 1 of 2 (hard cap): the +1.7 °C reveal gets a rest -->
+	<!-- pause beat 1 of 2 (hard cap): the record-warm reveal gets a rest -->
 	<PauseBeat
 		id="pause-signal"
 		surface="dark"
-		kicker="+1.7 °C and rising"
-		statement="The ocean knows first."
-		exploreLabel="What is this number? →"
+		kicker="+1.1 °C · the warmest year on record"
+		statement="The ocean warmed first."
+		exploreLabel="What is an anomaly? →"
 	>
-		<h4>Niño 3.4, in one breath</h4>
+		<h4>One number a year</h4>
 		<p>
-			The number is the sea-surface temperature anomaly of the Niño 3.4 region — a box of
-			equatorial Pacific straddling the date line. Average it over three months and you get the
-			Oceanic Niño Index (ONI): above +0.5 °C, El Niño conditions; above +1.5 °C, a strong
-			event. It is the single most-watched number in seasonal climate forecasting — and it moves
-			months before the weather over Papua New Guinea does.
+			An anomaly is not the temperature — it is the <em>departure</em> from a long-term average, so
+			zero means "an ordinary year" and the sign tells you warmer or cooler. The Pacific Community
+			publishes one such value a year for each country, back to 1850. Reading anomalies instead of
+			raw temperatures lets a century and a half of a warming ocean fit into a single climbing
+			line — and makes a record-breaking year unmistakable.
 		</p>
 	</PauseBeat>
 
@@ -54,26 +54,26 @@
 	<Scene3Descent />
 	<Scene4Lag />
 
-	<!-- the ocean → land handover carries the divider motif: the ONI record
-	     itself as a thin geometric strip (no imagery anywhere in the piece) -->
+	<!-- the ocean → land handover carries the divider motif: climate
+	     variability itself as a thin geometric strip (no imagery anywhere) -->
 	<div class="shore-transition no-print" aria-hidden="true">
 		<OniBand />
 	</div>
 
-	<!-- pause beat 2 of 2: the lag has landed; rest before the garden -->
+	<!-- pause beat 2 of 2: the data has landed; rest before the garden -->
 	<PauseBeat
 		id="pause-lag"
 		surface="light"
-		kicker="T + 8 · the frost has landed"
-		statement="Eight months of warning. Not one of them needs to be wasted."
-		exploreLabel="What fits in eight months? →"
+		kicker="From the record to the ground"
+		statement="Every number here is a year someone lived through."
+		exploreLabel="Why one garden? →"
 	>
-		<h4>Anticipatory action, briefly</h4>
+		<h4>Where the numbers land</h4>
 		<p>
-			Acting on a forecast instead of a disaster: pre-positioning frost-hardy vine cuttings,
-			agreeing river-corridor relief routes while the barges still run, staging seed and water
-			storage before prices spike. Every action is cheaper, faster and more dignified before
-			the shock than after it — the lag is the budget line that pays for all of it.
+			National annual figures are honest but distant: they average a whole country and a whole
+			year into a point. The next scene leaves the charts for a single highland garden on one
+			clear night, to show the mechanism the record only summarises — how a warming, drying climate
+			reaches a family's food. It is an illustration, not a measurement, and it is labelled as one.
 		</p>
 	</PauseBeat>
 
@@ -85,20 +85,29 @@
 <footer class="colophon surface-light no-print">
 	<div class="colophon-band"><OniBand /></div>
 	<p>
-		<strong>The Ocean Knows First</strong> · an entry for the Pacific Data Viz Challenge 2026
+		<strong>The Warming Sea</strong> · an entry for the Pacific Data Viz Challenge 2026
 		(interactive category).
 	</p>
 	<p>
-		Chart and calendar data currently shown is <strong>synthetic placeholder data</strong>
-		generated to the documented contracts in <code>/prep</code>; the production pipeline replaces
-		it with OISST / ERSST sea-surface temperatures, the CPC Oceanic Niño Index, CHIRPS rainfall,
-		and NDC / provincial hazard records. The province drought statuses are real — the official
-		PNG-NWS / NARI monthly Drought Update — as are the sourced reported facts (superscript
-		links). No cookies, no tracking, fully static.
+		Every chart is built from the <strong>Pacific Community (SPC) climate-change indicators</strong>
+		— dataflow <code>SPC:DF_CLIMATE_CHANGE(1.0)</code>, exported from the Pacific Data Hub's .Stat
+		Explorer (<code>stats.pacificdata.org</code>) and filtered to Papua New Guinea. It is the
+		official dataset of this year's Challenge: annual, national-level observations, 1850–2025. The
+		series are real and unaltered; the pipeline that extracts them is in <code>/prep</code>. Scene 5
+		(the garden) is an explicitly labelled illustration of radiative frost, not data, and cites no
+		source. No forecast, no synthetic values. No cookies, no tracking, fully static.
 	</p>
 </footer>
 
 <style>
+	.shore-transition {
+		padding: 3rem 1.5rem;
+		display: flex;
+		justify-content: center;
+		color: var(--ink-dark-axis);
+		background: var(--ocean);
+	}
+
 	.colophon {
 		padding: 2.5rem 1.5rem 3.5rem;
 		font-size: 0.8rem;

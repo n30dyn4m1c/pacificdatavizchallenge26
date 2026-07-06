@@ -1,21 +1,19 @@
 <script>
 	/**
-	 * OniBand — the piece's only section-divider ornament: the ONI record
-	 * itself, 1982 → present, abstracted into a thin repeating geometric
-	 * strip. One bar per DJF season, height = |ONI|, up for El Niño years,
-	 * down for La Niña, drawn in the palette's neutrals (currentColor — the
-	 * placement sets the ink). Deliberately austere: data as decoration,
-	 * never imagery. Purely decorative (aria-hidden).
-	 *
-	 * Values are approximate DJF-peak ONI per season from the CPC ONI table
-	 * (decorative abstraction only — the charts read real series from
-	 * static/data/). The final value is the piece's 2026–27 forecast peak.
+	 * OniBand — the piece's only section-divider ornament: El Niño / La Niña
+	 * variability abstracted into a thin repeating geometric strip. One bar
+	 * per season, height = |ONI|, up for El Niño years, down for La Niña,
+	 * drawn in the palette's neutrals (currentColor — the placement sets the
+	 * ink). Deliberately austere: a decorative rhythm, never imagery. Purely
+	 * decorative (aria-hidden); the charts read the real SPC series from
+	 * static/data/. These bars are an approximate, observed-only abstraction
+	 * of the CPC Oceanic Niño Index record — no forecast value is included.
 	 */
 	const ONI = [
 		2.2, -0.6, -1.0, -0.5, 1.2, 0.8, -1.7, 0.1, 0.4, 1.7, 0.1, 0.1, 1.0,
 		-0.9, -0.5, 2.4, -1.5, -1.7, -0.7, -0.1, 0.9, 0.4, 0.6, -0.9, 0.7,
 		-1.6, -0.8, 1.5, -1.4, -0.8, -0.4, -0.4, 0.5, 2.6, -0.3, -0.9, 0.7,
-		0.5, -1.0, -1.0, -0.7, 2.0, -0.6, 2.8
+		0.5, -1.0, -1.0, -0.7, 2.0, -0.6
 	];
 	const STEP = 8;
 	const MID = 13;
