@@ -64,6 +64,9 @@
 		pulse = false;
 		clearTimeout(idleTimer);
 		if (active) idleTimer = setTimeout(() => (pulse = true), 2000);
+		// a hotspot card is fixed to the viewport bottom on mobile; close any
+		// open one when the scene scrolls away so it can't linger over another
+		else hsGroup.open = null;
 	}
 	onDestroy(() => clearTimeout(idleTimer));
 </script>
@@ -141,7 +144,7 @@
 						{@const copy = frosted ? h.frosted : h.healthy}
 						{#if pos}
 							<Hotspot id="hs-{h.id}" x={pos.x} y={pos.y} label={h.label} group={hsGroup} {pulse}>
-								<h4>{copy.title}</h4>
+								<h3>{copy.title}</h3>
 								<p>{copy.body}</p>
 							</Hotspot>
 						{/if}

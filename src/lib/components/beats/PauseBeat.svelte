@@ -44,7 +44,9 @@
 		{#if kicker}
 			<p class="kicker">{kicker}</p>
 		{/if}
-		<p class="statement display">{statement}</p>
+		<!-- the statement is this resting section's heading (keeps the heading
+		     order h1 → h2 → h3 valid across the piece; styled identically) -->
+		<h2 class="statement display">{statement}</h2>
 
 		{#if !ui.noTap}
 			<div class="row" use:dismissable={{ active: exploreOpen, onDismiss: dismissExplore }}>

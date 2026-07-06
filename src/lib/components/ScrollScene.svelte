@@ -73,6 +73,29 @@
 		const onResize = () => scroller.resize();
 		window.addEventListener('resize', onResize);
 
+		// fetch with a tiny retry (transient drops are the norm on slow mobile
+		// links); only after the retries are spent do we surface the prose
+		// fallback so the scroll flow is never blocked on a failed request.
+		function loadData(attempt = 0) {
+			fetch(`${base}${dataUrl}`)
+				.then((r) => {
+					if (!r.ok) throw new Error(r.statusText);
+					return r.json();
+				})
+				.then((d) => {
+					dataError = false;
+					data = d;
+					ondata?.(d);
+				})
+				.catch(() => {
+					if (attempt < 2) {
+						setTimeout(() => loadData(attempt + 1), 400 * 2 ** attempt);
+					} else {
+						dataError = true;
+					}
+				});
+		}
+
 		let io = null;
 		if (dataUrl) {
 			io = new IntersectionObserver(
@@ -80,18 +103,10 @@
 					if (entries.some((e) => e.isIntersecting)) {
 						io.disconnect();
 						io = null;
-						fetch(`${base}${dataUrl}`)
-							.then((r) => {
-								if (!r.ok) throw new Error(r.statusText);
-								return r.json();
-							})
-							.then((d) => {
-								data = d;
-								ondata?.(d);
-							})
-							.catch(() => (dataError = true));
+						loadData();
 					}
 				},
+				// generous margin: begin fetching ~2 viewports before the scene
 				{ rootMargin: '200% 0px' }
 			);
 			io.observe(el);
@@ -116,7 +131,13 @@
 	aria-label={title}
 >
 	{#if prose}
-		<div class="scene-prose" class:sr-only={!ui.readerMode} class:revealed={ui.readerMode}>
+		<!-- on a spent data fetch, the prose is promoted from the a11y-only
+		     layer to a visible fallback so the scene still tells its story -->
+		<div
+			class="scene-prose"
+			class:sr-only={!ui.readerMode && !dataError}
+			class:revealed={ui.readerMode || dataError}
+		>
 			{@render prose({ data })}
 		</div>
 	{/if}

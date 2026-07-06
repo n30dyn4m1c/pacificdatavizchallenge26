@@ -50,8 +50,32 @@ a {
 	position: sticky;
 	top: 0;
 	height: 100vh;
-	height: 100svh;
+	height: 100svh; /* iOS Safari: smallest viewport height, so the pin never
+	                   exceeds the visible area when the browser chrome shows */
 	overflow: hidden;
+}
+
+/* The persistent reader-mode toggle is fixed top-right; on narrow screens it
+   would otherwise float over a scene's first header line / kicker. Reserve a
+   safe band at the top of the elements that sit near the viewport top. */
+@media (max-width: 640px) {
+	.scene header,
+	.scene .copy-col {
+		padding-top: 3rem;
+	}
+}
+
+/* Chart skeletons: a minimal sized placeholder (never a spinner) shown while
+   a lazy chart chunk / its data loads, so the reveal causes no layout shift. */
+.chart-skeleton {
+	width: 100%;
+	border-radius: 8px;
+	background: linear-gradient(
+		180deg,
+		color-mix(in srgb, currentColor 7%, transparent),
+		color-mix(in srgb, currentColor 3%, transparent)
+	);
+	border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
 }
 
 .surface-dark {
@@ -144,6 +168,9 @@ a {
 .data-table-details summary {
 	cursor: pointer;
 	opacity: 0.75;
+	min-height: 44px; /* tap-target floor */
+	display: flex;
+	align-items: center;
 }
 
 .data-table-details table {
@@ -228,7 +255,7 @@ sup.cite a:focus-visible {
 	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
 }
 
-.beat-card h4 {
+.beat-card h3 {
 	font-family: Fraunces, Georgia, serif;
 	font-size: 1.05rem;
 	margin: 0 0 0.4em;

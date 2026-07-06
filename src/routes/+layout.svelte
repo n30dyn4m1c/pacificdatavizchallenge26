@@ -1,8 +1,11 @@
 <script>
-	import '@fontsource/fraunces/700.css';
-	import '@fontsource/fraunces/900.css';
-	import '@fontsource/public-sans/400.css';
-	import '@fontsource/public-sans/600.css';
+	// latin subset only — the audience is PNG on slow connections and the
+	// piece uses no latin-ext glyphs; the full-family CSS would also ship the
+	// latin-ext woff2/woff files. font-display:swap is built into these.
+	import '@fontsource/fraunces/latin-700.css';
+	import '@fontsource/fraunces/latin-900.css';
+	import '@fontsource/public-sans/latin-400.css';
+	import '@fontsource/public-sans/latin-600.css';
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { ui } from '$lib/state.svelte.js';
@@ -69,22 +72,32 @@
 <style>
 	.reader-toggle {
 		position: fixed;
-		top: 0.75rem;
-		right: 0.75rem;
+		top: max(0.75rem, env(safe-area-inset-top));
+		right: max(0.75rem, env(safe-area-inset-right));
 		z-index: 100;
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px; /* tap-target floor */
 		font: 600 0.72rem/1 'Public Sans', system-ui, sans-serif;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--ink-dark-primary);
-		background: color-mix(in srgb, var(--ocean) 65%, transparent);
+		/* opaque enough to stay legible where it floats over scene headers */
+		background: color-mix(in srgb, var(--ocean) 88%, transparent);
 		border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
 		border-radius: 999px;
 		padding: 0.55rem 0.9rem;
 		cursor: pointer;
-		backdrop-filter: blur(4px);
+		backdrop-filter: blur(6px);
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
 	}
 
 	.reader-toggle:hover {
 		border-color: currentColor;
+	}
+
+	.reader-toggle:focus-visible {
+		outline: 2px solid var(--accent-dark);
+		outline-offset: 3px;
 	}
 </style>

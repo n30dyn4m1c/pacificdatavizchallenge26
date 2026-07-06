@@ -6,7 +6,7 @@
 	 * glance. All real (static/data/scene7_record.json). Prints to one page.
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
-	import AnnualLines from '$lib/components/AnnualLines.svelte';
+	import LazyLines from '$lib/components/LazyLines.svelte';
 
 	const fmt = (v, unit) => {
 		const s = Math.abs(v) >= 100 ? Math.round(v).toLocaleString('en') : Math.abs(v) < 1 ? v.toFixed(2) : v.toFixed(1);
@@ -53,7 +53,7 @@
 								<span class="panel-name">{p.name}</span>
 								<span class="panel-change">{changeNote(p)}</span>
 							</figcaption>
-							<AnnualLines
+							<LazyLines
 								series={[{ key: p.code, name: p.name, accent: p.kind === 'anomaly', values: p.years }]}
 								mode="light"
 								unit={p.unit}
