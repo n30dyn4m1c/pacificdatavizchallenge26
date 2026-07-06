@@ -10,7 +10,7 @@
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import SceneSteps from '$lib/components/SceneSteps.svelte';
-	import AnnualBars from '$lib/components/AnnualBars.svelte';
+	import LazyBars from '$lib/components/LazyBars.svelte';
 	import TapReveal from '$lib/components/beats/TapReveal.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 
@@ -61,7 +61,7 @@
 				<h2 class="display">The driest years.</h2>
 			</header>
 			{#if data}
-				<AnnualBars
+				<LazyBars
 					values={data.years}
 					markYears={data.driest}
 					{progress}
@@ -75,7 +75,7 @@
 				<SceneSteps {steps} {progress} width="32rem" />
 				<div class="reveal-slot" class:hidden={progress <= 0.62} inert={progress <= 0.62}>
 					<TapReveal id="s3-elnino" label="Why doesn’t the ocean chart show this? →">
-						<h4>Two different oceans</h4>
+						<h3>Two different oceans</h3>
 						<p>
 							El Niño is warming in the <em>central and eastern</em> equatorial Pacific — the
 							Niño 3.4 region, thousands of kilometres east of Papua New Guinea. During a strong

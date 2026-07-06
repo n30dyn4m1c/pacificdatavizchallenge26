@@ -8,7 +8,7 @@
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import SceneSteps from '$lib/components/SceneSteps.svelte';
-	import AnnualLines from '$lib/components/AnnualLines.svelte';
+	import LazyLines from '$lib/components/LazyLines.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 
 	const steps = [
@@ -64,7 +64,7 @@
 				<h2 class="display">Sea and land, in step.</h2>
 			</header>
 			{#if data}
-				<AnnualLines
+				<LazyLines
 					series={data.series}
 					{progress}
 					mode="dark"

@@ -40,7 +40,7 @@
 		statement="The ocean warmed first."
 		exploreLabel="What is an anomaly? →"
 	>
-		<h4>One number a year</h4>
+		<h3>One number a year</h3>
 		<p>
 			An anomaly is not the temperature — it is the <em>departure</em> from a long-term average, so
 			zero means "an ordinary year" and the sign tells you warmer or cooler. The Pacific Community
@@ -68,7 +68,7 @@
 		statement="Every number here is a year someone lived through."
 		exploreLabel="Why one garden? →"
 	>
-		<h4>Where the numbers land</h4>
+		<h3>Where the numbers land</h3>
 		<p>
 			National annual figures are honest but distant: they average a whole country and a whole
 			year into a point. The next scene leaves the charts for a single highland garden on one

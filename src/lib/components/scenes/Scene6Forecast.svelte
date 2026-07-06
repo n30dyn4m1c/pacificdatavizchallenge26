@@ -8,7 +8,7 @@
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import SceneSteps from '$lib/components/SceneSteps.svelte';
-	import AnnualLines from '$lib/components/AnnualLines.svelte';
+	import LazyLines from '$lib/components/LazyLines.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 
 	const steps = [
@@ -61,7 +61,7 @@
 				<div class="panels">
 					<figure>
 						<figcaption>Emissions per person · {data.ghg.unit}</figcaption>
-						<AnnualLines
+						<LazyLines
 							series={[{ key: 'ghg', name: data.ghg.name, values: data.ghg.years }]}
 							{progress}
 							mode="light"
@@ -73,7 +73,7 @@
 					</figure>
 					<figure>
 						<figcaption>Sea-level anomaly · {data.sea_level.unit}</figcaption>
-						<AnnualLines
+						<LazyLines
 							series={[{ key: 'sea', name: data.sea_level.name, accent: true, values: data.sea_level.years }]}
 							{progress}
 							mode="light"
