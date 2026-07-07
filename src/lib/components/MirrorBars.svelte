@@ -16,8 +16,10 @@
 	let {
 		years = [], // [{year, oni, phase, rain, driest?}]
 		markYears = [],
-		mode = 'dark',
+		mode = 'light',
 		progress = 1,
+		/** the far-ocean band fades in when the narrative calls it up */
+		showOni = true,
 		height = 470,
 		ariaLabel
 	} = $props();
@@ -53,7 +55,8 @@
 <div class="wrap" bind:clientWidth={w}>
 	<svg viewBox="0 0 {Math.max(w, 300)} {height}" role="img" aria-label={ariaLabel}>
 		<!-- band titles -->
-		<text x={PAD.l} y={PAD.t - 16} font-size="11.5" font-weight="700" fill={inkC.secondary}>
+		<text x={PAD.l} y={PAD.t - 16} font-size="11.5" font-weight="700" fill={inkC.secondary}
+			opacity={showOni ? 1 : 0} style="transition: opacity 0.5s">
 			THE FAR OCEAN · Oceanic Niño Index (°C) — El Niño up, La Niña down
 		</text>
 		<text x={PAD.l} y={PAD.t + bandH + GAP - 12} font-size="11.5" font-weight="700" fill={inkC.secondary}>
@@ -61,7 +64,8 @@
 		</text>
 
 		<!-- zero baselines -->
-		<line x1={PAD.l} x2={Math.max(w, 300) - PAD.r} y1={yOni(0)} y2={yOni(0)} stroke={inkC.axis} stroke-width="1.3" />
+		<line x1={PAD.l} x2={Math.max(w, 300) - PAD.r} y1={yOni(0)} y2={yOni(0)} stroke={inkC.axis} stroke-width="1.3"
+			opacity={showOni ? 1 : 0} style="transition: opacity 0.5s" />
 		<line x1={PAD.l} x2={Math.max(w, 300) - PAD.r} y1={yRain(0)} y2={yRain(0)} stroke={inkC.axis} stroke-width="1.3" />
 
 		{#each years as d (d.year)}
@@ -74,9 +78,10 @@
 					y={d.oni >= 0 ? yOni(d.oni) : yOni(0)}
 					width={bw}
 					height={Math.abs(yOni(d.oni) - yOni(0))}
+					rx="1.5"
 					fill={oniColor(d.oni)}
-					opacity={on ? (marked ? 1 : 0.55) : 0}
-					style="transition: opacity 0.25s"
+					opacity={!showOni ? 0 : on ? (marked ? 1 : 0.55) : 0}
+					style="transition: opacity 0.4s"
 				/>
 			{:else}
 				<text
@@ -86,8 +91,8 @@
 					font-size="13"
 					font-weight="700"
 					fill={inkC.muted}
-					opacity={on ? 0.9 : 0}
-					style="transition: opacity 0.25s"
+					opacity={!showOni ? 0 : on ? 0.9 : 0}
+					style="transition: opacity 0.4s"
 				>?</text>
 			{/if}
 			<!-- rain bar -->
@@ -101,7 +106,7 @@
 				style="transition: opacity 0.25s"
 			/>
 			<!-- marked years: a faint connector walks the eye from spike to shortfall -->
-			{#if marked && on}
+			{#if marked && on && showOni}
 				<line
 					x1={x(d.year)}
 					x2={x(d.year)}

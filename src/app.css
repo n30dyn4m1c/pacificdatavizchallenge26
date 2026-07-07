@@ -1,6 +1,11 @@
 /* Global styles. Color VALUES come from src/lib/palette.js — the custom
    properties below are emitted into :root by +layout.svelte so palette.js
-   stays the single source of truth. This file only consumes them. */
+   stays the single source of truth. This file only consumes them.
+
+   Design language: light editorial ("pudding.cool" register) — one warm
+   paper surface end to end, big expressive serif display type, prose in
+   readable cards, and color used only where it means something (the warm
+   El Niño / dry arm vs the cool La Niña / wet arm). */
 
 *,
 *::before,
@@ -14,11 +19,11 @@ html {
 
 body {
 	margin: 0;
-	background: var(--ocean);
-	color: var(--ink-dark-primary);
+	background: var(--paper);
+	color: var(--ink-light-primary);
 	font-family: 'Public Sans', system-ui, sans-serif;
-	font-size: 1rem;
-	line-height: 1.55;
+	font-size: 1.02rem;
+	line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -27,21 +32,45 @@ h2,
 h3,
 .display {
 	font-family: Fraunces, Georgia, serif;
-	font-weight: 700;
-	line-height: 1.1;
+	font-weight: 900;
+	line-height: 1.06;
 	margin: 0 0 0.5em;
+	letter-spacing: -0.01em;
 }
 
 p {
 	margin: 0 0 1em;
-	max-width: 34em;
+	max-width: 36em;
 }
 
 a {
 	color: inherit;
+	text-decoration-color: color-mix(in srgb, var(--accent-light) 60%, transparent);
+	text-underline-offset: 2px;
 }
 
-/* ── scene scaffolding ──────────────────────────────────────────────────── */
+/* ── inline highlights: prose words wear the exact chart colors ─────────── */
+.hl {
+	padding: 0.02em 0.22em;
+	border-radius: 5px;
+	font-weight: 600;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+}
+
+.hl-warm {
+	background: color-mix(in srgb, var(--warm) 20%, transparent);
+}
+
+.hl-cool {
+	background: color-mix(in srgb, var(--cool) 18%, transparent);
+}
+
+.hl-ink {
+	background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+/* ── scene scaffolding (sticky graphic + step cards flowing over it) ─────── */
 .scene {
 	position: relative;
 }
@@ -53,16 +82,137 @@ a {
 	height: 100svh; /* iOS Safari: smallest viewport height, so the pin never
 	                   exceeds the visible area when the browser chrome shows */
 	overflow: hidden;
+	display: grid;
+	align-items: center;
 }
 
-/* The persistent reader-mode toggle is fixed top-right; on narrow screens it
-   would otherwise float over a scene's first header line / kicker. Reserve a
-   safe band at the top of the elements that sit near the viewport top. */
+/* the card column scrolls back up OVER the sticky graphic */
+.cards-region {
+	position: relative;
+	z-index: 20;
+	margin-top: -100vh;
+	margin-top: -100svh;
+	pointer-events: none;
+}
+
+.card-slot {
+	min-height: 100vh;
+	min-height: 100svh;
+	display: flex;
+	align-items: center;
+	padding: 0 1rem 0 clamp(1rem, 6vw, 5.5rem);
+}
+
+/* breathing room so the first card doesn't cover the fresh graphic and the
+   last card releases before the pin does */
+.card-slot.first {
+	align-items: flex-end;
+	padding-bottom: 8vh;
+}
+
+.step-card {
+	pointer-events: auto;
+	background: var(--paper-raised);
+	border: 1px solid var(--ink-light-grid);
+	border-radius: 14px;
+	box-shadow:
+		0 2px 6px rgba(29, 26, 20, 0.06),
+		0 14px 38px rgba(29, 26, 20, 0.12);
+	padding: 1.15rem 1.35rem;
+	max-width: 23.5rem;
+	font-size: 1.02rem;
+	line-height: 1.55;
+	opacity: 0.55;
+	transform: translateY(6px);
+	transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.card-slot.active .step-card {
+	opacity: 1;
+	transform: none;
+}
+
+.step-card p {
+	margin: 0 0 0.7em;
+}
+
+.step-card p:last-child {
+	margin-bottom: 0;
+}
+
+.step-card .card-kicker {
+	display: block;
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.13em;
+	text-transform: uppercase;
+	color: var(--ink-light-muted);
+	margin-bottom: 0.45rem;
+}
+
 @media (max-width: 640px) {
-	.scene header,
-	.scene .copy-col {
-		padding-top: 3rem;
+	.card-slot {
+		justify-content: center;
+		padding: 0 1rem;
 	}
+
+	.step-card {
+		font-size: 0.95rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.step-card {
+		transform: none;
+		transition: opacity 0.35s ease;
+	}
+}
+
+/* ── chapter headers: the editorial connective tissue between scrollies ──── */
+.chapter-head {
+	max-width: 44rem;
+	margin: 0 auto;
+	padding: clamp(5rem, 14vh, 9rem) 1.5rem 3.5rem;
+	text-align: center;
+}
+
+.chapter-head .chapter-no {
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--ink-light-muted);
+	margin-bottom: 1.1rem;
+}
+
+.chapter-head h2 {
+	font-size: clamp(2.1rem, 6.5vw, 4rem);
+	text-wrap: balance;
+	margin-bottom: 0.45em;
+}
+
+.chapter-head .standfirst {
+	font-size: clamp(1.02rem, 2.2vw, 1.18rem);
+	color: var(--ink-light-secondary);
+	max-width: 34em;
+	margin: 0 auto;
+	text-wrap: pretty;
+}
+
+/* the graphic inside a pin: centered, comfortable margins */
+.graphic {
+	width: min(72rem, 100%);
+	margin: 0 auto;
+	padding: 1.25rem clamp(1rem, 3.5vw, 2.5rem);
+}
+
+.graphic .graphic-title {
+	font-family: 'Public Sans', system-ui, sans-serif;
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	color: var(--ink-light-secondary);
+	margin: 0 0 0.6rem;
 }
 
 /* Chart skeletons: a minimal sized placeholder (never a spinner) shown while
@@ -72,22 +222,13 @@ a {
 	border-radius: 8px;
 	background: linear-gradient(
 		180deg,
-		color-mix(in srgb, currentColor 7%, transparent),
-		color-mix(in srgb, currentColor 3%, transparent)
+		color-mix(in srgb, currentColor 6%, transparent),
+		color-mix(in srgb, currentColor 2%, transparent)
 	);
 	border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
 }
 
-.surface-dark {
-	background: var(--ocean);
-	color: var(--ink-dark-primary);
-	--beat-accent: var(--accent-dark);
-	--beat-surface: var(--ocean-raised);
-	--beat-ink: var(--ink-dark-primary);
-	--beat-ink-2: var(--ink-dark-secondary);
-	--beat-line: var(--ink-dark-axis);
-}
-
+/* one surface for the whole piece */
 .surface-light {
 	background: var(--paper);
 	color: var(--ink-light-primary);
@@ -103,19 +244,6 @@ a {
 	color: var(--paper);
 }
 
-/* the dark → paper handover between the coda and the printed epilogue;
-   carries the OniBand divider motif, seated in the gradient's paper end so
-   the neutral reads */
-.shore-transition {
-	height: 50vh;
-	background: linear-gradient(to bottom, var(--ocean), var(--paper));
-	display: flex;
-	align-items: flex-end;
-	justify-content: center;
-	padding-bottom: 8vh;
-	color: var(--ink-light-secondary);
-}
-
 /* ── scene prose (a11y equivalent / reader mode) ────────────────────────── */
 .scene-prose {
 	position: relative;
@@ -126,8 +254,8 @@ a {
 }
 
 .scene-prose.revealed {
-	border-left: 3px solid var(--accent-dark);
-	background: color-mix(in srgb, currentColor 6%, transparent);
+	border-left: 3px solid var(--accent-light);
+	background: color-mix(in srgb, currentColor 5%, transparent);
 	margin: 1.5rem auto;
 }
 
@@ -193,30 +321,10 @@ a {
 	font-family: 'Public Sans', system-ui, sans-serif;
 }
 
-/* superscript source links (Cite.svelte) — quiet but clickable */
-sup.cite {
-	font-size: 0.68em;
-	line-height: 0;
-	margin-left: 0.15em;
-}
-
-sup.cite a {
-	text-decoration: none;
-	opacity: 0.65;
-	border-bottom: 1px dotted currentColor;
-	padding: 0.1em 0.15em;
-}
-
-sup.cite a:hover,
-sup.cite a:focus-visible {
-	opacity: 1;
-}
-
 /* ── interaction beats: one visual language for every optional affordance ──
-   The beat components (TapReveal, Hotspot, PauseBeat) consume these classes
-   and the per-surface --beat-* custom properties.
-   The narrative NEVER depends on any of them: they are enrichment only,
-   and every one of them renders nothing under ?notap=1. */
+   TapReveal consumes these classes and the per-surface --beat-* custom
+   properties. The narrative NEVER depends on a beat: enrichment only, and
+   every one renders nothing under ?notap=1. */
 
 .beat-pill {
 	display: inline-flex;
@@ -241,7 +349,7 @@ sup.cite a:focus-visible {
 
 .beat-pill[aria-expanded='true'] {
 	border-color: var(--beat-accent);
-	background: color-mix(in srgb, var(--beat-accent) 14%, var(--beat-surface));
+	background: color-mix(in srgb, var(--beat-accent) 12%, var(--beat-surface));
 }
 
 .beat-card {
@@ -253,7 +361,7 @@ sup.cite a:focus-visible {
 	padding: 1rem 1.15rem;
 	font-size: 0.9rem;
 	line-height: 1.5;
-	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+	box-shadow: 0 8px 28px rgba(29, 26, 20, 0.12);
 }
 
 .beat-card h3 {
@@ -275,7 +383,7 @@ sup.cite a:focus-visible {
 @keyframes beat-pulse {
 	0%,
 	100% {
-		box-shadow: 0 0 0 0 color-mix(in srgb, var(--beat-accent) 45%, transparent);
+		box-shadow: 0 0 0 0 color-mix(in srgb, var(--beat-accent) 40%, transparent);
 	}
 	55% {
 		box-shadow: 0 0 0 9px color-mix(in srgb, var(--beat-accent) 0%, transparent);
@@ -299,35 +407,7 @@ sup.cite a:focus-visible {
 	}
 }
 
-/* ── steps: one idea per step, only one at full visual weight ─────────────── */
-.step {
-	transition: opacity 0.45s ease, transform 0.45s ease;
-	will-change: opacity, transform;
-}
-
-.step[data-state='before'] {
-	opacity: 0;
-	transform: translateY(14px);
-}
-
-.step[data-state='active'] {
-	opacity: 1;
-	transform: none;
-}
-
-.step[data-state='after'] {
-	opacity: 0.12;
-	transform: scale(0.97) translateY(-8px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.step {
-		transition: opacity 0.45s ease;
-		transform: none !important;
-	}
-}
-
-/* ── print: scene 7 only, one clean page ────────────────────────────────── */
+/* ── print: the epilogue only, one clean page ───────────────────────────── */
 @media print {
 	.no-print {
 		display: none !important;
