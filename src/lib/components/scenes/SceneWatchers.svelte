@@ -1,6 +1,6 @@
 <script>
 	/**
-	 * Chapter 6 — the watchers. The close: Papua New Guinea's meteorological
+	 * Chapter 8 — the watchers. The close: Papua New Guinea's meteorological
 	 * monitoring network as a step chart (1 station in 1951 → 6 in 2026), and
 	 * the payoff of the whole journey — a remote signal is an early one, if
 	 * someone is watching.
@@ -15,7 +15,7 @@
 </script>
 
 <ChapterHead
-	no="Chapter six · the watchers"
+	no="Chapter eight · the watchers"
 	title="A signal is only a warning if someone reads it."
 	standfirst="The last chart isn’t a temperature. It’s attention — measured in monitoring stations, one number a year, since 1951."
 />

@@ -1,6 +1,6 @@
 <script>
 	/**
-	 * Chapter 1 — the see-saw. The Oceanic Niño Index as a sticky bar chart;
+	 * Chapter 2 — the see-saw. The Oceanic Niño Index as a sticky bar chart;
 	 * four step cards teach it: what the measurement is, what the tips mean
 	 * (colors arrive), the four great El Niños (labels arrive), and the
 	 * still-unwritten current season ("?"). Data: static/data/scene_reveal.json
@@ -18,9 +18,9 @@
 </script>
 
 <ChapterHead
-	no="Chapter one · the far ocean"
+	no="Chapter two · the far ocean"
 	title="The Pacific runs on a see&#8209;saw."
-	standfirst="Seven thousand kilometres east of Port Moresby there is a patch of open ocean that decides more about Papua New Guinea’s year than any cloud over the country. Scientists have a number for it."
+	standfirst="The dashed rectangle from chapter one is an instrument, and it has been read for decades. Its temperature, condensed to one number per season, is the Oceanic Niño Index — and the index has a see&#8209;saw in it."
 />
 
 <ScrollScene
@@ -74,9 +74,9 @@
 			<div class="step-card">
 				<span class="card-kicker">The measurement</span>
 				<p>
-					Meet the Pacific’s metronome. Scientists log the temperature of one patch of equatorial
-					ocean — the <span class="hl hl-cool">Niño&nbsp;3.4 region</span> — season after season.
-					Condensed to one bar per year, it looks like this.
+					Scientists log the temperature of the <span class="hl hl-cool">Niño&nbsp;3.4 region</span>
+					season after season, year after year. Condensed to one bar per year, the record
+					looks like this.
 				</p>
 			</div>
 		</div>
@@ -96,7 +96,7 @@
 				<span class="card-kicker">The big ones</span>
 				<p>
 					<strong>1982. 1997. 2015. 2023.</strong> The great El Niños of the modern record.
-					Remember these bars — you are about to see them again, upside down.
+					The next chapter holds these same years against Papua New Guinea’s rain.
 				</p>
 			</div>
 		</div>

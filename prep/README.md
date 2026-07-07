@@ -36,7 +36,7 @@ scene renders as an open "?").
 
 ### 3. One reference number — world-average emissions
 
-Chapter 5 marks a single reference value of **≈6.6 t CO₂e per person**
+Chapter 7 marks a single reference value of **≈6.6 t CO₂e per person**
 (world average, 2023), from EDGAR — the European Commission JRC's Emissions
 Database for Global Atmospheric Research
 (<https://edgar.jrc.ec.europa.eu/report_2024>). It is written into
@@ -56,24 +56,33 @@ rainfall anomaly by ENSO phase — and writes:
 | output | chapter | contents |
 |---|---|---|
 | `pg_climate.json` | (foundation) | every PG indicator series + regional context + ONI + all source blocks |
-| `scene_reveal.json` | Ch. 1–2 | {year, oni, phase, rain} + r_oni + driest-ten phases + phase means |
-| `scene_cost.json` | Ch. 3 | crop yield 1961–2024 + the drought years |
-| `scene_exposure.json` | Ch. 4 | SST 1850–2025 + sea level 1993–2023 + r_local (the "alibi") |
-| `scene_gap.json` | Ch. 5 | GHG per capita 1970–2024 + the EDGAR world reference |
-| `scene_watch.json` | Ch. 6 | meteorological monitoring network 1951–2026 |
+| `scene_reveal.json` | Ch. 2–3 | {year, oni, phase, rain} + r_oni + driest-ten phases + phase means |
+| `scene_cost.json` | Ch. 5 | crop yield 1961–2024 + the drought years |
+| `scene_exposure.json` | Ch. 6 | SST 1850–2025 + sea level 1993–2023 + r_local (the "alibi") |
+| `scene_gap.json` | Ch. 7 | GHG per capita 1970–2024 + the EDGAR world reference |
+| `scene_watch.json` | Ch. 8 | meteorological monitoring network 1951–2026 |
 | `scene_record.json` | Epilogue | small multiples: six PG indicators with first/last values |
 
 Re-running the script rewrites `static/data/`. To update the
 piece when SPC republishes the dataflow, re-export the CSV from .Stat
 Explorer, drop it in `source/`, and re-run; same for the ONI table.
 
+A second script, `make_maps.mjs`, builds `scene_map.json` for the two map
+chapters (1 and 4): real **Natural Earth** coastlines and rivers (public
+domain), downloaded into `source/naturalearth/` on first run (not
+committed — several MB), pre-projected to plain equirectangular SVG paths
+and Douglas-Peucker simplified so no geo library ships to the client. The
+highlands band on the country map is an illustrative marker, not a DEM,
+and is labelled as such in the scene.
+
 ## Rules
 
-1. **Real data only.** Every value in `static/data/` traces to a row in one
-   of the committed source files. The single illustrative element in the
-   piece (chapter 3's frost-night popup) is prose inside its scene
-   component, explicitly labelled "an illustration, not a measurement", and
-   carries no numbers.
+1. **Real data only.** Every numeric value in `static/data/` traces to a
+   row in one of the committed source files (or, for `scene_map.json`, to
+   Natural Earth geometry). The illustrative elements in the piece — the
+   warm-pool motion on the map, the elevation profile, the two field-note
+   interactives, the aftermath hillside — are explicitly labelled
+   illustrations on the graphic itself and carry no dataset numbers.
 2. Keep every scene file small (the audience is on 3G); derive from the
    foundation file rather than re-parsing the CSV in the front end.
 3. Never ship a derived quantity computed in the browser — every statistic
@@ -82,4 +91,4 @@ Explorer, drop it in `source/`, and re-run; same for the ONI table.
 4. State the caveats in the piece, not just the code: national annual
    averages blunt extreme events, and PNG's local sea-surface anomaly is not
    the El Niño (Niño 3.4) signal — the piece leans on that mismatch
-   (chapters 1–2 and chapter 4's "alibi" card), not around it.
+   (chapters 1–3 and chapter 6's "alibi" card), not around it.

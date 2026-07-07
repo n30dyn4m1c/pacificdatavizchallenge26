@@ -1,14 +1,13 @@
 <script>
 	/**
-	 * Chapter 3 — down in the gardens. The national crop-yield record with
-	 * the driest years marked; the honest caveat (subsistence gardens sit off
-	 * this ledger) and the 1997 frost story as an explicitly-labelled
-	 * illustrative popup inside the last card.
+	 * Chapter 5 — down in the gardens. The national crop-yield record with
+	 * the driest years marked, and the honest caveat: subsistence gardens sit
+	 * off this ledger. The frost mechanism itself is taken apart in field
+	 * note 02, just above this chapter.
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
 	import LazyLines from '$lib/components/LazyLines.svelte';
-	import TapReveal from '$lib/components/beats/TapReveal.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import { cardIndex, sweep } from '$lib/scrolly.js';
 
@@ -17,13 +16,13 @@
 </script>
 
 <ChapterHead
-	no="Chapter three · the gardens"
+	no="Chapter five · the gardens"
 	title="What a dry year takes."
 	standfirst="A shortfall on a rainfall chart is a shortfall in somebody’s garden. The national harvest record shows where the El&nbsp;Niño years landed — and hides where they landed hardest."
 />
 
 <ScrollScene
-	id="3-gardens"
+	id="5-gardens"
 	title="Papua New Guinea crop yield against its driest years, 1961–2024"
 	heightVh={(N + 1) * 100}
 	dataUrl="/data/scene_cost.json"
@@ -35,10 +34,9 @@
 			across the decades, and stumbles at the driest years — 1982, 1993, 1997 and 2015. The dips
 			look modest, and that is itself a finding: most of the country's food grows in subsistence
 			gardens a national yield-per-hectare figure barely sees, so the deepest losses sit off this
-			ledger. 1997 was the cruellest year: drought below and frost above, because an El Niño
-			drought's clear, dry skies let highland nights radiate their heat to space, and gardens
-			above 2,200 metres died in a single night. (The frost mechanism is described as an
-			illustration — it carries no numbers from this dataset.)
+			ledger. 1997 was the hardest year of the record: drought in the lowlands and frost in the
+			Highlands in the same season — the double mechanism the island chapter and its field notes
+			describe — brought one of the country's worst food emergencies in living memory.
 		</p>
 		{#if data}
 			<DataTable
@@ -78,8 +76,8 @@
 			<div class="step-card">
 				<span class="card-kicker">The harvest</span>
 				<p>
-					So what does a dry year actually take? Here is the national harvest — crop yield, 1961
-					to 2024. Mostly it climbs: better seed, better roads, better prices.
+					So what does a dry year take, in the official ledger? Here is the national harvest —
+					crop yield, 1961 to 2024. Mostly it climbs: better seed, better roads, better prices.
 				</p>
 			</div>
 		</div>
@@ -96,35 +94,21 @@
 			<div class="step-card">
 				<span class="card-kicker">The honest caveat</span>
 				<p>
-					The dips look small. Don’t be fooled: most of Papua New Guinea’s food grows in
+					The dips look small. But most of Papua New Guinea’s food grows in
 					<span class="hl hl-ink">subsistence gardens</span> that a national statistic barely
-					sees. The hardest losses land off this chart.
+					sees — the hardest losses land off this chart, in exactly the villages the field notes
+					described.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
-				<span class="card-kicker">1997, the cruellest</span>
+				<span class="card-kicker">1997, twice over</span>
 				<p>
-					1997 hit twice: drought below, and <span class="hl hl-cool">frost</span> above. An El
-					Niño drought’s clear, dry skies let highland nights freeze — gardens above 2,200 metres
-					died in a single night.
+					1997 hit twice in one season: <span class="hl hl-warm">drought</span> in the lowlands
+					and <span class="hl hl-cool">frost</span> above the 2,200-metre line — the clear-night
+					mechanism of field note 02. Gardens, and the cuttings to replant them, died together.
 				</p>
-				<TapReveal id="gardens-frost" label="How a clear night kills a garden →">
-					<h3>The frost story <em>(an illustration, not a measurement)</em></h3>
-					<p>
-						Kaukau — sweet potato — is the staple of the Highlands, grown on mounded gardens up
-						to and past 2,200 metres. Cloud is a blanket; in an El Niño drought there is none.
-						The ground radiates the day’s heat straight to space, and by dawn a garden that
-						normally never freezes is silver with frost.
-					</p>
-					<p>
-						One such night blackens the vines. The tubers below survive, but nothing feeds them —
-						and the cuttings needed to replant died in the same hour, so the loss reaches into
-						the next season. In 1997, drought and frost together brought one of the country’s
-						worst food emergencies in living memory.
-					</p>
-				</TapReveal>
 			</div>
 		</div>
 	{/snippet}

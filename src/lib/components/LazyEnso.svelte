@@ -1,6 +1,6 @@
 <script>
 	/**
-	 * LazyEnso — code-split wrapper around EnsoBars (chapter 1). Same contract
+	 * LazyEnso — code-split wrapper around EnsoBars (chapter two). Same contract
 	 * as LazyLines: the chart chunk loads only when the scene mounts it, with
 	 * a sized skeleton holding the space until then.
 	 */

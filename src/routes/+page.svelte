@@ -1,23 +1,34 @@
 <script>
 	/**
 	 * The Ocean Knows First — the page spine. A light, editorial scrollytelling
-	 * journey in six chapters: the drought signal travels from the far ocean
-	 * (the ENSO see-saw) to Papua New Guinea's rain, down into its gardens,
-	 * across the 176-year warming record beneath, through the emissions
-	 * ledger, and ends with the watchers who read the signal early. Every
-	 * chapter is a sticky graphic with white step cards scrolling over it
-	 * (ScrollScene + the /lib/scrolly.js card convention). Data: the official
-	 * SPC record plus the documented NOAA ONI companion (see /prep).
+	 * journey in eight chapters plus field notes: the map of the two oceans,
+	 * the ENSO see-saw, the rain that mirrors it, the island in cross-section
+	 * (coast → rivers → Highlands day and night), the harvest record, the
+	 * 176-year warming record beneath, the emissions ledger, and the watchers
+	 * who read the signal early. Between chapters: two interactive field notes
+	 * (the drying river, the frost night), the aftermath (the floods that
+	 * follow), the paper trail of real coverage, and the closing ask —
+	 * prepare for the predictable. Every scrolly chapter is a sticky graphic
+	 * with white step cards over it (ScrollScene + /lib/scrolly.js). Data:
+	 * the official SPC record plus documented companions (NOAA ONI, Natural
+	 * Earth geometry — see /prep); illustrations are labelled as such.
 	 */
 	import Hero from '$lib/components/Hero.svelte';
 	import BigStat from '$lib/components/BigStat.svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
-	import Ch1SeeSaw from '$lib/components/scenes/Ch1SeeSaw.svelte';
-	import Ch2Signal from '$lib/components/scenes/Ch2Signal.svelte';
-	import Ch3Gardens from '$lib/components/scenes/Ch3Gardens.svelte';
-	import Ch4LongRecord from '$lib/components/scenes/Ch4LongRecord.svelte';
-	import Ch5Ledger from '$lib/components/scenes/Ch5Ledger.svelte';
-	import Ch6Watchers from '$lib/components/scenes/Ch6Watchers.svelte';
+	import SceneMap from '$lib/components/scenes/SceneMap.svelte';
+	import SceneSeeSaw from '$lib/components/scenes/SceneSeeSaw.svelte';
+	import SceneSignal from '$lib/components/scenes/SceneSignal.svelte';
+	import SceneIsland from '$lib/components/scenes/SceneIsland.svelte';
+	import RiverDry from '$lib/components/RiverDry.svelte';
+	import FrostNight from '$lib/components/FrostNight.svelte';
+	import SceneGardens from '$lib/components/scenes/SceneGardens.svelte';
+	import Aftermath from '$lib/components/Aftermath.svelte';
+	import NewsShelf from '$lib/components/NewsShelf.svelte';
+	import SceneLongRecord from '$lib/components/scenes/SceneLongRecord.svelte';
+	import SceneLedger from '$lib/components/scenes/SceneLedger.svelte';
+	import SceneWatchers from '$lib/components/scenes/SceneWatchers.svelte';
+	import CallToAction from '$lib/components/CallToAction.svelte';
 	import SceneRecord from '$lib/components/scenes/SceneRecord.svelte';
 </script>
 
@@ -25,7 +36,7 @@
 	<title>The Ocean Knows First — Papua New Guinea and the far ocean that takes its rain</title>
 	<meta
 		name="description"
-		content="Papua New Guinea's worst droughts start in the temperature of seawater seven thousand kilometres east, months before the rain fails. A scrollytelling journey through 176 years of the official Pacific climate record — the Pacific Community's climate-change dataset on the Pacific Data Hub, with the NOAA Oceanic Niño Index naming the El Niño years."
+		content="Papua New Guinea's worst droughts start in the temperature of seawater seven thousand kilometres east, months before the rain fails — and the damage runs from dry coastal tanks to stranded river barges to frost-killed highland gardens. A scrollytelling journey through 176 years of the official Pacific climate record, with the real coverage of 1997 and 2015, and one ask: prepare for the predictable."
 	/>
 </svelte:head>
 
@@ -36,26 +47,29 @@
 	<section class="intro" aria-label="Introduction">
 		<p>
 			In the middle of 1997, the rain over Papua New Guinea began to fail. By the end of the year
-			it was the driest year ever measured there — gardens wilted in the lowlands, and in the
-			Highlands, on cloudless drought nights, entire hillsides of sweet potato froze. Nearly two
-			decades later, in 2015, it happened again.
+			it was the driest year ever measured there — rivers fell until the barges stopped, gardens
+			wilted from the coast to the valleys, and in the Highlands, on cloudless drought nights,
+			entire hillsides of sweet potato froze. Nearly two decades later, in 2015, it happened
+			again.
 		</p>
 		<p>
-			Here is the strange part: the first sign was never in the sky over Papua New Guinea. It was
-			in the temperature of seawater <span class="hl hl-cool">seven thousand kilometres east</span>
-			— months earlier.
+			The first sign was never in the sky over Papua New Guinea. It was in the temperature of
+			seawater <span class="hl hl-cool">seven thousand kilometres east</span> — months earlier.
 		</p>
 		<p>
-			This is the story of that signal, told entirely through the
-			<strong>official climate record</strong>: the Pacific Community’s indicators for Papua New
-			Guinea, one number a year, some series back to 1850. Six charts. No forecasts, no synthetic
-			data — just the record, read in order.
+			This is the story of that signal, told through the <strong>official climate record</strong> —
+			the Pacific Community’s indicators for Papua New Guinea, one number a year, some series back
+			to 1850 — with the real reporting from 1997 and 2015 alongside it. No forecasts, no synthetic
+			data; where the piece draws a mechanism instead of measuring it, it says so on the drawing.
+			It ends with the only conclusion the record supports: this will happen again, on a schedule
+			the ocean announces — so it can be prepared for.
 		</p>
 		<div class="intro-band" aria-hidden="true"><OniBand /></div>
 	</section>
 
-	<Ch1SeeSaw />
-	<Ch2Signal />
+	<SceneMap />
+	<SceneSeeSaw />
+	<SceneSignal />
 
 	<BigStat
 		kicker="Since 1979"
@@ -64,8 +78,14 @@
 		accent="warm"
 	/>
 
-	<Ch3Gardens />
-	<Ch4LongRecord />
+	<SceneIsland />
+	<RiverDry />
+	<FrostNight />
+	<SceneGardens />
+	<Aftermath />
+	<NewsShelf />
+
+	<SceneLongRecord />
 
 	<BigStat
 		kicker="2025"
@@ -74,8 +94,9 @@
 		accent="warm"
 	/>
 
-	<Ch5Ledger />
-	<Ch6Watchers />
+	<SceneLedger />
+	<SceneWatchers />
+	<CallToAction />
 
 	<SceneRecord />
 </main>
@@ -91,12 +112,15 @@
 		— dataflow <code>SPC:DF_CLIMATE_CHANGE(1.0)</code>, exported from the Pacific Data Hub's .Stat
 		Explorer (<code>stats.pacificdata.org</code>) and filtered to Papua New Guinea. It is the
 		official dataset of this year's Challenge: annual, national-level observations, 1850–2025, used
-		real and unaltered; the pipeline that extracts them is in <code>/prep</code>. Two documented
-		companions from open sources name what the SPC record cannot: the El Niño years come from the
-		<strong>NOAA Climate Prediction Center's Oceanic Niño Index</strong>, and the world-average
-		emissions reference (≈6.6 t CO₂e/person) from <strong>EDGAR</strong> (EC-JRC). The frost story
-		in chapter three is an explicitly labelled illustration of a mechanism, not data. No forecast,
-		no synthetic values. No cookies, no tracking, fully static.
+		real and unaltered; the pipeline that extracts them is in <code>/prep</code>. Documented
+		companions from open sources supply what the SPC record cannot: the El Niño years come from the
+		<strong>NOAA Climate Prediction Center's Oceanic Niño Index</strong>, the world-average
+		emissions reference (≈6.6 t CO₂e/person) from <strong>EDGAR</strong> (EC-JRC), and the
+		coastlines and rivers on both maps from <strong>Natural Earth</strong> (public domain). The
+		cross-section, the field notes and the aftermath hillside are explicitly labelled illustrations
+		of mechanisms, and carry no dataset numbers; the paper-trail section links to external
+		reporting, summarised by this piece. No forecast, no synthetic values. No cookies, no tracking,
+		fully static.
 	</p>
 </footer>
 

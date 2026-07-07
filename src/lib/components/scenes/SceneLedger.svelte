@@ -1,6 +1,6 @@
 <script>
 	/**
-	 * Chapter 5 — the ledger. Emissions per person as countable dots: the
+	 * Chapter 7 — the ledger. Emissions per person as countable dots: the
 	 * world's ≈6.6 t against Papua New Guinea's ≈1.2 t (SPC record). The one
 	 * reference value not from the SPC dataflow (the world average, EDGAR
 	 * 2023) is documented in /prep and named in the prose.
@@ -16,9 +16,9 @@
 </script>
 
 <ChapterHead
-	no="Chapter five · the ledger"
+	no="Chapter seven · the ledger"
 	title="Papua New Guinea didn’t order this weather."
-	standfirst="The see&#8209;saw is natural. The rising floor beneath it is not — and the ledger of who builds it is short reading."
+	standfirst="The see&#8209;saw is natural. The rising floor beneath it is not — and the ledger of who builds it is short."
 />
 
 <ScrollScene
@@ -69,7 +69,7 @@
 			<div class="step-card">
 				<span class="card-kicker">Count it out</span>
 				<p>
-					Here’s the part that stings. Count emissions the way you’d count anything: one dot for
+					Count emissions the way you’d count anything: one dot for
 					every <strong>100&nbsp;kg</strong> of greenhouse gas a person’s country puts into the
 					sky in a year.
 				</p>
