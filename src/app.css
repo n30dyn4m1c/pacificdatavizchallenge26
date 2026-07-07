@@ -150,8 +150,17 @@ a {
 	margin-bottom: 0.45rem;
 }
 
+/* chapter nine reads left-to-right into the future: its cards sit on the
+   RIGHT so they never cover the 2026 line (the months already observed, at
+   the left edge of the aligned chart) */
+#scene-9-now .card-slot {
+	justify-content: flex-end;
+	padding: 0 clamp(1rem, 6vw, 5.5rem) 0 1rem;
+}
+
 @media (max-width: 640px) {
-	.card-slot {
+	.card-slot,
+	#scene-9-now .card-slot {
 		justify-content: center;
 		padding: 0 1rem;
 	}

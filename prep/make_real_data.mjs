@@ -307,4 +307,155 @@ function pearson(pairs) {
 	});
 }
 
+// ── chapter 9 — now (monthly Niño 3.4: the 2026 event against its precedents) ─
+{
+	// Monthly Niño 3.4 SST anomalies, NOAA PSL (see prep/README.md §3).
+	const NINO_SRC = new URL('./source/nino34_monthly.csv', import.meta.url).pathname;
+	const ninoRows = parseCsv(readFileSync(NINO_SRC, 'utf8'));
+	ninoRows.shift(); // header: date,year,month,anomaly
+	const nino = ninoRows
+		.filter((r) => r.length >= 4 && r[0] !== '')
+		.map((r) => ({ date: r[0], year: Number(r[1]), month: Number(r[2]), anomaly: Number(r[3]) }))
+		.filter((d) => Number.isFinite(d.anomaly));
+
+	const NINO_SOURCE = {
+		name: 'Niño 3.4 SST anomaly, monthly — NOAA Physical Sciences Laboratory',
+		url: 'https://psl.noaa.gov/data/correlation/nina34.anom.data',
+		note:
+			'Monthly mean sea-surface temperature anomaly for the Niño 3.4 region (5°N–5°S, ' +
+			'170°–120°W). Exported with prep/fetch_nino34.py in July 2026; observations run ' +
+			'through June 2026. The only monthly series in the piece.'
+	};
+
+	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	const byDate = new Map(nino.map((d) => [d.date, d.anomaly]));
+	const at = (year, month) => byDate.get(`${year}-${String(month).padStart(2, '0')}`) ?? null;
+
+	// Event alignment: m = 0..17 spans Jan of the onset year → Jun of the year after.
+	const SPAN = 18;
+	const alignEvent = (onset) => {
+		const months = [];
+		for (let m = 0; m < SPAN; m++) {
+			const year = onset + Math.floor(m / 12);
+			const value = at(year, (m % 12) + 1);
+			if (value != null) months.push({ m, anomaly: value });
+		}
+		return months;
+	};
+	const mLabel = (onset, m) => `${MONTHS[m % 12]} ${onset + Math.floor(m / 12)}`;
+
+	const GREAT_ONSETS = [1982, 1997, 2015, 2023];
+	const events = GREAT_ONSETS.map((onset) => {
+		const months = alignEvent(onset);
+		const peak = months.reduce((a, b) => (b.anomaly > a.anomaly ? b : a));
+		return { onset, label: `${onset}–${String(onset + 1).slice(2)}`, peak, months };
+	});
+
+	const CURRENT_ONSET = 2026;
+	const current = alignEvent(CURRENT_ONSET); // Jan–Jun 2026 at extraction
+	const lastObs = current.at(-1);
+
+	// The recent see-saw, month by month: Jan 2023 → the last observation.
+	const recent = nino
+		.filter((d) => d.year >= 2023)
+		.map((d) => ({ date: d.date, anomaly: d.anomaly }));
+
+	// ── the analogue estimate for the unwritten months ────────────────────────
+	// Weight each great event by how closely its Jan–Jun matched 2026's Jan–Jun
+	// (inverse RMSE), then extend: mean = similarity-weighted average of the four
+	// trajectories; the band is their min–max envelope. This is an ESTIMATE from
+	// precedent, not an observation — the scene labels it as such on the graphic.
+	const obsWindow = current.map((d) => d.m);
+	const rmseOf = (ev) => {
+		const diffs = obsWindow
+			.map((m) => {
+				const a = ev.months.find((d) => d.m === m);
+				const b = current.find((d) => d.m === m);
+				return a && b ? a.anomaly - b.anomaly : null;
+			})
+			.filter((d) => d != null);
+		return Math.sqrt(diffs.reduce((s, d) => s + d * d, 0) / diffs.length);
+	};
+	const raw = events.map((ev) => ({ onset: ev.onset, rmse: rmseOf(ev) }));
+	const wsum = raw.reduce((s, d) => s + 1 / d.rmse, 0);
+	const weights = raw.map((d) => ({
+		onset: d.onset,
+		rmse: round(d.rmse, 3),
+		weight: round(1 / d.rmse / wsum, 3)
+	}));
+
+	const forecast = [];
+	// anchor the band to the last observation so the estimate continues the line
+	forecast.push({ m: lastObs.m, mean: lastObs.anomaly, lo: lastObs.anomaly, hi: lastObs.anomaly });
+	for (let m = lastObs.m + 1; m < SPAN; m++) {
+		const vals = events
+			.map((ev) => ({ onset: ev.onset, v: ev.months.find((d) => d.m === m)?.anomaly }))
+			.filter((d) => d.v != null);
+		const mean =
+			vals.reduce((s, d) => s + d.v / weights.find((w) => w.onset === d.onset).rmse, 0) /
+			vals.reduce((s, d) => s + 1 / weights.find((w) => w.onset === d.onset).rmse, 0);
+		forecast.push({
+			m,
+			mean: round(mean, 2),
+			lo: round(Math.min(...vals.map((d) => d.v)), 2),
+			hi: round(Math.max(...vals.map((d) => d.v)), 2)
+		});
+	}
+
+	const peakF = forecast.reduce((a, b) => (b.mean > a.mean ? b : a));
+	// "the hardest months": estimate ≥ +1.0 °C (event fully in force)…
+	const hard = forecast.filter((d) => d.mean >= 1);
+	// …and "the swing back": the estimate's decay below the +0.5 El Niño threshold.
+	const swing = forecast.find((d) => d.m > peakF.m && d.mean <= 0.5);
+
+	// The official outlook the estimate is checked against (cited reference values,
+	// not a dataset — same pattern as the EDGAR world-average number in chapter 7).
+	const OFFICIAL = {
+		name: 'NOAA CPC / IRI ENSO outlook, mid-June 2026',
+		url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml',
+		iri_url: 'https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/',
+		points: [
+			'El Niño conditions are present and expected to strengthen through late 2026.',
+			'Probability of El Niño ≈100% through Sep–Nov 2026 and ≈99% through Dec 2026–Feb 2027.',
+			'Forecast peak in Sep–Nov 2026; 13 of 24 models reach “very strong” (Niño 3.4 ≥ +2.0 °C).'
+		]
+	};
+
+	// June standings: 2026 against each great event at the same point in the year.
+	const juneM = lastObs.m;
+	const june = events.map((ev) => ({
+		onset: ev.onset,
+		value: ev.months.find((d) => d.m === juneM)?.anomaly ?? null
+	}));
+
+	write('scene_now.json', {
+		source: SOURCE,
+		nino_source: NINO_SOURCE,
+		official: OFFICIAL,
+		span: SPAN,
+		month_names: MONTHS,
+		recent,
+		events: events.map(({ onset, label, peak, months }) => ({ onset, label, peak, months })),
+		current: { onset: CURRENT_ONSET, months: current, latest: { ...lastObs, date: nino.at(-1).date } },
+		june_standings: june,
+		analogue: { weights, forecast },
+		timing: {
+			peak: { m: peakF.m, label: mLabel(CURRENT_ONSET, peakF.m), mean: peakF.mean, lo: peakF.lo, hi: peakF.hi },
+			hardest: hard.length
+				? { from: hard[0].m, to: hard.at(-1).m,
+				    label: `${mLabel(CURRENT_ONSET, hard[0].m)} – ${mLabel(CURRENT_ONSET, hard.at(-1).m)}` }
+				: null,
+			swingback: swing
+				? { from: swing.m, to: SPAN - 1,
+				    label: `${mLabel(CURRENT_ONSET, swing.m)} – ${mLabel(CURRENT_ONSET, SPAN - 1)}` }
+				: null
+		}
+	});
+	console.log(`  · Niño 3.4 monthly: ${nino.length} months ${nino[0].date} → ${nino.at(-1).date}`);
+	console.log(`  · analogue weights: ${weights.map((w) => `${w.onset}=${w.weight} (rmse ${w.rmse})`).join('  ')}`);
+	console.log(`  · June standings: 2026=${lastObs.anomaly} vs ${june.map((d) => `${d.onset}=${d.value}`).join(' ')}`);
+	console.log(`  · estimate peak ${peakF.mean} (${peakF.lo}–${peakF.hi}) at ${mLabel(CURRENT_ONSET, peakF.m)}`);
+	console.log(`  · hardest ${hard[0]?.m}–${hard.at(-1)?.m}, swing-back from m=${swing?.m}`);
+}
+
 console.log('done.');

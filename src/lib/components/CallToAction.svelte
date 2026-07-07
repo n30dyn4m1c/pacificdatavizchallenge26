@@ -38,8 +38,9 @@
 		<p class="standfirst">
 			No one in Papua New Guinea can stop an El Niño, and no policy written in Port Moresby will
 			cool the far ocean. But nothing in this story arrived unannounced: the signal came months
-			early, and the damage followed a sequence the record has already written down twice. That is
-			what preparation is for.
+			early, the damage followed a sequence the record has already written down twice — and the
+			third writing has begun, with most of its hard months still ahead. That is what preparation
+			is for.
 		</p>
 	</header>
 
@@ -54,9 +55,9 @@
 	</div>
 
 	<p class="cta-close">
-		The see-saw will tip again — that is the one certainty this record offers. The choice it
-		leaves is whether the next El Niño meets a country that has read its own history, or one that
-		has to live it again from the beginning.
+		The see-saw has tipped again — that much is already measured. The choice the record leaves is
+		whether this El Niño, in its hardest months, meets a country that has read its own history, or
+		one that has to live it again from the beginning.
 	</p>
 </section>
 
