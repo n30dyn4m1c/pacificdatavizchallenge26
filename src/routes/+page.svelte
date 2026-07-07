@@ -1,17 +1,21 @@
 <script>
 	/**
 	 * The Ocean Knows First — the page spine. A light, editorial scrollytelling
-	 * journey in eight chapters plus field notes: the map of the two oceans,
+	 * journey in nine chapters plus field notes: the map of the two oceans,
 	 * the ENSO see-saw, the rain that mirrors it, the island in cross-section
 	 * (coast → rivers → Highlands day and night), the harvest record, the
-	 * 176-year warming record beneath, the emissions ledger, and the watchers
-	 * who read the signal early. Between chapters: two interactive field notes
-	 * (the drying river, the frost night), the aftermath (the floods that
-	 * follow), the paper trail of real coverage, and the closing ask —
-	 * prepare for the predictable. Every scrolly chapter is a sticky graphic
-	 * with white step cards over it (ScrollScene + /lib/scrolly.js). Data:
-	 * the official SPC record plus documented companions (NOAA ONI, Natural
-	 * Earth geometry — see /prep); illustrations are labelled as such.
+	 * 176-year warming record beneath, the emissions ledger, the watchers
+	 * who read the signal early — and chapter nine, the present: the 2026
+	 * El Niño month by month against its four precedents, with the piece's
+	 * one labelled estimate of the months ahead. Between chapters: two
+	 * interactive field notes (the drying river, the frost night), the
+	 * aftermath (the floods that follow), two paper trails of real coverage
+	 * (1997/2015 archives, and 2026 live), and the closing ask — prepare for
+	 * the predictable. Every scrolly chapter is a sticky graphic with white
+	 * step cards over it (ScrollScene + /lib/scrolly.js). Data: the official
+	 * SPC record plus documented companions (NOAA ONI, NOAA PSL Niño 3.4
+	 * monthly, Natural Earth geometry — see /prep); illustrations and the
+	 * one estimate are labelled as such.
 	 */
 	import Hero from '$lib/components/Hero.svelte';
 	import BigStat from '$lib/components/BigStat.svelte';
@@ -28,6 +32,8 @@
 	import SceneLongRecord from '$lib/components/scenes/SceneLongRecord.svelte';
 	import SceneLedger from '$lib/components/scenes/SceneLedger.svelte';
 	import SceneWatchers from '$lib/components/scenes/SceneWatchers.svelte';
+	import SceneNow from '$lib/components/scenes/SceneNow.svelte';
+	import NewsShelf2026 from '$lib/components/NewsShelf2026.svelte';
 	import CallToAction from '$lib/components/CallToAction.svelte';
 	import SceneRecord from '$lib/components/scenes/SceneRecord.svelte';
 </script>
@@ -36,7 +42,7 @@
 	<title>The Ocean Knows First — Papua New Guinea and the far ocean that takes its rain</title>
 	<meta
 		name="description"
-		content="Papua New Guinea's worst droughts start in the temperature of seawater seven thousand kilometres east, months before the rain fails — and the damage runs from dry coastal tanks to stranded river barges to frost-killed highland gardens. A scrollytelling journey through 176 years of the official Pacific climate record, with the real coverage of 1997 and 2015, and one ask: prepare for the predictable."
+		content="Papua New Guinea's worst droughts start in the temperature of seawater seven thousand kilometres east, months before the rain fails — and in mid-2026 that water is warming faster than in 1982, 1997, 2015 or 2023. A scrollytelling journey through 176 years of the official Pacific climate record, with the real coverage of 1997, 2015 and the unfolding 2026 event, a clearly-labelled estimate of the months ahead, and one ask: prepare for the predictable."
 	/>
 </svelte:head>
 
@@ -57,12 +63,18 @@
 			seawater <span class="hl hl-cool">seven thousand kilometres east</span> — months earlier.
 		</p>
 		<p>
+			And it is not only a story about the past. In the middle of 2026 — right now — the far ocean
+			is warming faster than it did in 1982, 1997, 2015 or 2023, and the declarations and drought
+			alerts are already on the record.
+		</p>
+		<p>
 			This is the story of that signal, told through the <strong>official climate record</strong> —
 			the Pacific Community’s indicators for Papua New Guinea, one number a year, some series back
-			to 1850 — with the real reporting from 1997 and 2015 alongside it. No forecasts, no synthetic
-			data; where the piece draws a mechanism instead of measuring it, it says so on the drawing.
-			It ends with the only conclusion the record supports: this will happen again, on a schedule
-			the ocean announces — so it can be prepared for.
+			to 1850 — with the real reporting from 1997, 2015 and 2026 alongside it. No synthetic data;
+			where the piece draws a mechanism instead of measuring it, it says so on the drawing, and the
+			one panel that looks forward is labelled as an estimate, on the chart. It ends with the only
+			conclusion the record supports: this is happening again, on a schedule the ocean announced —
+			so it can still be prepared for.
 		</p>
 		<div class="intro-band" aria-hidden="true"><OniBand /></div>
 	</section>
@@ -96,6 +108,16 @@
 
 	<SceneLedger />
 	<SceneWatchers />
+
+	<BigStat
+		kicker="June 2026"
+		stat="+1.44 °C"
+		caption="the far ocean, right now — warmer at June than 1982, 1997, 2015 or 2023 stood at the same point in their onset years."
+		accent="warm"
+	/>
+
+	<SceneNow />
+	<NewsShelf2026 />
 	<CallToAction />
 
 	<SceneRecord />
@@ -118,9 +140,13 @@
 		emissions reference (≈6.6 t CO₂e/person) from <strong>EDGAR</strong> (EC-JRC), and the
 		coastlines and rivers on both maps from <strong>Natural Earth</strong> (public domain). The
 		cross-section, the field notes and the aftermath hillside are explicitly labelled illustrations
-		of mechanisms, and carry no dataset numbers; the paper-trail section links to external
-		reporting, summarised by this piece. No forecast, no synthetic values. No cookies, no tracking,
-		fully static.
+		of mechanisms, and carry no dataset numbers; the two paper-trail sections link to external
+		reporting, summarised by this piece. Chapter nine adds the one monthly series — the
+		<strong>Niño 3.4 anomaly from NOAA's Physical Sciences Laboratory</strong>, observations through
+		June 2026 — and the piece's one forward-looking panel: an analogue estimate computed in
+		<code>/prep</code> from the four documented precedents, drawn dashed, labelled as an estimate on
+		the graphic, and checked against the official <strong>NOAA CPC / IRI</strong> mid-June 2026
+		outlook. No synthetic values presented as observations. No cookies, no tracking, fully static.
 	</p>
 </footer>
 

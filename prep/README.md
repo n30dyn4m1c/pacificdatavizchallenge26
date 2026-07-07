@@ -34,7 +34,30 @@ scene renders as an open "?").
 > then re-run the pipeline. Nothing else in the repo hardcodes ONI values
 > except the decorative `OniBand` divider.
 
-### 3. One reference number — world-average emissions
+### 3. `source/nino34_monthly.csv` — monthly Niño 3.4 anomalies (NOAA PSL)
+
+Chapter nine runs at monthly resolution, and this is its series: the
+**monthly mean SST anomaly for the Niño 3.4 region** (5°N–5°S, 170°–120°W)
+from the NOAA Physical Sciences Laboratory
+(<https://psl.noaa.gov/data/correlation/nina34.anom.data>), 1970 through
+June 2026. `fetch_nino34.py` re-exports it (NOAA marks unobserved months
+`-99.99`; the script drops them). When NOAA appends a month, re-run the
+fetch and the pipeline: the "2026 so far" line, the analogue estimate, its
+weights and the timing brackets all recompute.
+
+From this series the pipeline computes chapter nine's **analogue
+estimate** — the piece's only forward-looking numbers, and it is labelled
+as an estimate on the graphic and in the legend. Method, in full: align
+the four great El Niños (1982, 1997, 2015, 2023) by calendar month over
+Jan(onset)–Jun(onset+1); weight each by inverse RMSE against 2026's
+observed January–June; the dashed path is the weighted mean of the four
+trajectories, the band their min–max envelope. Nothing is tuned by hand.
+The scene quotes the official **NOAA CPC / IRI mid-June 2026 outlook**
+beside it (El Niño ≈100% through Sep–Nov 2026, ≈99% through Dec–Feb;
+peak forecast Sep–Nov; 13/24 models "very strong") as cited reference
+points with their source URL — the same pattern as the EDGAR number below.
+
+### 4. One reference number — world-average emissions
 
 Chapter 7 marks a single reference value of **≈6.6 t CO₂e per person**
 (world average, 2023), from EDGAR — the European Commission JRC's Emissions
@@ -61,6 +84,7 @@ rainfall anomaly by ENSO phase — and writes:
 | `scene_exposure.json` | Ch. 6 | SST 1850–2025 + sea level 1993–2023 + r_local (the "alibi") |
 | `scene_gap.json` | Ch. 7 | GHG per capita 1970–2024 + the EDGAR world reference |
 | `scene_watch.json` | Ch. 8 | meteorological monitoring network 1951–2026 |
+| `scene_now.json` | Ch. 9 | monthly Niño 3.4: recent months 2023–26, the four great events aligned by month, 2026 so far, the analogue estimate + weights, timing windows, the official-outlook citation |
 | `scene_record.json` | Epilogue | small multiples: six PG indicators with first/last values |
 
 Re-running the script rewrites `static/data/`. To update the
@@ -77,12 +101,17 @@ and is labelled as such in the scene.
 
 ## Rules
 
-1. **Real data only.** Every numeric value in `static/data/` traces to a
-   row in one of the committed source files (or, for `scene_map.json`, to
-   Natural Earth geometry). The illustrative elements in the piece — the
-   warm-pool motion on the map, the elevation profile, the two field-note
-   interactives, the aftermath hillside — are explicitly labelled
-   illustrations on the graphic itself and carry no dataset numbers.
+1. **Real data only — and the one estimate says it is one.** Every numeric
+   value in `static/data/` traces to a row in one of the committed source
+   files (or, for `scene_map.json`, to Natural Earth geometry), with two
+   documented exceptions: the reference citations (EDGAR; the CPC/IRI
+   outlook points) carry their source URLs in the JSON, and chapter nine's
+   analogue estimate is computed here by the published method above and
+   labelled as an estimate on the graphic, in the legend and in the data
+   table. The illustrative elements in the piece — the warm-pool motion on
+   the map, the elevation profile, the two field-note interactives, the
+   aftermath hillside — are explicitly labelled illustrations on the
+   graphic itself and carry no dataset numbers.
 2. Keep every scene file small (the audience is on 3G); derive from the
    foundation file rather than re-parsing the CSV in the front end.
 3. Never ship a derived quantity computed in the browser — every statistic
