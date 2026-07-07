@@ -46,11 +46,11 @@
 
 	<div class="title-block" style:opacity={Math.max(0, 1 - progress * 11)}>
 		<p class="kicker">Pacific Data Viz Challenge 2026 · Papua New Guinea</p>
-		<h1 class="display">The Warming<br />Sea</h1>
+		<h1 class="display">Stolen<br />Rain</h1>
 		<p class="standfirst">
-			A hundred and seventy-five years of Papua New Guinea’s ocean, one number a year — and how
-			far it has climbed. Data: the Pacific Community’s climate-change indicators, on the Pacific
-			Data Hub.
+			Papua New Guinea’s driest years keep coming back — and its own warming sea has an alibi.
+			An inquiry into 176 years of the official Pacific climate record, from the Pacific
+			Community’s data on the Pacific Data Hub.
 		</p>
 		<span class="scroll-hint">scroll ↓</span>
 	</div>
@@ -68,7 +68,8 @@
 				+{data.latest.value.toFixed(1)} °C
 			</span>
 			<span class="latest-caption">
-				{data.latest.year} — the warmest year in the record, and the sea is still climbing.
+				{data.latest.year} — the warmest year in 176 years of record. An obvious suspect for the
+				missing rain. Too obvious.
 			</span>
 		</div>
 	{/if}

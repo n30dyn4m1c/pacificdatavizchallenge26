@@ -9,7 +9,7 @@
 	 * Shared by scenes 2, 6 and 7. A zero baseline is drawn for anomaly units.
 	 */
 	import { scaleLinear } from 'd3-scale';
-	import { line as d3line, curveMonotoneX } from 'd3-shape';
+	import { line as d3line, curveMonotoneX, curveStepAfter } from 'd3-shape';
 	import { series as seriesColors, ink } from '$lib/palette.js';
 
 	let {
@@ -23,6 +23,10 @@
 		compact = false,
 		markYears = [],
 		markLabel = '',
+		/** optional dashed horizontal reference: { value, label } (e.g. a world average) */
+		refLine = null,
+		/** 'monotone' (default) or 'step' — step for integer counts (stations) */
+		curve = 'monotone',
 		ariaLabel
 	} = $props();
 
@@ -42,11 +46,14 @@
 		let lo = Math.min(...vals);
 		let hi = Math.max(...vals);
 		if (base != null) { lo = Math.min(lo, base); hi = Math.max(hi, base); }
+		if (refLine) { lo = Math.min(lo, refLine.value); hi = Math.max(hi, refLine.value); }
 		const pad = (hi - lo) * 0.12 || 1;
 		return [lo - pad, hi + pad];
 	}
 
-	const gen = $derived(d3line().x((d) => x(d.year)).y((d) => y(d.value)).curve(curveMonotoneX));
+	const gen = $derived(
+		d3line().x((d) => x(d.year)).y((d) => y(d.value)).curve(curve === 'step' ? curveStepAfter : curveMonotoneX)
+	);
 	const colorOf = (s) => (s.accent ? colors.accent : s.ghost ? colors.ghost2 : colors.ghost1);
 
 	// draw-in: reveal each path proportionally to progress (≈ along the year axis)
@@ -107,6 +114,29 @@
 			{#each [y0, Math.round((y0 * 2 + y1) / 3), Math.round((y0 + y1 * 2) / 3), y1] as yr (yr)}
 				<text x={x(yr)} y={height - 8} text-anchor="middle" font-size="11" fill={inkC.muted}>{yr}</text>
 			{/each}
+		{/if}
+
+		{#if refLine}
+			<line
+				x1={PAD.l}
+				x2={Math.max(w, 300) - PAD.r}
+				y1={y(refLine.value)}
+				y2={y(refLine.value)}
+				stroke={colors.ghost2}
+				stroke-width="1.5"
+				stroke-dasharray="6 5"
+				opacity={frac > 0.5 ? 0.9 : 0}
+				style="transition: opacity 0.4s"
+			/>
+			<text
+				x={PAD.l + 2}
+				y={y(refLine.value) - 7}
+				font-size="11.5"
+				font-weight="600"
+				fill={inkC.secondary}
+				opacity={frac > 0.5 ? 1 : 0}
+				style="transition: opacity 0.4s"
+			>{refLine.label}</text>
 		{/if}
 
 		<!-- highlighted years: faint verticals revealed as the draw-in passes them -->

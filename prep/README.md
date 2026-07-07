@@ -1,52 +1,89 @@
 # /prep — data pipeline
 
 The front end never computes anything from raw data: every scene reads one
-small, scene-scoped JSON from `static/data/`, pre-baked here from the **real
-official source**. There is no synthetic data in this project.
+small, scene-scoped JSON from `static/data/`, pre-baked here from the source
+files below. There is no synthetic data in this project.
 
-## Source
+## Sources
 
-`source/SPC_DF_CLIMATE_CHANGE.csv` — the official Pacific Data Viz Challenge
-2026 dataset: the Pacific Community (SPC) `DF_CLIMATE_CHANGE(1.0)` dataflow,
-exported from the Pacific Data Hub's .Stat Explorer
-(<https://stats.pacificdata.org/>). It is **annual, national-level** data —
-one observation per indicator, per country/territory, per year — covering 22
-Pacific countries and territories and 13 climate-change indicators, with
-coverage running (for some indicators) back to 1850. The CSV is committed so
-the pipeline is fully reproducible offline.
+### 1. `source/SPC_DF_CLIMATE_CHANGE.csv` — the official dataset (~90 % of the piece)
+
+The official Pacific Data Viz Challenge 2026 dataset: the Pacific Community
+(SPC) `DF_CLIMATE_CHANGE(1.0)` dataflow, exported from the Pacific Data
+Hub's .Stat Explorer (<https://stats.pacificdata.org/>). It is **annual,
+national-level** data — one observation per indicator, per country/territory,
+per year — covering 22 Pacific countries and territories and 13
+climate-change indicators, with coverage running (for some indicators) back
+to 1850. The CSV is committed so the pipeline is fully reproducible offline.
+
+### 2. `source/oni_cpc.csv` — the Oceanic Niño Index (NOAA CPC)
+
+The one series in the piece not from the SPC dataflow: for each year
+1979–2025 (the span of PNG's rainfall record), the **peak ONI of the ENSO
+season developing in that year** (its Jun–Feb window) and the CPC episode
+classification (`elnino` / `lanina` / `neutral`; 2025 is `pending` — that
+season's column was still being written at extraction, which the reveal
+scene renders as an open "?").
+
+> ⚠️ **Transcribed table — verify before submission.** This file was
+> transcribed from the NOAA CPC ONI record
+> (<https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php>)
+> because the build environment could not reach noaa.gov. The episode
+> classifications are robust; individual peak values should be checked to
+> ±0.1 °C against that page (a five-minute job) and corrected in place —
+> then re-run the pipeline. Nothing else in the repo hardcodes ONI values
+> except the decorative `OniBand` divider.
+
+### 3. One reference number — world-average emissions
+
+Act VII draws a single dashed reference line at **≈6.6 t CO₂e per person**
+(world average, 2023), from EDGAR — the European Commission JRC's Emissions
+Database for Global Atmospheric Research
+(<https://edgar.jrc.ec.europa.eu/report_2024>). It is written into
+`scene_gap.json` by this script with its source attached. Verify/update the
+value when EDGAR publishes a newer edition.
 
 ## Script
 
 `make_real_data.mjs` (Node, no install step beyond the repo's deps —
-`node prep/make_real_data.mjs` from the repo root) reads that CSV with a
+`node prep/make_real_data.mjs` from the repo root) reads the SPC CSV with a
 quote-aware parser, extracts **Papua New Guinea** (`GEO_PICT = "PG"`) for
-every indicator, computes a Pacific-wide mean-per-year context trace for the
-anomaly indicators, and writes:
+every indicator, joins the ONI table, computes every derived statistic the
+piece quotes — the driest-year rankings, r(local SST, rain) = +0.48,
+r(ONI, rain) = −0.64, the El Niño count among the driest ten, the mean
+rainfall anomaly by ENSO phase — and writes:
 
-| output | contents |
-|---|---|
-| `pg_climate.json` | tidy foundation: every PG indicator series + regional context means + the source block |
-| `scene1_sst.json` | annual SST anomaly 1850–2025, each year quantized to a uniform grid for the shader |
-| `scene2_temps.json` | SST anomaly + land-surface anomaly (both 1850–2025) + Pacific-average ghost |
-| `scene3_rain.json` | rainfall anomaly 1979–2025, with the four driest years flagged |
-| `scene4_impact.json` | crop yield 1961–2024 + rainfall, with the driest years |
-| `scene5_garden.json` | **illustrative only** — the frost-night diagram's copy; no data claim, no source |
-| `scene6_justice.json` | GHG per capita + sea-level anomaly + SST (the climate-justice contrast) |
-| `scene7_record.json` | small-multiples: six PG indicators with first/last values |
-| `../static/posters/sst_{cool,warm}.png` | scene 1's no-WebGL fallback (coolest year / record 2025), through the shared palette |
+| output | scene | contents |
+|---|---|---|
+| `pg_climate.json` | (foundation) | every PG indicator series + regional context + ONI + all source blocks |
+| `scene_record_sst.json` | Act I | annual SST anomaly 1850–2025, each year quantized to a uniform grid for the shader |
+| `scene_dry.json` | Act II | rainfall anomaly 1979–2025, five driest flagged |
+| `scene_alibi.json` | Act III | {year, sst, rain} points + r_local + the driest-five detail |
+| `scene_reveal.json` | Act IV | {year, oni, phase, rain} + r_oni + driest-ten phases + phase means |
+| `scene_cost.json` | Act V | crop yield 1961–2024 + the drought years |
+| `scene_exposure.json` | Act VI | sea-level anomaly 1993–2023 + SST 1850–2025 |
+| `scene_gap.json` | Act VII | GHG per capita 1970–2024 + the EDGAR world reference |
+| `scene_watch.json` | Coda | meteorological monitoring network 1951–2026 |
+| `scene_record.json` | Epilogue | small multiples: six PG indicators with first/last values |
+| `../static/posters/sst_{cool,warm}.png` | Act I | no-WebGL fallback (coolest year / record 2025), through the shared palette |
 
 Re-running the script rewrites `static/data/` and the posters. To update the
 piece when SPC republishes the dataflow, re-export the CSV from .Stat
-Explorer, drop it in `source/`, and re-run.
+Explorer, drop it in `source/`, and re-run; same for the ONI table.
 
 ## Rules
 
-1. **Real data only.** Every value in `static/data/` traces to a row in the
-   source CSV, except `scene5_garden.json`, which is a labelled illustration
-   (a diagram of radiative frost) and is marked `illustrative: true`.
+1. **Real data only.** Every value in `static/data/` traces to a row in one
+   of the committed source files. The single illustrative element in the
+   piece (Act V's frost-night popup) is prose inside its scene component,
+   explicitly labelled "an illustration, not a measurement", and carries no
+   numbers.
 2. Keep every scene file small (the audience is on 3G); derive from the
    foundation file rather than re-parsing the CSV in the front end.
-3. Never ship a derived quantity computed in the browser — pre-shape it here.
+3. Never ship a derived quantity computed in the browser — every statistic
+   the copy quotes (correlations, rankings, phase means) is computed here
+   and written into the scene JSON.
 4. State the caveats in the piece, not just the code: national annual
    averages blunt extreme events, and PNG's local sea-surface anomaly is not
-   the El Niño (Niño 3.4) signal — see scene 3's tap-reveal.
+   the El Niño (Niño 3.4) signal — in this story that mismatch is the plot
+   (Acts III–IV), not a footnote.

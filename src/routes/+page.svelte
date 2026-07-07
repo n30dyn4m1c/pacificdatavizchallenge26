@@ -1,28 +1,33 @@
 <script>
 	/**
-	 * Scene manifest — the ordered spine of the piece. Each entry is a
-	 * self-contained scene component built on the ScrollScene abstraction;
-	 * the divider marks the surface handover (ocean → land). Every chart reads
-	 * the real Pacific Community climate-change record (static/data/), the
-	 * official Pacific Data Viz Challenge 2026 dataset.
+	 * Scene manifest — the ordered spine of the piece: a data detective story
+	 * in seven exhibits and a coda. Papua New Guinea's rain keeps failing; its
+	 * own warming sea has an alibi; the thief is the far ocean (El Niño). Each
+	 * entry is a self-contained scene component built on the ScrollScene
+	 * abstraction. Every chart reads the real Pacific Community climate-change
+	 * record (static/data/), the official Pacific Data Viz Challenge 2026
+	 * dataset — plus one small documented companion, the NOAA CPC Oceanic Niño
+	 * Index (see /prep).
 	 */
 	import Scene1Signal from '$lib/components/scenes/Scene1Signal.svelte';
-	import Scene2History from '$lib/components/scenes/Scene2History.svelte';
-	import Scene3Descent from '$lib/components/scenes/Scene3Descent.svelte';
-	import Scene4Lag from '$lib/components/scenes/Scene4Lag.svelte';
-	import Scene5Garden from '$lib/components/scenes/Scene5Garden.svelte';
-	import Scene6Forecast from '$lib/components/scenes/Scene6Forecast.svelte';
-	import Scene7Calendar from '$lib/components/scenes/Scene7Calendar.svelte';
+	import SceneDry from '$lib/components/scenes/SceneDry.svelte';
+	import SceneAlibi from '$lib/components/scenes/SceneAlibi.svelte';
+	import SceneReveal from '$lib/components/scenes/SceneReveal.svelte';
+	import SceneCost from '$lib/components/scenes/SceneCost.svelte';
+	import SceneExposure from '$lib/components/scenes/SceneExposure.svelte';
+	import SceneGap from '$lib/components/scenes/SceneGap.svelte';
+	import SceneWatch from '$lib/components/scenes/SceneWatch.svelte';
+	import SceneRecord from '$lib/components/scenes/SceneRecord.svelte';
 	import PauseBeat from '$lib/components/beats/PauseBeat.svelte';
 	import TransitionMotif from '$lib/components/TransitionMotif.svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
 </script>
 
 <svelte:head>
-	<title>The Warming Sea — Papua New Guinea's climate record, 1850–2025</title>
+	<title>Stolen Rain — who takes Papua New Guinea's rain?</title>
 	<meta
 		name="description"
-		content="A scrollytelling read of Papua New Guinea's official climate record — 175 years of a warming ocean, its driest El Niño years, and who warms it versus who wears it. Built on the Pacific Community's climate-change dataset, the official Pacific Data Viz Challenge 2026 data on the Pacific Data Hub."
+		content="A scrollytelling inquiry into Papua New Guinea's official climate record: the driest years keep coming back, the country's own warming sea has an alibi, and the thief is an ocean 7,000 km away. Built on the Pacific Community's climate-change dataset — the official Pacific Data Viz Challenge 2026 data on the Pacific Data Hub — with the NOAA Oceanic Niño Index naming the El Niño years."
 	/>
 </svelte:head>
 
@@ -30,14 +35,15 @@
 <TransitionMotif />
 
 <main>
+	<!-- Act I — the record: the obvious suspect, warming to its 2025 high -->
 	<Scene1Signal />
 
-	<!-- pause beat 1 of 2 (hard cap): the record-warm reveal gets a rest -->
+	<!-- pause beat 1 of 2 (hard cap): rest after the record-warm reveal -->
 	<PauseBeat
-		id="pause-signal"
+		id="pause-record"
 		surface="dark"
-		kicker="+1.1 °C · the warmest year on record"
-		statement="The ocean warmed first."
+		kicker="+1.1 °C · the warmest of 176 years"
+		statement="The sea is warming. That is not the mystery."
 		exploreLabel="What is an anomaly? →"
 	>
 		<h3>One number a year</h3>
@@ -50,63 +56,71 @@
 		</p>
 	</PauseBeat>
 
-	<Scene2History />
-	<Scene3Descent />
-	<Scene4Lag />
+	<!-- Acts II–IV — the crime, the alibi, the reveal -->
+	<SceneDry />
+	<SceneAlibi />
+	<SceneReveal />
 
-	<!-- the ocean → land handover carries the divider motif: climate
-	     variability itself as a thin geometric strip (no imagery anywhere) -->
+	<!-- pause beat 2 of 2: the verdict gets a rest before the consequences -->
+	<PauseBeat
+		id="pause-verdict"
+		surface="dark"
+		kicker="The verdict"
+		statement="The thief lives seven thousand kilometres away."
+		exploreLabel="Why does a far ocean move the rain here? →"
+	>
+		<h3>The rising air moves east</h3>
+		<p>
+			The Pacific's rain follows its warmest water. In an ordinary year that water — and the great
+			column of rising, cloud-building air above it — sits in the west, over and around Papua New
+			Guinea. In an El Niño year the warm water slides east along the equator and the rising air
+			goes with it; what descends over the western Pacific in exchange is dry. Papua New Guinea's
+			drought is not a local accident but one end of an ocean-wide see-saw — which is why a
+			national dataset can record the wound but not the weapon.
+		</p>
+	</PauseBeat>
+
+	<!-- Acts V–VII — the cost, the double exposure, the gap -->
+	<SceneCost />
+	<SceneExposure />
+	<SceneGap />
+
+	<!-- Coda — watching for the next one -->
+	<SceneWatch />
+
+	<!-- the dark → paper handover carries the divider motif: ENSO variability
+	     itself as a thin geometric strip (no imagery anywhere) -->
 	<div class="shore-transition no-print" aria-hidden="true">
 		<OniBand />
 	</div>
 
-	<!-- pause beat 2 of 2: the data has landed; rest before the garden -->
-	<PauseBeat
-		id="pause-lag"
-		surface="light"
-		kicker="From the record to the ground"
-		statement="Every number here is a year someone lived through."
-		exploreLabel="Why one garden? →"
-	>
-		<h3>Where the numbers land</h3>
-		<p>
-			National annual figures are honest but distant: they average a whole country and a whole
-			year into a point. The next scene leaves the charts for a single highland garden on one
-			clear night, to show the mechanism the record only summarises — how a warming, drying climate
-			reaches a family's food. It is an illustration, not a measurement, and it is labelled as one.
-		</p>
-	</PauseBeat>
-
-	<Scene5Garden />
-	<Scene6Forecast />
-	<Scene7Calendar />
+	<!-- Epilogue — the whole record as the case file's appendix (prints) -->
+	<SceneRecord />
 </main>
 
 <footer class="colophon surface-light no-print">
 	<div class="colophon-band"><OniBand /></div>
 	<p>
-		<strong>The Warming Sea</strong> · an entry for the Pacific Data Viz Challenge 2026
+		<strong>Stolen Rain</strong> · an entry for the Pacific Data Viz Challenge 2026
 		(interactive category).
 	</p>
 	<p>
 		Every chart is built from the <strong>Pacific Community (SPC) climate-change indicators</strong>
 		— dataflow <code>SPC:DF_CLIMATE_CHANGE(1.0)</code>, exported from the Pacific Data Hub's .Stat
 		Explorer (<code>stats.pacificdata.org</code>) and filtered to Papua New Guinea. It is the
-		official dataset of this year's Challenge: annual, national-level observations, 1850–2025. The
-		series are real and unaltered; the pipeline that extracts them is in <code>/prep</code>. Scene 5
-		(the garden) is an explicitly labelled illustration of radiative frost, not data, and cites no
-		source. No forecast, no synthetic values. No cookies, no tracking, fully static.
+		official dataset of this year's Challenge: annual, national-level observations, 1850–2025, used
+		real and unaltered; the pipeline that extracts them is in <code>/prep</code>. Two documented
+		companions from open sources name what the SPC record cannot: the El Niño years come from the
+		<strong>NOAA Climate Prediction Center's Oceanic Niño Index</strong>, and the world-average
+		emissions reference (≈6.6 t CO₂e/person) from <strong>EDGAR</strong> (EC-JRC). The frost story
+		in Act V is an explicitly labelled illustration of a mechanism, not data. No forecast, no
+		synthetic values. No cookies, no tracking, fully static.
 	</p>
 </footer>
 
 <style>
-	.shore-transition {
-		padding: 3rem 1.5rem;
-		display: flex;
-		justify-content: center;
-		color: var(--ink-dark-axis);
-		background: var(--ocean);
-	}
+	/* .shore-transition itself is styled globally in app.css (the dark → paper
+	   gradient carrying the OniBand divider) */
 
 	.colophon {
 		padding: 2.5rem 1.5rem 3.5rem;
