@@ -9,7 +9,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { ui } from '$lib/state.svelte.js';
-	import { surfaces, ink, series } from '$lib/palette.js';
+	import { surfaces, ink, series, impact } from '$lib/palette.js';
 
 	let { children } = $props();
 
@@ -22,6 +22,7 @@
 		--ink-light-primary:${ink.light.primary};--ink-light-secondary:${ink.light.secondary};
 		--ink-light-muted:${ink.light.muted};--ink-light-grid:${ink.light.grid};--ink-light-axis:${ink.light.axis};
 		--accent-dark:${series.dark.accent};--accent-light:${series.light.accent};
+		--warm:${impact.light.drought};--cool:${impact.light.frost};
 	}`;
 
 	onMount(() => {
@@ -81,15 +82,15 @@
 		font: 600 0.72rem/1 'Public Sans', system-ui, sans-serif;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: var(--ink-dark-primary);
+		color: var(--ink-light-primary);
 		/* opaque enough to stay legible where it floats over scene headers */
-		background: color-mix(in srgb, var(--ocean) 88%, transparent);
+		background: color-mix(in srgb, var(--paper-raised) 90%, transparent);
 		border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
 		border-radius: 999px;
 		padding: 0.55rem 0.9rem;
 		cursor: pointer;
 		backdrop-filter: blur(6px);
-		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+		box-shadow: 0 2px 10px rgba(29, 26, 20, 0.15);
 	}
 
 	.reader-toggle:hover {
@@ -97,7 +98,7 @@
 	}
 
 	.reader-toggle:focus-visible {
-		outline: 2px solid var(--accent-dark);
+		outline: 2px solid var(--accent-light);
 		outline-offset: 3px;
 	}
 </style>

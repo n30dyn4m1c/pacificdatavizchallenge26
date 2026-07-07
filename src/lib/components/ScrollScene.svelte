@@ -22,13 +22,17 @@
 		id,
 		title,
 		heightVh = 300,
-		surface = 'dark',
+		surface = 'light',
 		pin = true,
 		dataUrl = null,
 		printable = false,
 		ondata = null,
 		onprogress = null,
 		children,
+		/** optional card column rendered AFTER the pin and pulled back over it
+		 *  (margin-top:-100svh) — the "step cards over a sticky graphic"
+		 *  scrolly pattern. Receives { progress, active, data }. */
+		flow = null,
 		prose = null
 	} = $props();
 
@@ -149,6 +153,11 @@
 				<div class="scene-progress-fill" style:transform="scaleY({progress})"></div>
 			</div>
 		</div>
+		{#if flow}
+			<div class="cards-region no-print">
+				{@render flow({ progress, active, data })}
+			</div>
+		{/if}
 	{:else}
 		{@render children({ progress, active, data })}
 	{/if}

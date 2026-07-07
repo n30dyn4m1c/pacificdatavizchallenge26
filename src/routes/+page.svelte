@@ -1,107 +1,89 @@
 <script>
 	/**
-	 * Scene manifest — the ordered spine of the piece: a data detective story
-	 * in seven exhibits and a coda. Papua New Guinea's rain keeps failing; its
-	 * own warming sea has an alibi; the thief is the far ocean (El Niño). Each
-	 * entry is a self-contained scene component built on the ScrollScene
-	 * abstraction. Every chart reads the real Pacific Community climate-change
-	 * record (static/data/), the official Pacific Data Viz Challenge 2026
-	 * dataset — plus one small documented companion, the NOAA CPC Oceanic Niño
-	 * Index (see /prep).
+	 * The Ocean Knows First — the page spine. A light, editorial scrollytelling
+	 * journey in six chapters: the drought signal travels from the far ocean
+	 * (the ENSO see-saw) to Papua New Guinea's rain, down into its gardens,
+	 * across the 176-year warming record beneath, through the emissions
+	 * ledger, and ends with the watchers who read the signal early. Every
+	 * chapter is a sticky graphic with white step cards scrolling over it
+	 * (ScrollScene + the /lib/scrolly.js card convention). Data: the official
+	 * SPC record plus the documented NOAA ONI companion (see /prep).
 	 */
-	import Scene1Signal from '$lib/components/scenes/Scene1Signal.svelte';
-	import SceneDry from '$lib/components/scenes/SceneDry.svelte';
-	import SceneAlibi from '$lib/components/scenes/SceneAlibi.svelte';
-	import SceneReveal from '$lib/components/scenes/SceneReveal.svelte';
-	import SceneCost from '$lib/components/scenes/SceneCost.svelte';
-	import SceneExposure from '$lib/components/scenes/SceneExposure.svelte';
-	import SceneGap from '$lib/components/scenes/SceneGap.svelte';
-	import SceneWatch from '$lib/components/scenes/SceneWatch.svelte';
-	import SceneRecord from '$lib/components/scenes/SceneRecord.svelte';
-	import PauseBeat from '$lib/components/beats/PauseBeat.svelte';
-	import TransitionMotif from '$lib/components/TransitionMotif.svelte';
+	import Hero from '$lib/components/Hero.svelte';
+	import BigStat from '$lib/components/BigStat.svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
+	import Ch1SeeSaw from '$lib/components/scenes/Ch1SeeSaw.svelte';
+	import Ch2Signal from '$lib/components/scenes/Ch2Signal.svelte';
+	import Ch3Gardens from '$lib/components/scenes/Ch3Gardens.svelte';
+	import Ch4LongRecord from '$lib/components/scenes/Ch4LongRecord.svelte';
+	import Ch5Ledger from '$lib/components/scenes/Ch5Ledger.svelte';
+	import Ch6Watchers from '$lib/components/scenes/Ch6Watchers.svelte';
+	import SceneRecord from '$lib/components/scenes/SceneRecord.svelte';
 </script>
 
 <svelte:head>
-	<title>Stolen Rain — who takes Papua New Guinea's rain?</title>
+	<title>The Ocean Knows First — Papua New Guinea and the far ocean that takes its rain</title>
 	<meta
 		name="description"
-		content="A scrollytelling inquiry into Papua New Guinea's official climate record: the driest years keep coming back, the country's own warming sea has an alibi, and the thief is an ocean 7,000 km away. Built on the Pacific Community's climate-change dataset — the official Pacific Data Viz Challenge 2026 data on the Pacific Data Hub — with the NOAA Oceanic Niño Index naming the El Niño years."
+		content="Papua New Guinea's worst droughts start in the temperature of seawater seven thousand kilometres east, months before the rain fails. A scrollytelling journey through 176 years of the official Pacific climate record — the Pacific Community's climate-change dataset on the Pacific Data Hub, with the NOAA Oceanic Niño Index naming the El Niño years."
 	/>
 </svelte:head>
 
-<!-- fixed connective tissue: the anomaly-scale motif at scene handovers -->
-<TransitionMotif />
-
 <main>
-	<!-- Act I — the record: the obvious suspect, warming to its 2025 high -->
-	<Scene1Signal />
+	<Hero />
 
-	<!-- pause beat 1 of 2 (hard cap): rest after the record-warm reveal -->
-	<PauseBeat
-		id="pause-record"
-		surface="dark"
-		kicker="+1.1 °C · the warmest of 176 years"
-		statement="The sea is warming. That is not the mystery."
-		exploreLabel="What is an anomaly? →"
-	>
-		<h3>One number a year</h3>
+	<!-- the cold open: 1997, in prose, before a single chart -->
+	<section class="intro" aria-label="Introduction">
 		<p>
-			An anomaly is not the temperature — it is the <em>departure</em> from a long-term average, so
-			zero means "an ordinary year" and the sign tells you warmer or cooler. The Pacific Community
-			publishes one such value a year for each country, back to 1850. Reading anomalies instead of
-			raw temperatures lets a century and a half of a warming ocean fit into a single climbing
-			line — and makes a record-breaking year unmistakable.
+			In the middle of 1997, the rain over Papua New Guinea began to fail. By the end of the year
+			it was the driest year ever measured there — gardens wilted in the lowlands, and in the
+			Highlands, on cloudless drought nights, entire hillsides of sweet potato froze. Nearly two
+			decades later, in 2015, it happened again.
 		</p>
-	</PauseBeat>
-
-	<!-- Acts II–IV — the crime, the alibi, the reveal -->
-	<SceneDry />
-	<SceneAlibi />
-	<SceneReveal />
-
-	<!-- pause beat 2 of 2: the verdict gets a rest before the consequences -->
-	<PauseBeat
-		id="pause-verdict"
-		surface="dark"
-		kicker="The verdict"
-		statement="The thief lives seven thousand kilometres away."
-		exploreLabel="Why does a far ocean move the rain here? →"
-	>
-		<h3>The rising air moves east</h3>
 		<p>
-			The Pacific's rain follows its warmest water. In an ordinary year that water — and the great
-			column of rising, cloud-building air above it — sits in the west, over and around Papua New
-			Guinea. In an El Niño year the warm water slides east along the equator and the rising air
-			goes with it; what descends over the western Pacific in exchange is dry. Papua New Guinea's
-			drought is not a local accident but one end of an ocean-wide see-saw — which is why a
-			national dataset can record the wound but not the weapon.
+			Here is the strange part: the first sign was never in the sky over Papua New Guinea. It was
+			in the temperature of seawater <span class="hl hl-cool">seven thousand kilometres east</span>
+			— months earlier.
 		</p>
-	</PauseBeat>
+		<p>
+			This is the story of that signal, told entirely through the
+			<strong>official climate record</strong>: the Pacific Community’s indicators for Papua New
+			Guinea, one number a year, some series back to 1850. Six charts. No forecasts, no synthetic
+			data — just the record, read in order.
+		</p>
+		<div class="intro-band" aria-hidden="true"><OniBand /></div>
+	</section>
 
-	<!-- Acts V–VII — the cost, the double exposure, the gap -->
-	<SceneCost />
-	<SceneExposure />
-	<SceneGap />
+	<Ch1SeeSaw />
+	<Ch2Signal />
 
-	<!-- Coda — watching for the next one -->
-	<SceneWatch />
+	<BigStat
+		kicker="Since 1979"
+		stat="8 / 10"
+		caption="of Papua New Guinea’s driest years were El Niño years. The other two trailed one."
+		accent="warm"
+	/>
 
-	<!-- the dark → paper handover carries the divider motif: ENSO variability
-	     itself as a thin geometric strip (no imagery anywhere) -->
-	<div class="shore-transition no-print" aria-hidden="true">
-		<OniBand />
-	</div>
+	<Ch3Gardens />
+	<Ch4LongRecord />
 
-	<!-- Epilogue — the whole record as the case file's appendix (prints) -->
+	<BigStat
+		kicker="2025"
+		stat="+1.1 °C"
+		caption="the warmest sea around Papua New Guinea in 176 years of record."
+		accent="warm"
+	/>
+
+	<Ch5Ledger />
+	<Ch6Watchers />
+
 	<SceneRecord />
 </main>
 
 <footer class="colophon surface-light no-print">
 	<div class="colophon-band"><OniBand /></div>
 	<p>
-		<strong>Stolen Rain</strong> · an entry for the Pacific Data Viz Challenge 2026
+		<strong>The Ocean Knows First</strong> · an entry for the Pacific Data Viz Challenge 2026
 		(interactive category).
 	</p>
 	<p>
@@ -113,19 +95,36 @@
 		companions from open sources name what the SPC record cannot: the El Niño years come from the
 		<strong>NOAA Climate Prediction Center's Oceanic Niño Index</strong>, and the world-average
 		emissions reference (≈6.6 t CO₂e/person) from <strong>EDGAR</strong> (EC-JRC). The frost story
-		in Act V is an explicitly labelled illustration of a mechanism, not data. No forecast, no
-		synthetic values. No cookies, no tracking, fully static.
+		in chapter three is an explicitly labelled illustration of a mechanism, not data. No forecast,
+		no synthetic values. No cookies, no tracking, fully static.
 	</p>
 </footer>
 
 <style>
-	/* .shore-transition itself is styled globally in app.css (the dark → paper
-	   gradient carrying the OniBand divider) */
+	.intro {
+		max-width: 38rem;
+		margin: 0 auto;
+		padding: clamp(3rem, 10vh, 6rem) 1.5rem 1rem;
+		font-size: clamp(1.05rem, 2.3vw, 1.22rem);
+		line-height: 1.7;
+	}
+
+	.intro p {
+		margin-bottom: 1.2em;
+	}
+
+	.intro-band {
+		display: flex;
+		justify-content: center;
+		padding: 2rem 0 0;
+		color: var(--ink-light-axis);
+	}
 
 	.colophon {
 		padding: 2.5rem 1.5rem 3.5rem;
 		font-size: 0.8rem;
 		color: var(--ink-light-secondary);
+		border-top: 1px solid var(--ink-light-grid);
 	}
 
 	.colophon p {

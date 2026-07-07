@@ -1,6 +1,6 @@
 <script>
 	/**
-	 * LazyBars — code-split wrapper around AnnualBars (scene 3). Same contract
+	 * LazyEnso — code-split wrapper around EnsoBars (chapter 1). Same contract
 	 * as LazyLines: the chart chunk loads only when the scene mounts it, with
 	 * a sized skeleton holding the space until then.
 	 */
@@ -10,12 +10,12 @@
 	let Chart = $state(null);
 
 	onMount(() => {
-		import('./AnnualBars.svelte').then((m) => (Chart = m.default));
+		import('./EnsoBars.svelte').then((m) => (Chart = m.default));
 	});
 </script>
 
 {#if Chart}
 	<Chart {...props} />
 {:else}
-	<div class="chart-skeleton" style:height="{props.height ?? 360}px" aria-hidden="true"></div>
+	<div class="chart-skeleton" style:height="{props.height ?? 420}px" aria-hidden="true"></div>
 {/if}

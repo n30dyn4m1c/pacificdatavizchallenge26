@@ -36,7 +36,7 @@ scene renders as an open "?").
 
 ### 3. One reference number — world-average emissions
 
-Act VII draws a single dashed reference line at **≈6.6 t CO₂e per person**
+Chapter 5 marks a single reference value of **≈6.6 t CO₂e per person**
 (world average, 2023), from EDGAR — the European Commission JRC's Emissions
 Database for Global Atmospheric Research
 (<https://edgar.jrc.ec.europa.eu/report_2024>). It is written into
@@ -53,21 +53,17 @@ piece quotes — the driest-year rankings, r(local SST, rain) = +0.48,
 r(ONI, rain) = −0.64, the El Niño count among the driest ten, the mean
 rainfall anomaly by ENSO phase — and writes:
 
-| output | scene | contents |
+| output | chapter | contents |
 |---|---|---|
 | `pg_climate.json` | (foundation) | every PG indicator series + regional context + ONI + all source blocks |
-| `scene_record_sst.json` | Act I | annual SST anomaly 1850–2025, each year quantized to a uniform grid for the shader |
-| `scene_dry.json` | Act II | rainfall anomaly 1979–2025, five driest flagged |
-| `scene_alibi.json` | Act III | {year, sst, rain} points + r_local + the driest-five detail |
-| `scene_reveal.json` | Act IV | {year, oni, phase, rain} + r_oni + driest-ten phases + phase means |
-| `scene_cost.json` | Act V | crop yield 1961–2024 + the drought years |
-| `scene_exposure.json` | Act VI | sea-level anomaly 1993–2023 + SST 1850–2025 |
-| `scene_gap.json` | Act VII | GHG per capita 1970–2024 + the EDGAR world reference |
-| `scene_watch.json` | Coda | meteorological monitoring network 1951–2026 |
+| `scene_reveal.json` | Ch. 1–2 | {year, oni, phase, rain} + r_oni + driest-ten phases + phase means |
+| `scene_cost.json` | Ch. 3 | crop yield 1961–2024 + the drought years |
+| `scene_exposure.json` | Ch. 4 | SST 1850–2025 + sea level 1993–2023 + r_local (the "alibi") |
+| `scene_gap.json` | Ch. 5 | GHG per capita 1970–2024 + the EDGAR world reference |
+| `scene_watch.json` | Ch. 6 | meteorological monitoring network 1951–2026 |
 | `scene_record.json` | Epilogue | small multiples: six PG indicators with first/last values |
-| `../static/posters/sst_{cool,warm}.png` | Act I | no-WebGL fallback (coolest year / record 2025), through the shared palette |
 
-Re-running the script rewrites `static/data/` and the posters. To update the
+Re-running the script rewrites `static/data/`. To update the
 piece when SPC republishes the dataflow, re-export the CSV from .Stat
 Explorer, drop it in `source/`, and re-run; same for the ONI table.
 
@@ -75,9 +71,9 @@ Explorer, drop it in `source/`, and re-run; same for the ONI table.
 
 1. **Real data only.** Every value in `static/data/` traces to a row in one
    of the committed source files. The single illustrative element in the
-   piece (Act V's frost-night popup) is prose inside its scene component,
-   explicitly labelled "an illustration, not a measurement", and carries no
-   numbers.
+   piece (chapter 3's frost-night popup) is prose inside its scene
+   component, explicitly labelled "an illustration, not a measurement", and
+   carries no numbers.
 2. Keep every scene file small (the audience is on 3G); derive from the
    foundation file rather than re-parsing the CSV in the front end.
 3. Never ship a derived quantity computed in the browser — every statistic
@@ -85,5 +81,5 @@ Explorer, drop it in `source/`, and re-run; same for the ONI table.
    and written into the scene JSON.
 4. State the caveats in the piece, not just the code: national annual
    averages blunt extreme events, and PNG's local sea-surface anomaly is not
-   the El Niño (Niño 3.4) signal — in this story that mismatch is the plot
-   (Acts III–IV), not a footnote.
+   the El Niño (Niño 3.4) signal — the piece leans on that mismatch
+   (chapters 1–2 and chapter 4's "alibi" card), not around it.

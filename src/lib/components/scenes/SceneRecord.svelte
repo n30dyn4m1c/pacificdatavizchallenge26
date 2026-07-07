@@ -1,8 +1,8 @@
 <script>
 	/**
-	 * Epilogue — the evidence, in full. A small-multiples close: every Papua
-	 * New Guinea series used in the piece, drawn as a compact spark line with
-	 * its first→last change, so the reader sees the whole official record at a
+	 * Epilogue — the whole record. A small-multiples close: every Papua New
+	 * Guinea series used in the piece, drawn as a compact spark line with its
+	 * first→last change, so the reader sees the whole official record at a
 	 * glance. All real (static/data/scene_record.json). Prints to one page.
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
@@ -20,17 +20,17 @@
 </script>
 
 <ScrollScene
-	id="9-evidence"
-	title="The evidence, in full — Papua New Guinea's official climate record"
+	id="7-record"
+	title="The whole record — Papua New Guinea's official climate indicators"
 	pin={false}
 	surface="light"
 	printable={true}
 	dataUrl="/data/scene_record.json"
 >
 	{#snippet prose()}
-		<h2>The evidence, in full</h2>
+		<h2>The whole record</h2>
 		<p>
-			Every official series used in this inquiry, drawn small and together: Papua New Guinea's
+			Every official series used in this piece, drawn small and together: Papua New Guinea's
 			sea-surface and land-surface temperature anomalies, its rainfall anomaly, sea level, crop
 			yield and greenhouse-gas emissions per person — each the annual national record from the
 			Pacific Community, on the Pacific Data Hub. The warming lines climb, the rainfall spikes
@@ -43,7 +43,7 @@
 		<div class="record">
 			<header class="record-head">
 				<p class="kicker">Papua New Guinea · the official climate record, at a glance</p>
-				<h2 class="display">The evidence, in full.</h2>
+				<h2 class="display">The whole record.</h2>
 			</header>
 
 			{#if data}
@@ -68,10 +68,9 @@
 				</div>
 
 				<p class="closing">
-					The rain was never lost. It was taken — by an ocean seven thousand kilometres away,
-					working over a warming that Papua New Guinea did almost nothing to cause. The record is
-					public, annual and unambiguous; the years it names as the driest are the years people
-					here already remember by name.
+					The ocean knows first. The record that proves it is public, annual and unambiguous —
+					and the years it names as the driest are the years people here already remember by
+					name.
 				</p>
 				<p class="source-line">
 					Source: {data.source.name} ({data.source.dataflow}), {data.source.hub} — the official
