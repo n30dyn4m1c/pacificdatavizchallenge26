@@ -5,9 +5,10 @@
 	 * per season, height = |ONI|, up for El Niño years, down for La Niña,
 	 * drawn in the palette's neutrals (currentColor — the placement sets the
 	 * ink). Deliberately austere: a decorative rhythm, never imagery. Purely
-	 * decorative (aria-hidden); the charts read the real SPC series from
-	 * static/data/. These bars are an approximate, observed-only abstraction
-	 * of the CPC Oceanic Niño Index record — no forecast value is included.
+	 * decorative (aria-hidden); the REAL ONI series the reveal scene charts
+	 * lives in prep/source/oni_cpc.csv → static/data/scene_reveal.json. These
+	 * bars are an approximate, observed-only abstraction of the same CPC
+	 * record — no forecast value is included.
 	 */
 	const ONI = [
 		2.2, -0.6, -1.0, -0.5, 1.2, 0.8, -1.7, 0.1, 0.4, 1.7, 0.1, 0.1, 1.0,

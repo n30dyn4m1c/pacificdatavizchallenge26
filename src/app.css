@@ -103,8 +103,9 @@ a {
 	color: var(--paper);
 }
 
-/* the ocean → land handover between scenes 4 and 5; carries the OniBand
-   divider motif, seated in the gradient's paper end so the neutral reads */
+/* the dark → paper handover between the coda and the printed epilogue;
+   carries the OniBand divider motif, seated in the gradient's paper end so
+   the neutral reads */
 .shore-transition {
 	height: 50vh;
 	background: linear-gradient(to bottom, var(--ocean), var(--paper));

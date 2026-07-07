@@ -7,20 +7,22 @@
  * per-country annual series the scenes read. Papua New Guinea (GEO_PICT "PG")
  * is the focus country; a Pacific-wide mean per year is emitted as context.
  *
- * This dataset is ANNUAL and NATIONAL (one value per country per year, no
- * spatial grid, no monthly resolution, observations only — no forecast). The
- * piece is anchored on what this record actually contains; nothing here is
- * synthetic.
+ * One small companion series is NOT from the SPC dataflow: the Oceanic Niño
+ * Index (source/oni_cpc.csv, NOAA CPC — see prep/README.md), which the piece
+ * uses to name the El Niño years. Everything else is the SPC record, annual
+ * and national, real and unaltered. No synthetic data, no forecast.
  *
  * Run from the repo root:  node prep/make_real_data.mjs
  * Input:  prep/source/SPC_DF_CLIMATE_CHANGE.csv  (the .Stat CSV export)
- * Output: static/data/pg_climate.json            (the real foundation file)
+ *         prep/source/oni_cpc.csv                (NOAA CPC ONI, transcribed)
+ * Output: static/data/*.json + static/posters/*.png
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
 import { fieldColor } from '../src/lib/palette.js';
 
 const SRC = new URL('./source/SPC_DF_CLIMATE_CHANGE.csv', import.meta.url).pathname;
+const ONI_SRC = new URL('./source/oni_cpc.csv', import.meta.url).pathname;
 const DATA = new URL('../static/data/', import.meta.url).pathname;
 const POSTERS = new URL('../static/posters/', import.meta.url).pathname;
 mkdirSync(DATA, { recursive: true });
@@ -102,6 +104,26 @@ const regionalMean = (entry) => {
 		.map(([year, a]) => ({ year, mean: +(a.sum / a.n).toFixed(3), n: a.n }));
 };
 
+// ── the ONI companion series (NOAA CPC, transcribed — see prep/README.md) ───
+const oniRows = parseCsv(readFileSync(ONI_SRC, 'utf8'));
+oniRows.shift(); // header
+const oni = oniRows
+	.filter((r) => r.length >= 3 && r[0] !== '')
+	.map((r) => ({
+		year: Number(r[0]),
+		oni: r[1] === '' ? null : Number(r[1]),
+		phase: r[2]
+	}));
+
+const ONI_SOURCE = {
+	name: 'Oceanic Niño Index (ONI) — NOAA Climate Prediction Center',
+	url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php',
+	note:
+		'Peak ONI of the ENSO season developing in each year (Jun–Feb window) and the ' +
+		'CPC episode classification. Transcribed table (see prep/README.md); the only ' +
+		'series in the piece not from the SPC dataflow.'
+};
+
 // ── assemble the focus-country foundation file ──────────────────────────────
 const indicators = {};
 const regional = {};
@@ -124,7 +146,7 @@ const SOURCE = {
 	extracted: '2026-07-06'
 };
 
-const foundation = { source: SOURCE, indicators, regional };
+const foundation = { source: SOURCE, oni_source: ONI_SOURCE, indicators, regional, oni };
 const write = (name, obj) => {
 	const json = JSON.stringify(obj);
 	writeFileSync(DATA + name, json);
@@ -137,8 +159,7 @@ for (const [code, o] of Object.entries(indicators)) {
 	console.log(`  ${code.padEnd(26)} ${s.length} yrs ${s[0].year}–${s[s.length - 1].year}  (${o.unit})`);
 }
 
-// ── the tidy foundation file (every PG series + regional context) ───────────
-console.log('\nwriting scene data (all derived from the official series above):');
+console.log('\nwriting scene data (SPC series + the ONI companion):');
 write('pg_climate.json', foundation);
 
 const ind_ = (code) => indicators[code];
@@ -146,8 +167,22 @@ const series_ = (code) => ind_(code).series;
 const round = (v, p = 3) => +v.toFixed(p);
 const extremesLow = (s, k) => s.slice().sort((a, b) => a.value - b.value).slice(0, k).map((d) => d.year);
 const extremesHigh = (s, k) => s.slice().sort((a, b) => b.value - a.value).slice(0, k).map((d) => d.year);
+const oniOf = (year) => oni.find((d) => d.year === year) ?? null;
 
-// ── scene 1 — the warming sea (annual SST anomaly, driven into the shader) ──
+function pearson(pairs) {
+	const n = pairs.length;
+	const mx = pairs.reduce((s, p) => s + p[0], 0) / n;
+	const my = pairs.reduce((s, p) => s + p[1], 0) / n;
+	let num = 0, dx = 0, dy = 0;
+	for (const [px, py] of pairs) {
+		num += (px - mx) * (py - my);
+		dx += (px - mx) ** 2;
+		dy += (py - my) ** 2;
+	}
+	return num / Math.sqrt(dx * dy);
+}
+
+// ── act I — the record (annual SST anomaly, driven into the shader) ─────────
 // Each year becomes a uniform LUMINANCE grid: byte = value/scale + offset, so
 // the WebGL field is tinted by that year's real national anomaly. The scale
 // matches the piece's palette contract (°C = (byte − 128)/40).
@@ -158,7 +193,7 @@ const extremesHigh = (s, k) => s.slice().sort((a, b) => b.value - a.value).slice
 		const byte = Math.max(0, Math.min(255, Math.round(value / SCALE) + OFFSET));
 		return Buffer.from(new Uint8Array(W * H).fill(byte)).toString('base64');
 	};
-	write('scene1_sst.json', {
+	write('scene_record_sst.json', {
 		source: SOURCE,
 		indicator: 'SST_ANOM',
 		title: ind_('SST_ANOM').name,
@@ -173,31 +208,11 @@ const extremesHigh = (s, k) => s.slice().sort((a, b) => b.value - a.value).slice
 	});
 }
 
-// ── scene 2 — sea and land, in step (two 176-yr traces + regional ghost) ────
-{
-	const sst = series_('SST_ANOM');
-	const land = series_('ST_ANOM');
-	const region = regional.SST_ANOM.map((d) => ({ year: d.year, value: d.mean }));
-	write('scene2_temps.json', {
-		source: SOURCE,
-		unit: '°C',
-		latest_year: sst.at(-1).year,
-		series: [
-			{ key: 'region', name: 'Pacific average (sea surface)', ghost: true,
-			  values: region.map((d) => ({ year: d.year, value: d.value })) },
-			{ key: 'land', name: 'Papua New Guinea — land surface',
-			  values: land.map((d) => ({ year: d.year, value: d.value })) },
-			{ key: 'sst', name: 'Papua New Guinea — sea surface', accent: true,
-			  values: sst.map((d) => ({ year: d.year, value: d.value })) }
-		]
-	});
-}
-
-// ── scene 3 — the driest years (rainfall anomaly bars) ──────────────────────
+// ── act II — the dry years (rainfall anomaly bars, driest flagged) ──────────
 {
 	const s = series_('RAIN_ANOM');
-	const driestYears = extremesLow(s, 4);
-	write('scene3_rain.json', {
+	const driestYears = extremesLow(s, 5);
+	write('scene_dry.json', {
 		source: SOURCE,
 		unit: 'mm',
 		note: ind_('RAIN_ANOM').name + ' (departure from the long-term mean)',
@@ -206,74 +221,128 @@ const extremesHigh = (s, k) => s.slice().sort((a, b) => b.value - a.value).slice
 	});
 }
 
-// ── scene 4 — what the extremes cost (crop yield against drought years) ─────
+// ── act III — the alibi (local SST vs rainfall: the naive suspect cleared) ──
+{
+	const sst = new Map(series_('SST_ANOM').map((d) => [d.year, d.value]));
+	const rain = series_('RAIN_ANOM');
+	const driest = extremesLow(rain, 5);
+	const points = rain
+		.filter((d) => sst.has(d.year))
+		.map((d) => ({
+			year: d.year,
+			sst: sst.get(d.year),
+			rain: d.value,
+			driest: driest.includes(d.year) || undefined
+		}));
+	const r_local = pearson(points.map((p) => [p.sst, p.rain]));
+	write('scene_alibi.json', {
+		source: SOURCE,
+		points,
+		driest,
+		r_local: round(r_local),
+		driest_detail: driest.map((y) => ({ year: y, sst: sst.get(y), rain: rain.find((d) => d.year === y).value }))
+	});
+	console.log(`  · r(local SST, rain) = ${round(r_local, 2)}  (n=${points.length})`);
+}
+
+// ── act IV — the far ocean (ONI vs rainfall: the mirror chart) ──────────────
+{
+	const rain = new Map(series_('RAIN_ANOM').map((d) => [d.year, d.value]));
+	const driest = extremesLow(series_('RAIN_ANOM'), 10);
+	const years = oni
+		.filter((d) => rain.has(d.year))
+		.map((d) => ({
+			year: d.year,
+			oni: d.oni,
+			phase: d.phase,
+			rain: rain.get(d.year),
+			driest: driest.includes(d.year) || undefined
+		}));
+	const both = years.filter((d) => d.oni != null);
+	const r_oni = pearson(both.map((d) => [d.oni, d.rain]));
+	const elninoYears = both.filter((d) => d.phase === 'elnino');
+	const otherYears = both.filter((d) => d.phase !== 'elnino');
+	const mean = (a) => a.reduce((s, d) => s + d.rain, 0) / a.length;
+	const driest10 = driest.map((y) => ({ year: y, phase: oniOf(y)?.phase ?? 'pending' }));
+	const driestElnino = driest10.filter((d) => d.phase === 'elnino').length;
+	write('scene_reveal.json', {
+		source: SOURCE,
+		oni_source: ONI_SOURCE,
+		years,
+		r_oni: round(r_oni),
+		r_local: round(pearson(
+			series_('RAIN_ANOM')
+				.filter((d) => new Map(series_('SST_ANOM').map((x) => [x.year, x.value])).has(d.year))
+				.map((d) => [new Map(series_('SST_ANOM').map((x) => [x.year, x.value])).get(d.year), d.value])
+		)),
+		driest10,
+		driest_elnino_count: driestElnino,
+		mean_rain_elnino: round(mean(elninoYears), 1),
+		mean_rain_other: round(mean(otherYears), 1)
+	});
+	console.log(`  · r(ONI, rain) = ${round(r_oni, 2)}  (n=${both.length})`);
+	console.log(`  · driest 10: ${driestElnino} El Niño years — ${driest10.map((d) => d.year + '(' + d.phase[0] + ')').join(' ')}`);
+	console.log(`  · mean rain anomaly: El Niño years ${round(mean(elninoYears), 1)} mm vs other years ${round(mean(otherYears), 1)} mm`);
+}
+
+// ── act V — the cost (crop yield against the drought years) ─────────────────
 {
 	const crop = series_('CROP_YIELD');
 	const rain = series_('RAIN_ANOM');
 	const droughtYears = extremesLow(rain, 4);
-	write('scene4_impact.json', {
+	write('scene_cost.json', {
 		source: SOURCE,
 		drought_years: droughtYears,
 		crop: { name: ind_('CROP_YIELD').name, unit: 'kg/ha',
-		        years: crop.map((d) => ({ year: d.year, value: d.value })) },
-		rain: { name: ind_('RAIN_ANOM').name, unit: 'mm',
-		        years: rain.map((d) => ({ year: d.year, value: d.value })) }
+		        years: crop.map((d) => ({ year: d.year, value: d.value })) }
 	});
 }
 
-// ── scene 5 — one garden (ILLUSTRATIVE, not from the dataset) ───────────────
-// A hand-drawn explainer of why a clear highland night kills a kaukau garden.
-// This scene carries no data claim and cites no source: it is a diagram of a
-// well-understood mechanism (radiative frost on a still, cloudless night),
-// shown so the record's numbers land on something human. Flagged illustrative.
+// ── act VI — double exposure (the rising floor under the visits) ────────────
 {
-	write('scene5_garden.json', {
-		illustrative: true,
-		note: 'Illustrative diagram of radiative frost on a highland kaukau mound. Not from the SPC dataset; no data claim, no source cited. The night-temperature curve is a schematic, not a station record.',
-		phase: {
-			elevation_m: 2300,
-			frost_threshold_c: 0,
-			schematic: true,
-			night_temps_c: [11, 9, 7, 5, 4, 3, 2, 1, 0, -1, -2, -3]
-		},
-		indicators: [
-			{ traditional: 'Morning fog sits low in the valley and burns off late', satellite: 'Cold, clear nights show up as low night-time land-surface temperature' },
-			{ traditional: 'Cordyline (tanket) leaves at the garden edge pale and curl', satellite: 'Vegetation greenness dips over the high gardens' },
-			{ traditional: 'Creek levels drop and the stones stay dry by mid-morning', satellite: 'Rainfall runs below its normal range for the season' }
-		],
-		hotspots: [
-			{ id: 'sky', label: 'The night sky',
-			  healthy: { title: 'Cloud is a blanket', body: 'It is the clear nights that kill. With no cloud, the day’s heat radiates straight out to space and ground that normally never freezes can freeze by dawn.' },
-			  frosted: { title: 'No blanket came', body: 'A cloudless, windless night lets the surface cool far below the air a few metres up — the classic setup for radiative frost.' } },
-			{ id: 'leaves', label: 'The vine leaves',
-			  healthy: { title: 'A living canopy', body: 'The vines close over the mound, holding the day’s warmth against the soil and shading the weeds.' },
-			  frosted: { title: 'Frost burn', body: 'Frost silvers the leaves overnight; they blacken and dry within days. The tuber below can survive, but with the canopy dead there is little left to feed it.' } },
-			{ id: 'soil', label: 'The mounded soil',
-			  healthy: { title: 'Why gardeners mound', body: 'Heaping the soil and folding in old vines to rot warms and drains it, and cold air slides off the crest downhill — a little height buys a little warmth.' },
-			  frosted: { title: 'Bricked ground', body: 'Weeks without rain bake a mound hard and it cracks; replanting needs soft, wet soil, so recovery has to wait for the rain.' } },
-			{ id: 'tuber', label: 'The tuber, below ground',
-			  healthy: { title: 'A slow clock', body: 'From planting to harvest, sweet potato takes roughly five to nine months — what is eaten today was planted the better part of a year ago.' },
-			  frosted: { title: 'Two harvests at once', body: 'A killing frost takes the standing crop and the vine cuttings needed to replant, so the loss reaches months into the future.' } },
-			{ id: 'indicator', label: 'Reading the warning',
-			  healthy: { title: 'Two ways of knowing', body: 'The garden gives its own signs — fog, leaf, creek — and satellites read the same conditions from orbit. Neither list replaces the other.' },
-			  frosted: { title: 'Both were right', body: 'The local signs and the instruments describe one event from two directions: a cold, dry, cloudless spell settling over the high gardens.' } }
-		]
-	});
-}
-
-// ── scene 6 — the record in full: who warms it, who wears it ────────────────
-{
-	const pick = (code, unit) => ({ name: ind_(code).name, unit,
-		years: series_(code).map((d) => ({ year: d.year, value: d.value })) });
-	write('scene6_justice.json', {
+	const sst = series_('SST_ANOM');
+	const sea = series_('SEA_LVL');
+	write('scene_exposure.json', {
 		source: SOURCE,
-		ghg: pick('GHG_EMI_CAPITA', 't CO₂e / person'),
-		sea_level: pick('SEA_LVL', 'm'),
-		sst: pick('SST_ANOM', '°C')
+		sst: { name: ind_('SST_ANOM').name, unit: '°C',
+		       record_year: extremesHigh(sst, 1)[0],
+		       years: sst.map((d) => ({ year: d.year, value: d.value })) },
+		sea_level: { name: ind_('SEA_LVL').name, unit: 'm',
+		             years: sea.map((d) => ({ year: d.year, value: d.value })) }
 	});
 }
 
-// ── scene 7 — the whole record (small multiples of PG's indicators) ─────────
+// ── act VII — the gap (emissions per person vs the world) ───────────────────
+{
+	const ghg = series_('GHG_EMI_CAPITA');
+	write('scene_gap.json', {
+		source: SOURCE,
+		ghg: { name: ind_('GHG_EMI_CAPITA').name, unit: 't CO₂e / person',
+		       years: ghg.map((d) => ({ year: d.year, value: d.value })) },
+		// single reference value, not an SPC series — documented in prep/README.md
+		world: {
+			value: 6.6,
+			label: 'world average, ≈6.6 t (2023)',
+			source: 'EDGAR (EC-JRC) global GHG per capita, 2023',
+			url: 'https://edgar.jrc.ec.europa.eu/report_2024'
+		},
+		latest: ghg.at(-1),
+		mean: round(ghg.reduce((s, d) => s + d.value, 0) / ghg.length, 2)
+	});
+}
+
+// ── coda — watching (the meteorological monitoring network) ─────────────────
+{
+	const met = series_('METEO_MONITOR_NET');
+	write('scene_watch.json', {
+		source: SOURCE,
+		stations: { name: ind_('METEO_MONITOR_NET').name, unit: 'stations',
+		            first: met[0], last: met.at(-1),
+		            years: met.map((d) => ({ year: d.year, value: d.value })) }
+	});
+}
+
+// ── epilogue — the whole record (small multiples of PG's indicators) ────────
 {
 	const panel = (code, unit, kind) => {
 		const s = series_(code);
@@ -281,8 +350,9 @@ const extremesHigh = (s, k) => s.slice().sort((a, b) => b.value - a.value).slice
 			first: s[0], last: s.at(-1),
 			years: s.map((d) => ({ year: d.year, value: d.value })) };
 	};
-	write('scene7_record.json', {
+	write('scene_record.json', {
 		source: SOURCE,
+		oni_source: ONI_SOURCE,
 		panels: [
 			panel('SST_ANOM', '°C', 'anomaly'),
 			panel('ST_ANOM', '°C', 'anomaly'),
@@ -294,7 +364,7 @@ const extremesHigh = (s, k) => s.slice().sort((a, b) => b.value - a.value).slice
 	});
 }
 
-// ── scene 1 no-WebGL fallback posters (solid fieldColor of a real year) ──────
+// ── act I no-WebGL fallback posters (solid fieldColor of a real year) ────────
 // Each poster is a uniform fill of a real annual SST anomaly through the shared
 // palette, so the fallback matches the shader. cool = coolest year, warm = 2025.
 {
