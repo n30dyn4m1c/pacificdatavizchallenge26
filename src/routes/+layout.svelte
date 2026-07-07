@@ -13,6 +13,15 @@
 
 	let { children } = $props();
 
+	// The reader-mode toggle only affects scene prose, and the first scene is
+	// a viewport below the hero — so on the opening screen the button would
+	// do nothing visible. It stays hidden until the reader scrolls toward
+	// content it can act on (and stays visible while reader mode is on).
+	let scrolled = $state(false);
+	const onWindowScroll = () => {
+		scrolled = window.scrollY > window.innerHeight * 0.5;
+	};
+
 	// palette.js → CSS custom properties (single source of truth stays in JS)
 	const rootVars = `:root{
 		--ocean:${surfaces.ocean};--ocean-raised:${surfaces.oceanRaised};
@@ -58,7 +67,9 @@
 	{@html `<style>${rootVars}</style>`}
 </svelte:head>
 
-{#if !ui.noTap}
+<svelte:window onscroll={onWindowScroll} />
+
+{#if !ui.noTap && (scrolled || ui.readerMode)}
 	<button
 		class="reader-toggle no-print"
 		aria-pressed={ui.readerMode}

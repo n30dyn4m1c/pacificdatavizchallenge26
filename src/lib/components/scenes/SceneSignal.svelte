@@ -1,6 +1,6 @@
 <script>
 	/**
-	 * Chapter 2 — the rain follows. The mirror chart: Papua New Guinea's
+	 * Chapter 3 — the rain follows. The mirror chart: Papua New Guinea's
 	 * rainfall anomaly alone first, then the far ocean fades in above it, then
 	 * the connectors on 1982/1997/2015 walk the eye from spike to shortfall.
 	 * All statistics quoted are computed by /prep and shipped in the JSON.
@@ -17,9 +17,9 @@
 </script>
 
 <ChapterHead
-	no="Chapter two · the rain"
+	no="Chapter three · the rain"
 	title="When the far ocean tips, the rain follows."
-	standfirst="Papua New Guinea keeps its own record: how much rain each year brought, above or below normal. Put it under the see&#8209;saw and the two charts finish each other’s sentences."
+	standfirst="Papua New Guinea keeps its own record: how much rain each year brought, above or below normal. Put it under the see&#8209;saw and the pattern is hard to miss."
 />
 
 <ScrollScene
@@ -36,7 +36,7 @@
 			home collapses. Eight of the ten driest years in the record are El Niño years; the other
 			two, 1992 and 1993, sit in the trailing warmth of the long 1991–92 event. Averaged across
 			the record, El Niño years run −5.9&nbsp;mm against +3.5&nbsp;mm in all other years, a
-			correlation of −0.64. The great El Niños of chapter one — 1982, 1997, 2015 — are the
+			correlation of −0.64. The great El Niños of chapter two — 1982, 1997, 2015 — are the
 			great droughts of this chart.
 		</p>
 		{#if data}

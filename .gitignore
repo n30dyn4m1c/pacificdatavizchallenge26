@@ -9,3 +9,4 @@ dist/
 vite.config.js.timestamp-*
 prep/__pycache__/
 prep/.venv/
+prep/source/naturalearth/

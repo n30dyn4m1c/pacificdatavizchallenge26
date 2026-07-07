@@ -1,6 +1,6 @@
 <script>
 	/**
-	 * Chapter 4 — the long record. The 176-year sea-surface series draws
+	 * Chapter 6 — the long record. The 176-year sea-surface series draws
 	 * itself under a giant year counter, reaches the 2025 record, then the
 	 * graphic crossfades to the sea-level record (1993–2023). The last card
 	 * carries the local "alibi": warm local years are WETTER (r = +0.48,
@@ -18,7 +18,7 @@
 </script>
 
 <ChapterHead
-	no="Chapter four · the long record"
+	no="Chapter six · the long record"
 	title="The see&#8209;saw is bolted to a rising floor."
 	standfirst="El Niño comes and goes — it always has. What’s new sits underneath it: the ocean around Papua New Guinea itself, measured one number a year since 1850."
 />
