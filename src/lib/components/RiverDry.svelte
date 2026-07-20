@@ -15,6 +15,7 @@
 	 */
 	import { ink, impact, surfaces } from '$lib/palette.js';
 	import { ui } from '$lib/state.svelte.js';
+	import { reveal } from '$lib/reveal.js';
 
 	const inkC = ink.light;
 	const imp = impact.light;
@@ -43,9 +44,9 @@
 
 <section class="fieldnote" aria-label="Field note: how a river dries">
 	<header>
-		<p class="kicker">Field note 01 · the rivers</p>
-		<h3>How a river dries.</h3>
-		<p class="lede">
+		<p class="kicker" use:reveal>Field note 01 · the rivers</p>
+		<h3 use:reveal={{ delay: 90 }}>How a river dries.</h3>
+		<p class="lede" use:reveal={{ delay: 200 }}>
 			In the lowlands the river is the road, the market and the water supply at once. Move the dry
 			season along and watch what fails, in the order it failed in 1997 and 2015.
 			<em>(An illustration of the mechanism, not a gauge record.)</em>

@@ -4,15 +4,24 @@
 	 * number and one line of caption. The pudding-style "let the stat land"
 	 * beat; purely static, no interaction.
 	 */
+	import { reveal } from '$lib/reveal.js';
+
 	let { kicker = '', stat, caption, accent = 'warm' } = $props();
 </script>
 
 <section class="bigstat" aria-label="{stat} — {caption}">
 	{#if kicker}
-		<p class="kicker">{kicker}</p>
+		<p class="kicker" use:reveal>{kicker}</p>
 	{/if}
-	<p class="stat display" class:warm={accent === 'warm'} class:cool={accent === 'cool'}>{stat}</p>
-	<p class="caption">{caption}</p>
+	<p
+		class="stat display reveal-pop"
+		class:warm={accent === 'warm'}
+		class:cool={accent === 'cool'}
+		use:reveal={{ delay: 110 }}
+	>
+		{stat}
+	</p>
+	<p class="caption" use:reveal={{ delay: 260 }}>{caption}</p>
 </section>
 
 <style>

@@ -9,6 +9,7 @@
 	 * explicitly labelled illustration.
 	 */
 	import { ink, impact, surfaces } from '$lib/palette.js';
+	import { reveal } from '$lib/reveal.js';
 
 	const inkC = ink.light;
 	const imp = impact.light;
@@ -22,9 +23,9 @@
 
 <section class="aftermath" aria-label="The aftermath: floods and landslides when the rain returns">
 	<header class="chapter-head">
-		<p class="chapter-no">Interlude · the aftermath</p>
-		<h2>The drought ends in water.</h2>
-		<p class="standfirst">
+		<p class="chapter-no" use:reveal>Interlude · the aftermath</p>
+		<h2 use:reveal={{ delay: 90 }}>The drought ends in water.</h2>
+		<p class="standfirst" use:reveal={{ delay: 200 }}>
 			El&nbsp;Niño's exit is as dangerous as its stay. The see&#8209;saw tips back, the rain
 			returns months of debt in weeks — and it lands on slopes the drought has stripped bare.
 		</p>

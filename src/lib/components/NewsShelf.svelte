@@ -7,6 +7,8 @@
 	 * ours, written from the documents. This is the piece's evidence that
 	 * "what to expect" is not a forecast — it is a memory.
 	 */
+	import { reveal } from '$lib/reveal.js';
+
 	const ITEMS = [
 		{
 			source: 'ReliefWeb · UN OCHA',
@@ -89,9 +91,9 @@
 
 <section class="newsshelf" aria-label="Real coverage of Papua New Guinea's El Niño emergencies">
 	<header class="chapter-head">
-		<p class="chapter-no">Interlude · the paper trail</p>
-		<h2>None of this is hypothetical.</h2>
-		<p class="standfirst">
+		<p class="chapter-no" use:reveal>Interlude · the paper trail</p>
+		<h2 use:reveal={{ delay: 90 }}>None of this is hypothetical.</h2>
+		<p class="standfirst" use:reveal={{ delay: 200 }}>
 			Every mechanism in the chapters above is on the public record, twice over — reported as it
 			happened in 1997–98 and again in 2015–16. Six documents, summarised; follow any of them to
 			the source.
@@ -99,8 +101,8 @@
 	</header>
 
 	<div class="shelf">
-		{#each ITEMS as item (item.url)}
-			<article class="clip">
+		{#each ITEMS as item, i (item.url)}
+			<article class="clip" use:reveal={{ delay: (i % 3) * 80 }}>
 				<p class="clip-meta">{item.source} · {item.date}</p>
 				<h3><a href={item.url} rel="external noopener">{item.title}</a></h3>
 				<p class="clip-summary">{item.summary}</p>

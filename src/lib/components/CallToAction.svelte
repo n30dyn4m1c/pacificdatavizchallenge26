@@ -7,6 +7,8 @@
 	 * signal, plan on the known exposure map, move money early, teach the
 	 * pattern. Plain, practical register; no slogans.
 	 */
+	import { reveal } from '$lib/reveal.js';
+
 	const ASKS = [
 		{
 			no: '01',
@@ -33,9 +35,9 @@
 
 <section class="cta" aria-label="What the record asks of us">
 	<header class="chapter-head">
-		<p class="chapter-no">The ask</p>
-		<h2>Prepare for the predictable.</h2>
-		<p class="standfirst">
+		<p class="chapter-no" use:reveal>The ask</p>
+		<h2 use:reveal={{ delay: 90 }}>Prepare for the predictable.</h2>
+		<p class="standfirst" use:reveal={{ delay: 200 }}>
 			No one in Papua New Guinea can stop an El Niño, and no policy written in Port Moresby will
 			cool the far ocean. But nothing in this story arrived unannounced: the signal came months
 			early, the damage followed a sequence the record has already written down twice — and the
@@ -45,8 +47,8 @@
 	</header>
 
 	<div class="asks">
-		{#each ASKS as ask (ask.no)}
-			<article class="ask">
+		{#each ASKS as ask, i (ask.no)}
+			<article class="ask" use:reveal={{ delay: i * 80 }}>
 				<p class="ask-no display">{ask.no}</p>
 				<h3>{ask.title}</h3>
 				<p>{ask.body}</p>
@@ -54,7 +56,7 @@
 		{/each}
 	</div>
 
-	<p class="cta-close">
+	<p class="cta-close" use:reveal>
 		The see-saw has tipped again — that much is already measured. The choice the record leaves is
 		whether this El Niño, in its hardest months, meets a country that has read its own history, or
 		one that has to live it again from the beginning.
