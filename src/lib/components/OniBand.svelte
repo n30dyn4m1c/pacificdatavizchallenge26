@@ -9,7 +9,15 @@
 	 * lives in prep/source/oni_cpc.csv → static/data/scene_reveal.json. These
 	 * bars are an approximate, observed-only abstraction of the same CPC
 	 * record — no forecast value is included.
+	 *
+	 * Entrance: the bars grow from the baseline with a small left-to-right
+	 * stagger the first time the band scrolls into view. The grown state is
+	 * the default (prerendered HTML, no-JS, prefers-reduced-motion); the
+	 * collapsed start state is only ever applied in-browser when motion is
+	 * allowed.
 	 */
+	import { onMount } from 'svelte';
+
 	const ONI = [
 		2.2, -0.6, -1.0, -0.5, 1.2, 0.8, -1.7, 0.1, 0.4, 1.7, 0.1, 0.1, 1.0,
 		-0.9, -0.5, 2.4, -1.5, -1.7, -0.7, -0.1, 0.9, 0.4, 0.6, -0.9, 0.7,
@@ -18,19 +26,41 @@
 	];
 	const STEP = 8;
 	const MID = 13;
+
+	let el = $state(null);
+	let animatable = $state(false);
+	let grown = $state(false);
+
+	onMount(() => {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		animatable = true;
+		const io = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((e) => e.isIntersecting)) {
+					grown = true;
+					io.disconnect();
+				}
+			},
+			{ threshold: 0.4 }
+		);
+		io.observe(el);
+		return () => io.disconnect();
+	});
 </script>
 
-<div class="oni-band no-print" aria-hidden="true">
+<div class="oni-band no-print" class:animatable class:grown bind:this={el} aria-hidden="true">
 	<svg viewBox="0 0 {ONI.length * STEP} 26" preserveAspectRatio="xMidYMid meet">
 		<line x1="0" x2={ONI.length * STEP} y1={MID} y2={MID} stroke="currentColor" stroke-opacity="0.25" />
 		{#each ONI as v, i (i)}
 			<rect
+				class={v > 0 ? 'up' : 'down'}
 				x={i * STEP + 2.5}
 				width="3"
 				y={v > 0 ? MID - v * 4.3 : MID}
 				height={Math.max(1.2, Math.abs(v) * 4.3)}
 				fill="currentColor"
 				fill-opacity="0.55"
+				style:transition-delay="{i * 16}ms"
 			/>
 		{/each}
 	</svg>
@@ -46,5 +76,24 @@
 	.oni-band svg {
 		width: min(22rem, 60vw);
 		height: 26px;
+	}
+
+	/* collapsed start state exists only when animation is possible */
+	.oni-band.animatable rect {
+		transform: scaleY(0);
+		transform-box: fill-box;
+		transition: transform 0.55s cubic-bezier(0.2, 0.65, 0.25, 1);
+	}
+
+	.oni-band.animatable rect.up {
+		transform-origin: 50% 100%;
+	}
+
+	.oni-band.animatable rect.down {
+		transform-origin: 50% 0%;
+	}
+
+	.oni-band.animatable.grown rect {
+		transform: none;
 	}
 </style>

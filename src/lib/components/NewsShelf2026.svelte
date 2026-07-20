@@ -7,6 +7,8 @@
 	 * Sirinumu drawdown and Port Moresby's power rationing). Same contract
 	 * as the 1997/2015 shelf: external links, our summaries.
 	 */
+	import { reveal } from '$lib/reveal.js';
+
 	const ITEMS = [
 		{
 			source: 'PNG National Weather Service',
@@ -91,9 +93,9 @@
 
 <section class="newsshelf" aria-label="Live coverage of the 2026 El Niño in Papua New Guinea">
 	<header class="chapter-head">
-		<p class="chapter-no">Interlude · the live paper trail</p>
-		<h2>The third writing has begun.</h2>
-		<p class="standfirst">
+		<p class="chapter-no" use:reveal>Interlude · the live paper trail</p>
+		<h2 use:reveal={{ delay: 90 }}>The third writing has begun.</h2>
+		<p class="standfirst" use:reveal={{ delay: 200 }}>
 			The 1997 and 2015 shelves above were assembled from archives. This one is being written now
 			— the declaration, the directives, the drought tiers and the first impacts of the 2026
 			event, as reported. Six documents, summarised; follow any of them to the source.
@@ -101,8 +103,8 @@
 	</header>
 
 	<div class="shelf">
-		{#each ITEMS as item (item.url)}
-			<article class="clip">
+		{#each ITEMS as item, i (item.url)}
+			<article class="clip" use:reveal={{ delay: (i % 3) * 80 }}>
 				<p class="clip-meta">{item.source} · {item.date}</p>
 				<h3><a href={item.url} rel="external noopener">{item.title}</a></h3>
 				<p class="clip-summary">{item.summary}</p>

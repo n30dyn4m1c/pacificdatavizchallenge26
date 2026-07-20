@@ -123,9 +123,17 @@ Niño / dry side), the cool arm its opposite.
   toggle) are self-contained "field note" sections. **The scroll alone
   tells the complete story** — append `?notap=1` and every optional control
   disappears, each figure freezing at its full-drought state.
-- Static animation: the hero's CSS rain field, chart draw-ins, the warm
-  pool's slide, layer crossfades — all disabled or frozen under
-  `prefers-reduced-motion`.
+- Static animation: the hero's two-depth CSS rain field and opening
+  choreography (type settles in, the highlights wipe on, a single drop
+  falls down the scroll cue), chart draw-ins, the warm pool's slide,
+  layer crossfades, and one shared entrance convention for editorial
+  blocks (`src/lib/reveal.js` — chapter heads, big stats and shelf cards
+  settle up into place once, on approach) — all disabled or frozen under
+  `prefers-reduced-motion`, and never present in the prerendered HTML.
+- Wayfinding & tactility: a hairline reading-progress rail along the top
+  edge (appears after the hero), a whisper of SVG paper grain over the
+  whole surface (excluded from print), and the ONI-band ornament growing
+  from its baseline as it enters view.
 - `src/lib/palette.js` is the **single source of truth for every color**.
 
 ## Accessibility & performance

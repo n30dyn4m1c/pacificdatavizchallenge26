@@ -10,6 +10,7 @@
 	import { onMount } from 'svelte';
 	import { ui } from '$lib/state.svelte.js';
 	import { surfaces, ink, series, impact } from '$lib/palette.js';
+	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
 
 	let { children } = $props();
 
@@ -79,7 +80,12 @@
 	</button>
 {/if}
 
+<ScrollProgress />
+
 {@render children()}
+
+<!-- a whisper of paper tooth over the whole surface (never printed) -->
+<div class="grain no-print" aria-hidden="true"></div>
 
 <style>
 	.reader-toggle {

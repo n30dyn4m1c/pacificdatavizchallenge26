@@ -14,6 +14,7 @@
 	 */
 	import { ink, impact, surfaces } from '$lib/palette.js';
 	import { ui } from '$lib/state.svelte.js';
+	import { reveal } from '$lib/reveal.js';
 
 	const inkC = ink.dark; // the figure is a night scene: dark surface, light ink
 	const imp = impact.dark;
@@ -35,9 +36,9 @@
 
 <section class="fieldnote" aria-label="Field note: how a clear night kills a garden">
 	<header>
-		<p class="kicker">Field note 02 · the frost</p>
-		<h3>How a clear night kills a garden.</h3>
-		<p class="lede">
+		<p class="kicker" use:reveal>Field note 02 · the frost</p>
+		<h3 use:reveal={{ delay: 90 }}>How a clear night kills a garden.</h3>
+		<p class="lede" use:reveal={{ delay: 200 }}>
 			Kaukau — sweet potato — is the staple food of the Highlands, and it grows to well past 2,200
 			metres. It survives up there because cloud works as a blanket. Take the cloud away and watch
 			the same night twice. <em>(An illustration of the mechanism; typical values, not station
