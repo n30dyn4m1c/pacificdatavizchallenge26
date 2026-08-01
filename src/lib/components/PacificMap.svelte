@@ -11,10 +11,21 @@
 	 */
 	import { ink, impact, surfaces } from '$lib/palette.js';
 
-	let { map, idx = 0, ariaLabel } = $props();
+	let { map, idx = 0, narrow = false, ariaLabel } = $props();
 
 	const inkC = ink.light;
 	const imp = impact.light;
+
+	/**
+	 * On a phone the full 2.5:1 basin is 140 pixels tall and illegible. The
+	 * story only ever happens between Papua New Guinea (x ≈ 150) and the
+	 * Niño 3.4 box (x ≈ 700), so narrow viewports get a window on exactly
+	 * that stretch — the same projection, cropped, not a second map. See
+	 * VIEW below for the box; everything else is unchanged.
+	 */
+	const VIEW = $derived(
+		narrow ? { x: 60, y: 0, w: 700, h: map.h } : { x: 0, y: 0, w: map.w, h: map.h }
+	);
 
 	// warm-pool center per state (px in the map's projected space):
 	// home (over PNG's doorstep) → Niño 3.4 (El Niño) → piled far west (La Niña)
@@ -30,8 +41,14 @@
 </script>
 
 <div class="wrap">
-	<svg viewBox="0 0 {map.w} {map.h}" role="img" aria-label={ariaLabel}>
+	<svg viewBox="{VIEW.x} {VIEW.y} {VIEW.w} {VIEW.h}" role="img" aria-label={ariaLabel}>
 		<defs>
+			<!-- the SVG now fills a frame taller than its own aspect ratio, so
+			     geometry beyond the viewBox (Asia north, Antarctica south)
+			     would otherwise bleed into the letterbox -->
+			<clipPath id="pacific-frame">
+				<rect x={VIEW.x} y={VIEW.y} width={VIEW.w} height={VIEW.h} rx="6" />
+			</clipPath>
 			<radialGradient id="pool-grad" cx="50%" cy="50%" r="50%">
 				<stop offset="0%" stop-color={imp.drought} stop-opacity="0.55" />
 				<stop offset="70%" stop-color={imp.drought} stop-opacity="0.28" />
@@ -42,12 +59,13 @@
 			</marker>
 		</defs>
 
+		<g clip-path="url(#pacific-frame)">
 		<!-- ocean -->
-		<rect width={map.w} height={map.h} rx="6" fill="color-mix(in srgb, {imp.frost} 8%, {surfaces.paper})" />
+		<rect x={VIEW.x} y={VIEW.y} width={VIEW.w} height={VIEW.h} rx="6" fill="color-mix(in srgb, {imp.frost} 8%, {surfaces.paper})" />
 
 		<!-- equator -->
-		<line x1="0" x2={map.w} y1={map.equator_y} y2={map.equator_y} stroke={inkC.axis} stroke-width="1" stroke-dasharray="3 5" />
-		<text x={map.w - 8} y={map.equator_y - 5} text-anchor="end" font-size="11" fill={inkC.muted}>equator</text>
+		<line x1={VIEW.x} x2={VIEW.x + VIEW.w} y1={map.equator_y} y2={map.equator_y} stroke={inkC.axis} stroke-width="1" stroke-dasharray="3 5" />
+		<text x={VIEW.x + VIEW.w - 8} y={map.equator_y - 5} text-anchor="end" font-size="11" fill={inkC.muted}>equator</text>
 
 		<!-- land: real Natural Earth coastlines -->
 		<g>
@@ -163,18 +181,23 @@
 				</text>
 			</g>
 		{/if}
+		</g>
 	</svg>
 </div>
 
 <style>
+	/* fill the measured figure box and scale to fit inside it, rather than
+	   taking a width and letting the aspect ratio decide the height */
 	.wrap {
 		width: 100%;
+		height: 100%;
+		display: flex;
 	}
 
 	svg {
 		display: block;
 		width: 100%;
-		height: auto;
+		height: 100%;
 	}
 
 	.pool {

@@ -43,6 +43,7 @@
 	const yOni = $derived(scaleLinear([-oniExt, oniExt], [PAD.t + bandH, PAD.t]));
 	const yRain = $derived(scaleLinear([-rainExt, rainExt], [PAD.t + bandH + GAP + bandH, PAD.t + bandH + GAP]));
 
+	const narrow = $derived(w < 620);
 	const shown = $derived(Math.max(0, Math.min(1, progress)));
 	const visibleUpTo = $derived(yrMin + shown * (yrMax - yrMin));
 
@@ -54,13 +55,19 @@
 
 <div class="wrap" bind:clientWidth={w}>
 	<svg viewBox="0 0 {Math.max(w, 300)} {height}" role="img" aria-label={ariaLabel}>
-		<!-- band titles -->
+		<!-- band titles: the long form ran off the right edge on a phone, so
+		     narrow renders drop to the band name alone (the figure subtitle
+		     above already carries the units) -->
 		<text x={PAD.l} y={PAD.t - 16} font-size="11.5" font-weight="700" fill={inkC.secondary}
 			opacity={showOni ? 1 : 0} style="transition: opacity 0.5s">
-			THE FAR OCEAN · Oceanic Niño Index (°C) — El Niño up, La Niña down
+			{narrow
+				? 'THE FAR OCEAN · El Niño up'
+				: 'THE FAR OCEAN · Oceanic Niño Index (°C) — El Niño up, La Niña down'}
 		</text>
 		<text x={PAD.l} y={PAD.t + bandH + GAP - 12} font-size="11.5" font-weight="700" fill={inkC.secondary}>
-			THE RAIN AT HOME · Papua New Guinea rainfall anomaly (mm)
+			{narrow
+				? 'THE RAIN AT HOME · dry down'
+				: 'THE RAIN AT HOME · Papua New Guinea rainfall anomaly (mm)'}
 		</text>
 
 		<!-- zero baselines -->

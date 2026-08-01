@@ -10,10 +10,25 @@
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
+	import Figure from '$lib/components/Figure.svelte';
 	import LazyMap from '$lib/components/LazyMap.svelte';
-	import { cardIndex } from '$lib/scrolly.js';
+	import { cardIndex, runwayVh } from '$lib/scrolly.js';
 
 	const N = 5;
+
+	// below this figure width the full 2.5:1 basin is unreadably short, and
+	// the map crops to the stretch the story actually uses (see PacificMap)
+	const NARROW_PX = 760;
+
+	// the figure title follows the card: a chart's headline should say what
+	// the reader is looking at right now, not describe the file it came from
+	const figTitle = [
+		'Two places, seven thousand kilometres apart',
+		'A normal year: the warm pool on Papua New Guinea’s doorstep',
+		'El Niño: the pool — and the rain — slide east',
+		'La Niña: the warmth piles back west',
+		'The empty rectangle is an instrument'
+	];
 
 	const stateLabel = [
 		'Map of the tropical Pacific: Papua New Guinea in the west; the Niño 3.4 detection box about 7,500 kilometres east, on the equator.',
@@ -25,6 +40,7 @@
 </script>
 
 <ChapterHead
+	id="ch-1"
 	no="Chapter one · the map"
 	title="Two patches of one ocean."
 	standfirst="Everything in this story happens between two places on this map: Papua New Guinea, and a rectangle of open water on the equator, seven thousand kilometres east. What moves between them is the rain."
@@ -33,7 +49,7 @@
 <ScrollScene
 	id="1-map"
 	title="The tropical Pacific: Papua New Guinea and the Niño 3.4 detection region"
-	heightVh={(N + 1) * 100}
+	heightVh={runwayVh(N)}
 	dataUrl="/data/scene_map.json"
 >
 	{#snippet prose()}
@@ -54,20 +70,32 @@
 
 	{#snippet children({ progress, data })}
 		{@const idx = cardIndex(progress, N)}
-		<div class="graphic">
-			<p class="graphic-title">
-				THE TROPICAL PACIFIC · coastlines: Natural Earth · the warm pool and its motion: a schematic of the mechanism
-			</p>
-			{#if data}
-				<LazyMap map={data.pacific} {idx} ariaLabel={stateLabel[idx]} />
-			{/if}
-		</div>
+		<Figure
+			wide={true}
+			fit={(w) => (w < NARROW_PX ? 700 / 393.4 : 1000 / 393.4)}
+			title={figTitle[idx]}
+			subtitle="The tropical Pacific, equator centred · Papua New Guinea west, the Niño&nbsp;3.4 detection box east"
+			note="The warm pool and its motion are a schematic of the mechanism, not a measurement."
+			source="Coastlines: Natural Earth"
+		>
+			{#snippet body({ w })}
+				{#if data}
+					<LazyMap
+						map={data.pacific}
+						{idx}
+						narrow={w < NARROW_PX}
+						ariaLabel={stateLabel[idx]}
+					/>
+				{/if}
+			{/snippet}
+		</Figure>
 	{/snippet}
 
 	{#snippet flow({ progress })}
 		{@const idx = cardIndex(progress, N)}
 		<div class="card-slot first" class:active={idx === 0}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">1/5</span>
 				<span class="card-kicker">The two places</span>
 				<p>
 					West, in dark ink: <strong>Papua New Guinea</strong>. East, past the date line: a
@@ -78,6 +106,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">2/5</span>
 				<span class="card-kicker">Most years</span>
 				<p>
 					The sea off Papua New Guinea is the warmest open ocean on Earth —
@@ -88,6 +117,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">3/5</span>
 				<span class="card-kicker">El Niño</span>
 				<p>
 					Every few years the pool <strong>slides east</strong> along the equator — and the rain
@@ -98,6 +128,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">4/5</span>
 				<span class="card-kicker">La Niña</span>
 				<p>
 					Then the swing back: warmth piles up in the far west, over the country's doorstep, and
@@ -108,6 +139,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 4}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">5/5</span>
 				<span class="card-kicker">Why the rectangle matters</span>
 				<p>
 					The water in Niño&nbsp;3.4 warms <span class="hl hl-ink">months before</span> the rain

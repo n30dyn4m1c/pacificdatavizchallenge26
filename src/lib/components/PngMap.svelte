@@ -16,6 +16,12 @@
 
 <div class="wrap">
 	<svg viewBox="0 0 {map.w} {map.h}" role="img" aria-label={ariaLabel}>
+		<defs>
+			<clipPath id="png-frame">
+				<rect width={map.w} height={map.h} rx="6" />
+			</clipPath>
+		</defs>
+		<g clip-path="url(#png-frame)">
 		<!-- sea -->
 		<rect width={map.w} height={map.h} rx="6" fill="color-mix(in srgb, {imp.frost} 8%, {surfaces.paper})" />
 
@@ -59,20 +65,22 @@
 				<text x={map.profile_cut.x2 + 2} y={map.profile_cut.y2 - 12} font-size="19" font-weight="800" fill={inkC.primary} text-anchor="middle">B</text>
 			</g>
 		{/if}
+		</g>
 	</svg>
 </div>
 
 <style>
+	/* fill the measured figure box, scaled to fit */
 	.wrap {
 		width: 100%;
-		max-width: 46rem;
-		margin: 0 auto;
+		height: 100%;
+		display: flex;
 	}
 
 	svg {
 		display: block;
 		width: 100%;
-		height: auto;
+		height: 100%;
 	}
 
 	.cut {

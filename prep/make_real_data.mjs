@@ -287,11 +287,38 @@ function pearson(pairs) {
 
 // ── epilogue — the whole record (small multiples of PG's indicators) ────────
 {
-	const panel = (code, unit, kind) => {
+	/**
+	 * Editorial panel titles. The SPC dataflow's own indicator names are
+	 * database labels, not headlines: they mix casing ("Sea Surface
+	 * Temperature anomalies" beside "Crop Yield") and one of them —
+	 * "Greenhouse gaz emission per capita" — carries a French spelling of
+	 * "gas" straight through to the page. Publishing the raw label verbatim
+	 * reads as a copy-paste, so the piece titles its own panels and keeps the
+	 * dataflow's label alongside as `source_name`, which is the thing that
+	 * actually matters for provenance.
+	 */
+	const PANEL_TITLE = {
+		SST_ANOM: 'Sea-surface temperature',
+		ST_ANOM: 'Air temperature over land',
+		RAIN_ANOM: 'Rainfall',
+		SEA_LVL: 'Sea level',
+		CROP_YIELD: 'Crop yield',
+		GHG_EMI_CAPITA: 'Greenhouse-gas emissions per person'
+	};
+
+	const panel = (code, unit, kind, opts = {}) => {
 		const s = series_(code);
-		return { code, name: ind_(code).name, unit, kind,
-			first: s[0], last: s.at(-1),
-			years: s.map((d) => ({ year: d.year, value: d.value })) };
+		return {
+			code,
+			name: PANEL_TITLE[code] ?? ind_(code).name,
+			source_name: ind_(code).name, // the dataflow's own label, for provenance
+			unit,
+			kind,
+			...opts,
+			first: s[0],
+			last: s.at(-1),
+			years: s.map((d) => ({ year: d.year, value: d.value }))
+		};
 	};
 	write('scene_record.json', {
 		source: SOURCE,
@@ -300,7 +327,9 @@ function pearson(pairs) {
 			panel('SST_ANOM', '°C', 'anomaly'),
 			panel('ST_ANOM', '°C', 'anomaly'),
 			panel('RAIN_ANOM', 'mm', 'anomaly'),
-			panel('SEA_LVL', 'm', 'level'),
+			// published rounded to 0.1 m — flagged so the chart can draw the
+			// published values as points instead of implying a smooth curve
+			panel('SEA_LVL', 'm', 'level', { resolution: 0.1 }),
 			panel('CROP_YIELD', 'kg/ha', 'level'),
 			panel('GHG_EMI_CAPITA', 't/person', 'level')
 		]

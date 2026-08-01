@@ -135,9 +135,20 @@ export const ink = {
 };
 
 // ── chart series (validated per surface — see header) ──────────────────────
+/**
+ * `accent` is the WARM ARM — it means El Niño / dry, and nothing else.
+ *
+ * `record` is the piece's neutral measured-series ink, and it exists to keep
+ * that promise. Sea level, crop yield, the count of weather stations and the
+ * emissions series carry no ENSO sign, and drawing them in the warm accent —
+ * as every one of them used to be — quietly told the reader that a rising
+ * sea and a growing monitoring network were "the El Niño colour". Anything
+ * that is not an ENSO arm is now drawn in `record`, and warm/cool are
+ * reserved for the see-saw and its direct consequences.
+ */
 export const series = {
-	dark: { ghost1: '#6b727d', ghost2: '#8b929f', accent: '#e8603f' },
-	light: { ghost1: '#6f6a5c', ghost2: '#9b9280', accent: '#c74331' }
+	dark: { ghost1: '#6b727d', ghost2: '#8b929f', accent: '#e8603f', record: '#dcd6c8' },
+	light: { ghost1: '#6f6a5c', ghost2: '#9b9280', accent: '#c74331', record: '#2f2a20' }
 };
 
 /** Impact colors reuse the anomaly arms: drought = warm arm, frost = cool arm. */

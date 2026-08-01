@@ -34,7 +34,7 @@
 </script>
 
 <section class="cta" aria-label="What the record asks of us">
-	<header class="chapter-head">
+	<header class="chapter-head" id="ch-ask">
 		<p class="chapter-no" use:reveal>The ask</p>
 		<h2 use:reveal={{ delay: 90 }}>Prepare for the predictable.</h2>
 		<p class="standfirst" use:reveal={{ delay: 200 }}>

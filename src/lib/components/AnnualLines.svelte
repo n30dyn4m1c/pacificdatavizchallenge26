@@ -4,9 +4,18 @@
 	 * D3 does scales/shapes only; Svelte owns the DOM. `progress` (0–1) draws
 	 * the traces in from the left, so scrolling advances time. Series identity
 	 * is carried by a direct label at each trace end (never colour alone);
-	 * `ghost` series render in the neutral grays, `accent` in the accent hue.
+	 * `ghost` series render in the neutral grays, `accent` in the WARM ARM
+	 * (El Niño / dry — use it only where that is the meaning), and everything
+	 * else in `record`, the neutral measured-series ink.
 	 *
-	 * Shared by scenes 2, 6 and 7. A zero baseline is drawn for anomaly units.
+	 * `quantized` marks a series whose source publishes on a coarse grid — the
+	 * SPC sea-level record is rounded to 0.1 m. Drawn as a plain line, such a
+	 * series reads as a square wave oscillating wildly; drawn as steps with a
+	 * dot on every published value, it reads as what it is: a coarse
+	 * measurement, rising.
+	 *
+	 * Shared by scenes 5, 6, 8 and the epilogue. A zero baseline is drawn for
+	 * anomaly units.
 	 */
 	import { scaleLinear } from 'd3-scale';
 	import { line as d3line, curveMonotoneX, curveStepAfter } from 'd3-shape';
@@ -27,10 +36,12 @@
 		refLine = null,
 		/** 'monotone' (default) or 'step' — step for integer counts (stations) */
 		curve = 'monotone',
+		/** show a dot at every published value (coarse-resolution sources) */
+		quantized = false,
 		ariaLabel
 	} = $props();
 
-	const PAD = $derived(compact ? { l: 34, r: 60, t: 12, b: 22 } : { l: 44, r: 118, t: 18, b: 30 });
+	const PAD = $derived(compact ? { l: 34, r: 60, t: 12, b: 22 } : { l: 48, r: 124, t: 22, b: 34 });
 	let w = $state(720);
 
 	const colors = $derived(seriesColors[mode]);
@@ -54,15 +65,21 @@
 	const gen = $derived(
 		d3line().x((d) => x(d.year)).y((d) => y(d.value)).curve(curve === 'step' ? curveStepAfter : curveMonotoneX)
 	);
-	const colorOf = (s) => (s.accent ? colors.accent : s.ghost ? colors.ghost2 : colors.ghost1);
+	// accent = the warm arm (El Niño / dry). Everything measured that carries
+	// no ENSO sign takes `record`; ghosts stay gray and rely on direct labels.
+	const colorOf = (s) =>
+		s.accent ? colors.accent : s.ghost ? colors.ghost2 : s.muted ? colors.ghost1 : colors.record;
 
 	// draw-in: reveal each path proportionally to progress (≈ along the year axis)
 	const frac = $derived(Math.max(0, Math.min(1, progress)));
 
-	// y ticks: a small set spanning the domain, always including the baseline
+	// y ticks: spanning the domain, always including the baseline. The count
+	// follows the height — a chart that now fills a tall pin would otherwise
+	// hang four gridlines across 700px of empty plot.
 	const yTicks = $derived.by(() => {
 		const [lo, hi] = yd;
-		const step = niceStep((hi - lo) / 4);
+		const target = compact ? 4 : Math.max(4, Math.min(8, Math.round(height / 110)));
+		const step = niceStep((hi - lo) / target);
 		const ticks = [];
 		for (let t = Math.ceil(lo / step) * step; t <= hi; t += step) ticks.push(+t.toFixed(4));
 		if (baseline != null && !ticks.includes(baseline) && baseline > lo && baseline < hi) ticks.push(baseline);
@@ -170,6 +187,21 @@
 				stroke-dasharray="1"
 				stroke-dashoffset={1 - frac}
 			/>
+			<!-- coarse-resolution sources: show the published values themselves,
+			     so the staircase reads as the grid the data sits on -->
+			{#if quantized}
+				{#each s.values as d (d.year)}
+					{@const on = (x(d.year) - PAD.l) / (Math.max(w, 300) - PAD.r - PAD.l) <= frac + 0.001}
+					<circle
+						cx={x(d.year)}
+						cy={y(d.value)}
+						r={compact ? 1.6 : 2.6}
+						fill={colorOf(s)}
+						opacity={on ? 0.9 : 0}
+						style="transition: opacity 0.3s"
+					/>
+				{/each}
+			{/if}
 			{#if !compact && frac > 0.92}
 				{@const last = s.values.at(-1)}
 				<text

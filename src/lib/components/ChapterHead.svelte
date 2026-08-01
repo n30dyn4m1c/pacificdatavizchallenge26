@@ -9,10 +9,10 @@
 	 */
 	import { reveal } from '$lib/reveal.js';
 
-	let { no, title, standfirst = '' } = $props();
+	let { no, title, standfirst = '', id = null } = $props();
 </script>
 
-<header class="chapter-head">
+<header class="chapter-head" {id}>
 	<p class="chapter-no" use:reveal>{no}</p>
 	<h2 use:reveal={{ delay: 90 }}>{@html title}</h2>
 	{#if standfirst}

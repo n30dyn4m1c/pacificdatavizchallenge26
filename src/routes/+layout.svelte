@@ -10,7 +10,7 @@
 	import { onMount } from 'svelte';
 	import { ui } from '$lib/state.svelte.js';
 	import { surfaces, ink, series, impact } from '$lib/palette.js';
-	import ScrollProgress from '$lib/components/ScrollProgress.svelte';
+	import ChapterNav from '$lib/components/ChapterNav.svelte';
 
 	let { children } = $props();
 
@@ -80,7 +80,7 @@
 	</button>
 {/if}
 
-<ScrollProgress />
+<ChapterNav />
 
 {@render children()}
 

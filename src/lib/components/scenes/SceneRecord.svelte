@@ -41,7 +41,7 @@
 
 	{#snippet children({ data })}
 		<div class="record">
-			<header class="record-head">
+			<header class="record-head" id="ch-record">
 				<p class="kicker">Papua New Guinea · the official climate record, at a glance</p>
 				<h2 class="display">The whole record.</h2>
 			</header>
@@ -55,14 +55,21 @@
 								<span class="panel-change">{changeNote(p)}</span>
 							</figcaption>
 							<LazyLines
-								series={[{ key: p.code, name: p.name, accent: p.kind === 'anomaly', values: p.years }]}
+								series={[{ key: p.code, name: p.name, values: p.years }]}
 								mode="light"
 								unit={p.unit}
 								compact={true}
 								height={150}
+								quantized={!!p.resolution}
 								baseline={p.kind === 'anomaly' ? 0 : null}
+								curve={p.resolution ? 'step' : 'monotone'}
 								ariaLabel="{p.name}: {changeNote(p)}"
 							/>
+							<span class="panel-source">
+								{p.unit} · {p.source_name}{p.resolution
+									? ` · published to the nearest ${p.resolution} ${p.unit}`
+									: ''}
+							</span>
 						</figure>
 					{/each}
 				</div>
@@ -90,6 +97,10 @@
 
 	.record-head {
 		margin-bottom: 2rem;
+	}
+
+	.record-head .kicker {
+		max-width: none;
 	}
 
 	h2.display {
@@ -122,6 +133,16 @@
 		font-size: 0.72rem;
 		color: var(--ink-light-secondary);
 		font-variant-numeric: tabular-nums;
+	}
+
+	/* the dataflow's own label, kept under each panel: the editorial title
+	   above says what it is, this says exactly which series it came from */
+	.panel-source {
+		display: block;
+		margin-top: 0.3rem;
+		font-size: 0.66rem;
+		line-height: 1.35;
+		color: var(--ink-light-muted);
 	}
 
 	.closing {

@@ -11,11 +11,19 @@
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
+	import Figure from '$lib/components/Figure.svelte';
 	import LazyNow from '$lib/components/LazyNow.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
-	import { cardIndex, clamp01 } from '$lib/scrolly.js';
+	import { cardIndex, clamp01, runwayVh } from '$lib/scrolly.js';
 
 	const N = 4;
+
+	const figTitle = [
+		'Three years of the see-saw, month by month',
+		'June 2026 is above all four great onsets',
+		'The months not yet measured, estimated from precedent',
+		'What that means on a calendar'
+	];
 
 	// per-card draw-in: mostly drawn when a card centers, completing just past it
 	const local = (progress, idx) => clamp01((progress * N - idx) * 1.6 + 0.75);
@@ -42,6 +50,7 @@
 </script>
 
 <ChapterHead
+	id="ch-9"
 	no="Chapter nine · now"
 	title="This time is <span class='hl hl-warm'>now</span>."
 	standfirst="Every chapter so far reads the record backwards, one number a year. This one runs at one number a <em>month</em>, because the reader is standing inside the event: in mid&#8209;2026 the far ocean is warming fast, and the national declarations have already been made. The chart below is the only place this piece looks forward — and it says so, on the chart."
@@ -50,7 +59,7 @@
 <ScrollScene
 	id="9-now"
 	title="The 2026 El Niño, month by month, against its four precedents"
-	heightVh={(N + 1) * 100}
+	heightVh={runwayVh(N)}
 	dataUrl="/data/scene_now.json"
 >
 	{#snippet prose({ data })}
@@ -83,27 +92,31 @@
 
 	{#snippet children({ progress, data })}
 		{@const idx = cardIndex(progress, N)}
-		<div class="graphic">
-			<p class="graphic-title">
-				NIÑO 3.4, MONTH BY MONTH · observations NOAA Physical Sciences Laboratory, through June
-				2026 · the dashed path is an estimate
-			</p>
+		<Figure
+			title={figTitle[idx]}
+			subtitle="Niño&nbsp;3.4 sea-surface temperature anomaly (°C), month by month · observations through June 2026"
+			note="The dashed path and its band are an <strong>estimate</strong> built from the four precedents — not an observation, and not an official forecast."
+			source="NOAA Physical Sciences Laboratory · checked against the NOAA CPC / IRI outlook, mid-June 2026"
+		>
+			{#snippet body({ h })}
 			{#if data}
 				<LazyNow
 					{data}
 					phase={idx}
 					progress={local(progress, idx)}
-					height={470}
+					height={h}
 					ariaLabel="Line chart of monthly Niño 3.4 sea-surface temperature anomalies. First the last three years as monthly bars: the 2023–24 El Niño, a weak double La Niña, then a fast rise through the first half of 2026 to +1.44 °C in June. Then the four great El Niños of 1982, 1997, 2015 and 2023 aligned by calendar month as gray lines, with 2026 so far as a red line above all of them at June. A shaded band and dashed line, labelled as an estimate, continue 2026 along the range of the four precedents to a peak of roughly +2.3 °C around November 2026, declining through mid-2027. Bracket annotations mark the hard months from June 2026 to March 2027 and the swing back to rain around May–June 2027."
 				/>
 			{/if}
-		</div>
+			{/snippet}
+		</Figure>
 	{/snippet}
 
 	{#snippet flow({ progress })}
 		{@const idx = cardIndex(progress, N)}
 		<div class="card-slot first" class:active={idx === 0}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">The last three years, in months</span>
 				<p>
 					Zoom the see-saw in to monthly resolution and there is the whole story of the moment:
@@ -117,6 +130,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">2/4</span>
 				<span class="card-kicker">Against the four great onsets</span>
 				<p>
 					Lay 2026 over the four great El Niños, month for month. At June of the onset year, 1982
@@ -128,6 +142,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">3/4</span>
 				<span class="card-kicker">The months nobody has measured yet</span>
 				<p>
 					The rest of the red line does not exist — so this chart continues it the only honest
@@ -142,6 +157,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">4/4</span>
 				<span class="card-kicker">What the calendar says</span>
 				<p>
 					Read as a calendar, the estimate is a work plan. <span class="hl hl-warm">Now to about

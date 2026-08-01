@@ -17,5 +17,5 @@
 {#if Chart}
 	<Chart {...props} />
 {:else}
-	<div class="chart-skeleton" style:aspect-ratio="1000 / 393" aria-hidden="true"></div>
+	<div class="chart-skeleton" style:height="100%" aria-hidden="true"></div>
 {/if}

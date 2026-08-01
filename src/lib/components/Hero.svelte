@@ -68,9 +68,11 @@
 		<p class="byline">
 			Built on the Pacific Community’s climate-change indicators · Pacific Data Hub
 		</p>
+		<!-- what the reader is committing to: a long piece should say so up
+		     front rather than let the scrollbar break the news -->
+		<p class="meta">Nine chapters · about 15 minutes · scroll to read</p>
 		<div class="hero-band" aria-hidden="true"><OniBand /></div>
 		<div class="scroll-cue no-print" aria-hidden="true">
-			<span class="cue-label">scroll</span>
 			<span class="cue-line"><span class="cue-drop"></span></span>
 		</div>
 	</div>
@@ -153,7 +155,17 @@
 		font-size: 0.8rem;
 		color: var(--ink-light-muted);
 		margin-top: 0.25rem;
+		margin-bottom: 0;
 		animation-delay: 0.64s;
+	}
+
+	.meta {
+		font-size: 0.72rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink-light-muted);
+		margin: 0.9rem 0 0;
+		animation-delay: 0.76s;
 	}
 
 	@keyframes hero-up {
@@ -213,19 +225,11 @@
 		animation-delay: 1.25s;
 	}
 
-	.cue-label {
-		font-size: 0.72rem;
-		letter-spacing: 0.22em;
-		text-transform: uppercase;
-		color: var(--ink-light-muted);
-	}
-
 	.cue-line {
 		position: relative;
 		display: block;
 		width: 1px;
 		height: 2.6rem;
-		margin-top: 0.55rem;
 		background: color-mix(in srgb, currentColor 28%, transparent);
 		overflow: hidden;
 	}
