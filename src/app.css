@@ -104,7 +104,40 @@ a {
 	background-repeat: repeat;
 }
 
-/* ── scene scaffolding (sticky graphic + step cards flowing over it) ─────── */
+/* ── scene scaffolding (sticky graphic + step cards) ──────────────────────
+   Two lanes, not an overlay. Cards used to float *on top of* the sticky
+   graphic, which meant every chapter opened with a white card sitting over
+   the very thing it was describing — Papua New Guinea on the map, the year
+   labels under the bar chart, the river plains on the elevation profile. On
+   any screen wide enough to hold both, the card column now owns a reserved
+   lane and the graphic starts where that lane ends, so nothing is ever read
+   through a card. Below that width the two share the screen vertically:
+   graphic in the upper half, cards in the lower.
+
+   --slot-vh mirrors SLOT_VH in src/lib/scrolly.js; they must stay equal. */
+:root {
+	--card-lane: 0px;
+	--slot-vh: 90;
+}
+
+@media (min-width: 900px) {
+	:root {
+		--card-lane: 22rem;
+	}
+}
+
+@media (min-width: 1180px) {
+	:root {
+		--card-lane: 26rem;
+	}
+}
+
+@media (min-width: 1440px) {
+	:root {
+		--card-lane: 29rem;
+	}
+}
+
 .scene {
 	position: relative;
 }
@@ -117,31 +150,34 @@ a {
 	                   exceeds the visible area when the browser chrome shows */
 	overflow: hidden;
 	display: grid;
-	align-items: center;
+	align-items: stretch; /* the graphic fills the frame it was given */
+	padding-left: var(--card-lane);
 }
 
-/* the card column scrolls back up OVER the sticky graphic */
+/* the card column scrolls back up over the pin. Below the lane breakpoint it
+   spans the full width (and shares the pin vertically instead); at and above
+   it, it is exactly as wide as the lane the graphic leaves for it. */
 .cards-region {
 	position: relative;
 	z-index: 20;
 	margin-top: -100vh;
 	margin-top: -100svh;
 	pointer-events: none;
+	width: 100%;
+}
+
+@media (min-width: 900px) {
+	.cards-region {
+		width: var(--card-lane);
+	}
 }
 
 .card-slot {
-	min-height: 100vh;
-	min-height: 100svh;
+	min-height: calc(var(--slot-vh) * 1vh);
+	min-height: calc(var(--slot-vh) * 1svh);
 	display: flex;
 	align-items: center;
-	padding: 0 1rem 0 clamp(1rem, 6vw, 5.5rem);
-}
-
-/* breathing room so the first card doesn't cover the fresh graphic and the
-   last card releases before the pin does */
-.card-slot.first {
-	align-items: flex-end;
-	padding-bottom: 8vh;
+	padding: 0 1.25rem 0 clamp(1rem, 4vw, 3rem);
 }
 
 .step-card {
@@ -156,7 +192,7 @@ a {
 	max-width: 23.5rem;
 	font-size: 1.02rem;
 	line-height: 1.55;
-	opacity: 0.55;
+	opacity: 0.4;
 	transform: translateY(6px);
 	transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
 }
@@ -187,23 +223,73 @@ a {
 	margin-bottom: 0.45rem;
 }
 
+/* a step counter, so the reader can see how long a chapter runs and how far
+   into it they are — the one thing a pinned scene otherwise hides */
+.step-card .card-step {
+	float: right;
+	font-size: 0.66rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: var(--ink-light-muted);
+	font-variant-numeric: tabular-nums;
+	margin-left: 0.75rem;
+}
+
 /* chapter nine reads left-to-right into the future: its cards sit on the
    RIGHT so they never cover the 2026 line (the months already observed, at
    the left edge of the aligned chart) */
-#scene-9-now .card-slot {
-	justify-content: flex-end;
-	padding: 0 clamp(1rem, 6vw, 5.5rem) 0 1rem;
+#scene-9-now .pin {
+	padding-left: 0;
+	padding-right: var(--card-lane);
 }
 
-@media (max-width: 640px) {
+@media (min-width: 900px) {
+	#scene-9-now .cards-region {
+		margin-left: auto;
+	}
+}
+
+#scene-9-now .card-slot {
+	justify-content: flex-end;
+	padding: 0 clamp(1rem, 4vw, 3rem) 0 1.25rem;
+}
+
+/* chapter nine's graphic starts at the left edge, where the fixed chapter
+   pill lives — give its title room to clear the chrome */
+#scene-9-now .graphic {
+	padding-top: clamp(3.75rem, 8vh, 5rem);
+}
+
+/* ── narrow screens: split the pin vertically instead ─────────────────────
+   The graphic takes the upper band and the card rides the lower one, over a
+   frosted scrim. Nothing overlaps anything it is explaining. */
+@media (max-width: 899px) {
 	.card-slot,
 	#scene-9-now .card-slot {
+		align-items: flex-end;
 		justify-content: center;
 		padding: 0 1rem;
 	}
 
+	/* The card sticks to the foot of the viewport for the length of its slot
+	   instead of drifting up through the graphic. Without this the "active"
+	   card is, by definition, at the centre of the screen — sitting on top of
+	   the chart it is describing, which is the exact problem the two-lane
+	   desktop layout solves. Here the graphic keeps the upper band and the
+	   card keeps the lower one, all the way through. */
+	.card-slot:not(.active) .step-card {
+		opacity: 0;
+	}
+
 	.step-card {
+		position: sticky;
+		bottom: 3.5svh;
+		margin-bottom: 3.5svh;
 		font-size: 0.95rem;
+		max-width: 34rem;
+		background: color-mix(in srgb, var(--paper-raised) 93%, transparent);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
 	}
 }
 
@@ -218,7 +304,10 @@ a {
 .chapter-head {
 	max-width: 44rem;
 	margin: 0 auto;
-	padding: clamp(5rem, 14vh, 9rem) 1.5rem 3.5rem;
+	/* was clamp(5rem,14vh,9rem) top — which, stacked between a released pin
+	   and the next one, put two-thirds of a screen of nothing on either side
+	   of every chapter title. A chapter opening needs air, not a void. */
+	padding: clamp(3rem, 9vh, 5.5rem) 1.5rem clamp(2rem, 5vh, 3rem);
 	text-align: center;
 }
 
@@ -258,20 +347,120 @@ a {
 	text-wrap: pretty;
 }
 
-/* the graphic inside a pin: centered, comfortable margins */
+/* ── the graphic inside a pin (src/lib/components/Figure.svelte) ──────────
+   A figure is a three-row column that fills the pin: head, body, foot. The
+   body takes every pixel the head and foot don't, and hands its measured
+   height to the chart — which is what stops charts rendering at a
+   hard-coded 430px in the middle of a 900px screen. */
 .graphic {
-	width: min(72rem, 100%);
+	width: min(74rem, 100%);
+	height: 100%;
 	margin: 0 auto;
-	padding: 1.25rem clamp(1rem, 3.5vw, 2.5rem);
+	padding: clamp(1.75rem, 5vh, 3rem) clamp(1rem, 3.5vw, 2.5rem) clamp(1rem, 3vh, 1.75rem);
+	display: flex;
+	flex-direction: column;
+	gap: clamp(0.6rem, 1.6vh, 1.1rem);
 }
 
-.graphic .graphic-title {
-	font-family: 'Public Sans', system-ui, sans-serif;
-	font-size: 0.8rem;
-	font-weight: 700;
-	letter-spacing: 0.05em;
+/* a figure whose body is capped (fixed-aspect geometry) centres as a block
+   rather than stretching a letterboxed graphic across the whole frame */
+.graphic.capped {
+	justify-content: center;
+	gap: clamp(0.6rem, 1.6vh, 1.1rem);
+}
+
+.graphic.capped .fig-foot {
+	margin-top: clamp(0.75rem, 2.5vh, 1.5rem);
+}
+
+/* very wide geometry (the Pacific map) gets the whole lane */
+.graphic.wide {
+	width: 100%;
+	max-width: none;
+	padding-right: clamp(1rem, 2vw, 1.5rem);
+}
+
+.fig-head {
+	flex: 0 0 auto;
+}
+
+.graphic .fig-title {
+	font-family: Fraunces, Georgia, serif;
+	font-weight: 900;
+	font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	color: var(--ink-light-primary);
+	margin: 0;
+	text-wrap: balance;
+	max-width: 32em;
+}
+
+.graphic .fig-sub {
+	font-size: 0.83rem;
+	line-height: 1.4;
 	color: var(--ink-light-secondary);
-	margin: 0 0 0.6rem;
+	margin: 0.35rem 0 0;
+	max-width: 66em;
+	text-wrap: pretty;
+}
+
+/* the measured box: flex-basis 0 so it takes exactly the leftover space,
+   never sized by its own content */
+.fig-body {
+	flex: 1 1 0;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.fig-foot {
+	flex: 0 0 auto;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 1.5rem;
+	justify-content: space-between;
+	align-items: baseline;
+	font-size: 0.72rem;
+	line-height: 1.4;
+	color: var(--ink-light-muted);
+	border-top: 1px solid var(--ink-light-grid);
+	padding-top: 0.5rem;
+}
+
+.fig-note {
+	color: var(--ink-light-secondary);
+	max-width: 44em;
+}
+
+.fig-source {
+	margin-left: auto;
+	text-align: right;
+}
+
+@media (max-width: 899px) {
+	/* reserve the lower band of the pin for the card column, and clear the
+	   fixed chapter pill above (there is no card lane to offset into here) */
+	.graphic {
+		padding-top: 4.25rem;
+		/* room for the card that sticks to the foot of the pin — sized to the
+		   card, not to a fraction of the screen, so a tall tablet does not
+		   reserve half a viewport for a five-line paragraph */
+		padding-bottom: clamp(13rem, 36svh, 20rem);
+	}
+
+	.graphic .fig-title {
+		font-size: 1.05rem;
+	}
+
+	.graphic .fig-sub {
+		font-size: 0.76rem;
+	}
+
+	.fig-foot {
+		font-size: 0.66rem;
+	}
 }
 
 /* Chart skeletons: a minimal sized placeholder (never a spinner) shown while

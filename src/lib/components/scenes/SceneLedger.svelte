@@ -9,13 +9,22 @@
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
 	import DotUnits from '$lib/components/DotUnits.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
-	import { cardIndex } from '$lib/scrolly.js';
+	import Figure from '$lib/components/Figure.svelte';
+	import { cardIndex, runwayVh } from '$lib/scrolly.js';
 
 	const N = 4;
+
+	const figTitle = [
+		'Count emissions the way you would count anything',
+		'The world average: 6.6 tonnes a person, a year',
+		'Papua New Guinea: one tonne',
+		'Small cause, large consequence — the whole ledger'
+	];
 	const fmt2 = (v) => v.toFixed(2);
 </script>
 
 <ChapterHead
+	id="ch-7"
 	no="Chapter seven · the ledger"
 	title="Papua New Guinea didn’t order this weather."
 	standfirst="The see&#8209;saw is natural. The rising floor beneath it is not — and the ledger of who builds it is short."
@@ -24,7 +33,7 @@
 <ScrollScene
 	id="5-ledger"
 	title="Greenhouse-gas emissions per person: Papua New Guinea against the world average"
-	heightVh={(N + 1) * 100}
+	heightVh={runwayVh(N)}
 	dataUrl="/data/scene_gap.json"
 >
 	{#snippet prose({ data })}
@@ -51,22 +60,31 @@
 
 	{#snippet children({ progress, data })}
 		{@const idx = cardIndex(progress, N)}
-		<div class="graphic ledger-graphic">
-			{#if data}
-				<DotUnits
-					world={{ value: data.world.value, label: 'World average (EDGAR, 2023)' }}
-					png={{ value: data.latest.value, label: `Papua New Guinea (${data.latest.year})` }}
-					state={idx}
-					ariaLabel="Unit chart comparing yearly greenhouse-gas emissions per person: the world average of about 6.6 tonnes shown as 66 dots, against Papua New Guinea's 1.2 tonnes shown as 12 dots."
-				/>
-			{/if}
-		</div>
+		<Figure
+			title={figTitle[idx]}
+			subtitle="Greenhouse-gas emissions per person per year · one dot = 100&nbsp;kg of CO₂-equivalent"
+			source="Papua New Guinea: SPC climate-change indicators · world average: EDGAR (EC-JRC), 2023"
+		>
+			{#snippet body({ h, w })}
+				{#if data}
+					<DotUnits
+						world={{ value: data.world.value, label: 'World average (EDGAR, 2023)' }}
+						png={{ value: data.latest.value, label: `Papua New Guinea (${data.latest.year})` }}
+						state={idx}
+						height={h}
+						width={w}
+						ariaLabel="Unit chart comparing yearly greenhouse-gas emissions per person: the world average of about 6.6 tonnes shown as 66 dots, against Papua New Guinea's 1.2 tonnes shown as 12 dots."
+					/>
+				{/if}
+			{/snippet}
+		</Figure>
 	{/snippet}
 
 	{#snippet flow({ progress })}
 		{@const idx = cardIndex(progress, N)}
 		<div class="card-slot first" class:active={idx === 0}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">Count it out</span>
 				<p>
 					Count emissions the way you’d count anything: one dot for
@@ -77,21 +95,24 @@
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">2/4</span>
 				<span class="card-kicker">The world</span>
 				<p>The world average: <strong>6.6 tonnes</strong> per person. Sixty-six dots.</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">3/4</span>
 				<span class="card-kicker">Papua New Guinea</span>
 				<p>
-					Papua New Guinea: <span class="hl hl-warm">1 tonne</span>. Ten dots — and in fifty
+					Papua New Guinea: <span class="hl hl-ink">1 tonne</span>. Ten dots — and in fifty
 					years of record it has never passed 1.7.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">4/4</span>
 				<span class="card-kicker">The point</span>
 				<p>
 					The see-saw is natural. The rising floor beneath it is not — and it is overwhelmingly
@@ -102,8 +123,4 @@
 	{/snippet}
 </ScrollScene>
 
-<style>
-	.ledger-graphic {
-		max-width: 46rem;
-	}
-</style>
+

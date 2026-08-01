@@ -83,6 +83,21 @@ Prime Minister's directive, NARI/DEWS drought updates, and the Sirinumu
 Dam / Port Moresby power-rationing reporting — as external links with
 this piece's own summaries.
 
+**Where the record is coarse, the chart says so.** The SPC sea-level
+series is published rounded to 0.1 m. Drawn as a smooth line it reads as a
+sea oscillating wildly between −0.10 and +0.20; it is drawn instead as
+steps with a dot on every published value, under an on-graphic note naming
+the resolution, so the staircase reads as the grid the data sits on. The
+pipeline carries that resolution as metadata (`resolution: 0.1`) rather
+than the chart hard-coding it.
+
+**Panel titles are the piece's own; the dataflow's labels are kept as
+provenance.** The SPC indicator names are database labels — inconsistently
+cased, and one of them spells greenhouse *gaz*. The epilogue titles its
+six panels editorially and prints the dataflow's own label under each one
+(`source_name`), which is the string that actually matters for tracing a
+number back to the hub.
+
 **Illustrations are labelled as such, on the graphic.** The elevation
 profile, the two interactive field notes and the aftermath hillside carry
 no dataset numbers; they draw the mechanisms the record and the linked
@@ -102,10 +117,46 @@ it *is* the story: a remote signal is a readable-in-advance signal.
 The presentation follows the light editorial scrollytelling register
 (pudding.cool-style): one warm paper surface end to end, big Fraunces
 display type with color-highlighted words, and **white step cards** that
-scroll over sticky graphics — each card advancing the graphic's state
-(colors arriving, marks appearing, the warm pool sliding, the profile's sky
-turning to night). The warm arm means the same thing everywhere (the El
-Niño / dry side), the cool arm its opposite.
+advance a sticky graphic card by card (colors arriving, marks appearing,
+the warm pool sliding, the profile's sky turning to night). The warm arm
+means the same thing everywhere (the El Niño / dry side), the cool arm its
+opposite.
+
+Four rules hold the whole piece together:
+
+**1. Two lanes, never an overlay.** On any screen at least 900 px wide the
+card column owns a reserved lane (`--card-lane`) and the sticky graphic
+starts where that lane ends, so a card is never read *through* and a
+graphic is never read *under*. Chapter nine mirrors it — cards right,
+chart left — because that chapter reads left-to-right into the future and
+the observed 2026 months sit at the left edge. Below 900 px the two share
+the pin vertically instead: the figure takes the upper band, and the card
+sticks to the foot of the viewport for the length of its step rather than
+drifting up through the chart.
+
+**2. Graphics fill the frame they are given.**
+`src/lib/components/Figure.svelte` is the one chrome every sticky graphic
+wears — title, subtitle, body, foot (caveat + source) — and the body
+measures itself and hands its pixel height to the chart, which sizes its
+viewBox to match. Fixed-aspect geometry (the maps, the elevation profile)
+declares its ratio with `fit` so the body is capped at the height that
+graphic can actually use and the figure centres as a block; the mirror
+chart caps at `maxHeight` so its two bands stay within one eye-drop. The
+Pacific map, which is 2.5:1, crops to the stretch the story uses when the
+figure is too narrow to render the whole basin legibly.
+
+**3. Colour means one thing.** The warm and cool arms are the ENSO axis
+and its direct consequences — nothing else. Every other measured series
+(sea level, crop yield, the station count, emissions) is drawn in
+`series[mode].record`, the neutral measured-series ink, so a rising sea
+and a growing monitoring network are not quietly painted "the drought
+colour".
+
+**4. Nine chapters need wayfinding.** `ChapterNav.svelte` is the piece's
+only chrome: a hairline progress fill, the name of the chapter you are in,
+and a contents panel that jumps to any of the eleven anchors. Each step
+card carries an `n/N` counter, so a pinned scene no longer hides how long
+it runs.
 
 - SvelteKit (Svelte 5) + `@sveltejs/adapter-static` — fully static, no SSR at
   runtime, deployed to GitHub Pages by `.github/workflows/deploy.yml`
@@ -114,7 +165,12 @@ Niño / dry side), the cool arm its opposite.
   `src/lib/components/ScrollScene.svelte` (pin + 0–1 progress + lazy
   scene-scoped JSON loading + the card column via its `flow` snippet).
   `src/lib/scrolly.js` holds the one card convention: N cards → runway of
-  (N+1)·100 vh, active card = nearest card center.
+  `LEAD_VH + N·SLOT_VH`, active card = nearest slot centre. `SLOT_VH` is
+  under 100 (a card does not need a full screen of travel to be read) and
+  the runway ends shortly after the last card instead of parking an empty
+  viewport of graphic at the end of every chapter — together those trim
+  roughly a sixth off a nine-chapter scroll. `SLOT_VH` is mirrored into CSS
+  as `--slot-vh`; the two must stay equal.
 - Charts and maps: hand-authored SVG via small reusable components —
   `AnnualLines`, `EnsoBars`, `MirrorBars`, `DotUnits`, plus `PacificMap`,
   `PngMap` and `IslandProfile` (all geometry pre-projected by the pipeline;
@@ -130,10 +186,11 @@ Niño / dry side), the cool arm its opposite.
   blocks (`src/lib/reveal.js` — chapter heads, big stats and shelf cards
   settle up into place once, on approach) — all disabled or frozen under
   `prefers-reduced-motion`, and never present in the prerendered HTML.
-- Wayfinding & tactility: a hairline reading-progress rail along the top
-  edge (appears after the hero), a whisper of SVG paper grain over the
-  whole surface (excluded from print), and the ONI-band ornament growing
-  from its baseline as it enters view.
+- Wayfinding & tactility: the chapter rail described above (hidden over the
+  hero), a whisper of SVG paper grain over the whole surface (excluded from
+  print), and the ONI-band ornament growing from its baseline as it enters
+  view. The hero states the commitment up front — nine chapters, about
+  fifteen minutes.
 - `src/lib/palette.js` is the **single source of truth for every color**.
 
 ## Accessibility & performance

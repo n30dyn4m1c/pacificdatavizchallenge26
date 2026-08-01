@@ -9,15 +9,25 @@
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
+	import Figure from '$lib/components/Figure.svelte';
 	import LazyLines from '$lib/components/LazyLines.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
-	import { cardIndex, clamp01 } from '$lib/scrolly.js';
+	import { cardIndex, clamp01, runwayVh } from '$lib/scrolly.js';
 
 	const N = 5;
+
+	const figTitle = [
+		'The sea around Papua New Guinea, one reading a year since 1850',
+		'A century of wobble, and no trend worth naming',
+		'2025: the warmest in 176 years of record',
+		'The water is also higher',
+		'And warm local years are the <em>wet</em> ones'
+	];
 	const fmt2 = (v) => (v > 0 ? '+' : '') + v.toFixed(2);
 </script>
 
 <ChapterHead
+	id="ch-6"
 	no="Chapter six · the long record"
 	title="The see&#8209;saw is bolted to a rising floor."
 	standfirst="El Niño comes and goes — it always has. What’s new sits underneath it: the ocean around Papua New Guinea itself, measured one number a year since 1850."
@@ -26,7 +36,7 @@
 <ScrollScene
 	id="4-longrecord"
 	title="Papua New Guinea's sea-surface temperature anomaly 1850–2025, and sea level 1993–2023"
-	heightVh={(N + 1) * 100}
+	heightVh={runwayVh(N)}
 	dataUrl="/data/scene_exposure.json"
 >
 	{#snippet prose({ data })}
@@ -58,51 +68,60 @@
 		{@const idx = cardIndex(progress, N)}
 		{@const lineFrac = clamp01((progress * N) / 2.4)}
 		{@const seaMode = idx >= 3}
-		<div class="graphic">
-			{#if data}
-				{@const counterYear = 1850 + Math.round(lineFrac * (data.sst.years.length - 1))}
-				<div class="stack">
-					<div class="layer" style:opacity={seaMode ? 0 : 1}>
-						<p class="graphic-title">
-							SEA-SURFACE TEMPERATURE · departure from the long-term average, 1850–2025
-						</p>
-						<LazyLines
-							series={[{ key: 'sst', name: 'Sea surface', accent: true, values: data.sst.years }]}
-							markYears={idx === 2 ? [data.sst.record_year] : []}
-							progress={lineFrac}
-							mode="light"
-							unit="°C"
-							baseline={0}
-							height={430}
-							ariaLabel="Line chart of Papua New Guinea's sea-surface-temperature anomaly from 1850 to 2025: near zero for a century, climbing from the late 20th century to a record of plus 1.1 degrees in 2025."
-						/>
+		<Figure
+			title={figTitle[idx]}
+			subtitle={seaMode
+				? 'Sea-level anomaly around Papua New Guinea, metres, satellite era 1993–2023'
+				: 'Sea-surface temperature, departure from the long-term average (°C), 1850–2025'}
+			note={seaMode
+				? 'Published to the nearest 0.1&nbsp;m — the staircase is the resolution of the record, not the motion of the sea. Each dot is one published value.'
+				: ''}
+			source="SPC climate-change indicators · Pacific Data Hub"
+		>
+			{#snippet body({ h })}
+				{#if data}
+					{@const counterYear = 1850 + Math.round(lineFrac * (data.sst.years.length - 1))}
+					<div class="stack">
+						<div class="layer" style:opacity={seaMode ? 0 : 1}>
+							<LazyLines
+								series={[{ key: 'sst', name: 'Sea surface', values: data.sst.years }]}
+								markYears={idx === 2 ? [data.sst.record_year] : []}
+								progress={lineFrac}
+								mode="light"
+								unit="°C"
+								baseline={0}
+								height={h}
+								ariaLabel="Line chart of Papua New Guinea's sea-surface-temperature anomaly from 1850 to 2025: near zero for a century, climbing from the late 20th century to a record of plus 1.1 degrees in 2025."
+							/>
+						</div>
+						<div class="layer" style:opacity={seaMode ? 1 : 0} inert={!seaMode}>
+							<LazyLines
+								series={[{ key: 'sea', name: 'Sea level', values: data.sea_level.years }]}
+								progress={seaMode ? 1 : 0}
+								mode="light"
+								unit="m"
+								baseline={0}
+								curve="step"
+								quantized={true}
+								height={h}
+								ariaLabel="Step chart of the sea-level anomaly around Papua New Guinea from 1993 to 2023, published to the nearest 0.1 metres, rising from about minus 0.10 metres to plus 0.20 metres."
+							/>
+						</div>
+						<!-- the giant year counter rides the draw-in, then bows out -->
+						<div class="counter display" style:opacity={idx <= 2 && lineFrac < 1 ? 0.9 : 0} aria-hidden="true">
+							{counterYear}
+						</div>
 					</div>
-					<div class="layer" style:opacity={seaMode ? 1 : 0} inert={!seaMode}>
-						<p class="graphic-title">SEA LEVEL · anomaly in metres (reported to 0.1 m), satellite era 1993–2023</p>
-						<LazyLines
-							series={[{ key: 'sea', name: 'Sea level', accent: true, values: data.sea_level.years }]}
-							progress={seaMode ? 1 : 0}
-							mode="light"
-							unit="m"
-							baseline={0}
-							curve="step"
-							height={430}
-							ariaLabel="Line chart of the sea-level anomaly around Papua New Guinea from 1993 to 2023, rising from about minus 0.10 metres to plus 0.20 metres."
-						/>
-					</div>
-					<!-- the giant year counter rides the draw-in, then bows out -->
-					<div class="counter display" style:opacity={idx <= 2 && lineFrac < 1 ? 0.9 : 0} aria-hidden="true">
-						{counterYear}
-					</div>
-				</div>
-			{/if}
-		</div>
+				{/if}
+			{/snippet}
+		</Figure>
 	{/snippet}
 
 	{#snippet flow({ progress, data })}
 		{@const idx = cardIndex(progress, N)}
 		<div class="card-slot first" class:active={idx === 0}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">1/5</span>
 				<span class="card-kicker">Zoom all the way out</span>
 				<p>
 					This is the sea around Papua New Guinea itself — one temperature reading a year,
@@ -112,12 +131,14 @@
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">2/5</span>
 				<span class="card-kicker">A century of wobble</span>
 				<p>For a hundred years: wobble. Warm years, cool years, no trend worth naming.</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">3/5</span>
 				<span class="card-kicker">Then the climb</span>
 				<p>
 					Then the climb. <span class="hl hl-warm">2025: +1.1&nbsp;°C</span> — the warmest sea in
@@ -127,6 +148,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">4/5</span>
 				<span class="card-kicker">Not just warmer</span>
 				<p>
 					Not just warmer — <strong>higher</strong>. The satellite record only begins in 1993,
@@ -136,6 +158,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 4}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">5/5</span>
 				<span class="card-kicker">One thing it isn’t</span>
 				<p>
 					One thing the local sea is <em>not</em>: the drought-maker. Warm local years are
@@ -152,20 +175,19 @@
 <style>
 	.stack {
 		position: relative;
+		width: 100%;
+		height: 100%;
 	}
 
 	.layer {
-		transition: opacity 0.6s ease;
-	}
-
-	.layer + .layer {
 		position: absolute;
 		inset: 0;
+		transition: opacity 0.6s ease;
 	}
 
 	.counter {
 		position: absolute;
-		top: -0.35em;
+		top: 0;
 		right: clamp(0.5rem, 4vw, 3rem);
 		font-size: clamp(2.6rem, 9vw, 6rem);
 		color: var(--ink-light-grid);

@@ -9,12 +9,21 @@
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
 	import LazyLines from '$lib/components/LazyLines.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
-	import { cardIndex, sweep } from '$lib/scrolly.js';
+	import Figure from '$lib/components/Figure.svelte';
+	import { cardIndex, sweep, runwayVh } from '$lib/scrolly.js';
 
 	const N = 4;
+
+	const figTitle = [
+		'In 1951 the country reported one weather station',
+		'Today it reports six',
+		'A remote drought-maker is a readable one',
+		'The see-saw’s last column is still open'
+	];
 </script>
 
 <ChapterHead
+	id="ch-8"
 	no="Chapter eight · the watchers"
 	title="A signal is only a warning if someone reads it."
 	standfirst="The last chart isn’t a temperature. It’s attention — measured in monitoring stations, one number a year, since 1951."
@@ -23,7 +32,7 @@
 <ScrollScene
 	id="6-watchers"
 	title="Papua New Guinea's meteorological monitoring network, 1951–2026"
-	heightVh={(N + 1) * 100}
+	heightVh={runwayVh(N)}
 	dataUrl="/data/scene_watch.json"
 >
 	{#snippet prose({ data })}
@@ -51,29 +60,33 @@
 
 	{#snippet children({ progress, data })}
 		{@const idx = cardIndex(progress, N)}
-		<div class="graphic">
-			<p class="graphic-title">
-				METEOROLOGICAL MONITORING NETWORK · stations reported per year, 1951–2026
-			</p>
-			{#if data}
-				<LazyLines
-					series={[{ key: 'met', name: 'Monitoring stations', accent: true, values: data.stations.years }]}
-					progress={sweep(progress, N, 1.2)}
-					mode="light"
-					unit=""
-					baseline={0}
-					curve="step"
-					height={400}
-					ariaLabel="Step chart of Papua New Guinea's meteorological monitoring network from 1951 to 2026, rising from one station to six."
-				/>
-			{/if}
-		</div>
+		<Figure
+			title={figTitle[idx]}
+			subtitle="Meteorological monitoring stations reported, 1951–2026"
+			source="SPC climate-change indicators (METEO_MONITOR_NET)"
+		>
+			{#snippet body({ h })}
+				{#if data}
+					<LazyLines
+						series={[{ key: 'met', name: 'Monitoring stations', values: data.stations.years }]}
+						progress={sweep(progress, N, 1.2)}
+						mode="light"
+						unit=""
+						baseline={0}
+						curve="step"
+						height={h}
+						ariaLabel="Step chart of Papua New Guinea's meteorological monitoring network from 1951 to 2026, rising from one station to six."
+					/>
+				{/if}
+			{/snippet}
+		</Figure>
 	{/snippet}
 
 	{#snippet flow({ progress })}
 		{@const idx = cardIndex(progress, N)}
 		<div class="card-slot first" class:active={idx === 0}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">The last chart</span>
 				<p>
 					It isn’t a temperature — it’s <em>who’s watching</em>. In <strong>1951</strong>, Papua
@@ -83,6 +96,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">2/4</span>
 				<span class="card-kicker">Today</span>
 				<p>
 					Today it reports <strong>six</strong> — and the record those stations and their
@@ -92,6 +106,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">3/4</span>
 				<span class="card-kicker">Why it matters</span>
 				<p>
 					Because the drought-maker is a <span class="hl hl-cool">far ocean</span>, it tips its
@@ -102,6 +117,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">4/4</span>
 				<span class="card-kicker">The open column</span>
 				<p>
 					Remember the see-saw’s last column — still a <strong>?</strong>. When it tips, the

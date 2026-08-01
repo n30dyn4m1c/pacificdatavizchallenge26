@@ -11,11 +11,21 @@
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
+	import Figure from '$lib/components/Figure.svelte';
 	import LazyPngMap from '$lib/components/LazyPngMap.svelte';
 	import LazyProfile from '$lib/components/LazyProfile.svelte';
-	import { cardIndex } from '$lib/scrolly.js';
+	import { cardIndex, runwayVh } from '$lib/scrolly.js';
 
 	const N = 6;
+
+	const figTitle = [
+		'The country, and the line we are about to cut along',
+		'Sea level: the tanks and the wells go first',
+		'20 metres: when the river drops, the road closes',
+		'1,400–2,000 metres: the gardens that feed most of the country',
+		'2 a.m., above 2,200 metres: the same drought, freezing',
+		'One drought, every altitude'
+	];
 
 	const profileLabel = [
 		'',
@@ -28,6 +38,7 @@
 </script>
 
 <ChapterHead
+	id="ch-4"
 	no="Chapter four · the island"
 	title="One drought, every altitude."
 	standfirst="Papua New Guinea runs from coral coastlines to 4,500&#8209;metre peaks in the space of a hundred kilometres. Cut the island sideways and walk uphill: an El&nbsp;Niño year reaches every step, and it takes something different from each."
@@ -36,7 +47,7 @@
 <ScrollScene
 	id="4-island"
 	title="Papua New Guinea in cross-section: what an El Niño year does at each altitude"
-	heightVh={(N + 1) * 100}
+	heightVh={runwayVh(N)}
 	dataUrl="/data/scene_map.json"
 >
 	{#snippet prose()}
@@ -60,34 +71,41 @@
 	{#snippet children({ progress, data })}
 		{@const idx = cardIndex(progress, N)}
 		{@const mapMode = idx === 0}
-		<div class="graphic">
-			{#if data}
-				<div class="stack">
-					<div class="layer" style:opacity={mapMode ? 1 : 0} inert={!mapMode}>
-						<p class="graphic-title">
-							PAPUA NEW GUINEA · coastlines and rivers: Natural Earth · highlands band: illustrative
-						</p>
-						<LazyPngMap
-							map={data.png}
-							showCut={true}
-							ariaLabel="Map of Papua New Guinea: the mainland with the Fly and Sepik rivers, the highlands band along its spine, and the island provinces — New Britain, New Ireland, Bougainville, Manus. A dashed A–B line cuts from the south coast over Mt Wilhelm to the north coast."
-						/>
+		<Figure
+			fit={1000 / 620}
+			title={figTitle[idx]}
+			subtitle={mapMode
+				? 'Papua New Guinea, with the A–B section line marked from the south coast over Mt&nbsp;Wilhelm to the north'
+				: 'The A–B section, sideways · sea level to 4,509&nbsp;m, vertical scale exaggerated'}
+			note={mapMode
+				? 'The highlands band is an illustrative marker, not an elevation model.'
+				: 'An illustration of the mechanism, not a survey — no value on this drawing comes from a dataset.'}
+			source="Coastlines and rivers: Natural Earth"
+		>
+			{#snippet body()}
+				{#if data}
+					<div class="stack">
+						<div class="layer" style:opacity={mapMode ? 1 : 0} inert={!mapMode}>
+							<LazyPngMap
+								map={data.png}
+								showCut={true}
+								ariaLabel="Map of Papua New Guinea: the mainland with the Fly and Sepik rivers, the highlands band along its spine, and the island provinces — New Britain, New Ireland, Bougainville, Manus. A dashed A–B line cuts from the south coast over Mt Wilhelm to the north coast."
+							/>
+						</div>
+						<div class="layer" style:opacity={mapMode ? 0 : 1} inert={mapMode}>
+							<LazyProfile state={Math.max(1, idx)} ariaLabel={profileLabel[Math.max(1, idx)]} />
+						</div>
 					</div>
-					<div class="layer" style:opacity={mapMode ? 0 : 1} inert={mapMode}>
-						<p class="graphic-title">
-							THE A–B CUT, SIDEWAYS · an illustration, not a survey · vertical scale exaggerated
-						</p>
-						<LazyProfile state={Math.max(1, idx)} ariaLabel={profileLabel[Math.max(1, idx)]} />
-					</div>
-				</div>
-			{/if}
-		</div>
+				{/if}
+			{/snippet}
+		</Figure>
 	{/snippet}
 
 	{#snippet flow({ progress })}
 		{@const idx = cardIndex(progress, N)}
 		<div class="card-slot first" class:active={idx === 0}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">1/6</span>
 				<span class="card-kicker">The country</span>
 				<p>
 					First, the country itself: a mainland with a wall of mountains down its spine, two great
@@ -98,6 +116,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">2/6</span>
 				<span class="card-kicker">0 m · coast &amp; islands</span>
 				<p>
 					Start at the sea. Coastal and island villages drink rain: tanks, shallow wells, small
@@ -109,6 +128,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">3/6</span>
 				<span class="card-kicker">20 m · the river plains</span>
 				<p>
 					On the plains, the rivers are the roads. When the Fly drops, the
@@ -120,6 +140,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">4/6</span>
 				<span class="card-kicker">1,600 m · the Highlands, by day</span>
 				<p>
 					Climb to the valleys where most of the nation’s kaukau grows. Gardens here have never
@@ -130,6 +151,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 4}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">5/6</span>
 				<span class="card-kicker">2,200 m · the same day, at night</span>
 				<p>
 					Now stay on that mountain until midnight. The same cloudless sky that burned the garden
@@ -141,6 +163,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 5}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">6/6</span>
 				<span class="card-kicker">The whole island</span>
 				<p>
 					Read the profile end to end: dry tanks at the coast, stranded barges on the plains,
@@ -156,15 +179,14 @@
 <style>
 	.stack {
 		position: relative;
+		width: 100%;
+		height: 100%;
 	}
 
 	.layer {
-		transition: opacity 0.6s ease;
-	}
-
-	.layer + .layer {
 		position: absolute;
 		inset: 0;
+		transition: opacity 0.6s ease;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

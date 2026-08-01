@@ -8,16 +8,25 @@
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
+	import Figure from '$lib/components/Figure.svelte';
 	import LazyEnso from '$lib/components/LazyEnso.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
-	import { cardIndex, sweep } from '$lib/scrolly.js';
+	import { cardIndex, sweep, runwayVh } from '$lib/scrolly.js';
 
 	const N = 4;
 	const GREATS = [1982, 1997, 2015, 2023];
+
+	const figTitle = [
+		'One number a year, for half a century',
+		'Up is El Niño. Down is La Niña.',
+		'Four times, it tipped hard',
+		'And the current season is still blank'
+	];
 	const phaseName = { elnino: 'El Niño', lanina: 'La Niña', neutral: 'neutral', pending: '—' };
 </script>
 
 <ChapterHead
+	id="ch-2"
 	no="Chapter two · the far ocean"
 	title="The Pacific runs on a see&#8209;saw."
 	standfirst="The dashed rectangle from chapter one is an instrument, and it has been read for decades. Its temperature, condensed to one number per season, is the Oceanic Niño Index — and the index has a see&#8209;saw in it."
@@ -26,7 +35,7 @@
 <ScrollScene
 	id="1-seesaw"
 	title="The Oceanic Niño Index, 1979–2025"
-	heightVh={(N + 1) * 100}
+	heightVh={runwayVh(N)}
 	dataUrl="/data/scene_reveal.json"
 >
 	{#snippet prose({ data })}
@@ -51,27 +60,31 @@
 
 	{#snippet children({ progress, data })}
 		{@const idx = cardIndex(progress, N)}
-		<div class="graphic">
-			<p class="graphic-title">
-				THE OCEANIC NIÑO INDEX · one bar per year, 1979–2025 · NOAA Climate Prediction Center
-			</p>
-			{#if data}
-				<LazyEnso
-					years={data.years}
-					progress={sweep(progress, N)}
-					colored={idx >= 1}
-					marks={idx >= 2 && idx < 3 ? GREATS : []}
-					height={430}
-					ariaLabel="Bar chart of the Oceanic Niño Index from 1979 to 2025. Bars point up in El Niño years — sharply in 1982, 1997, 2015 and 2023 — and down in La Niña years. The 2025 season is not yet classified."
-				/>
-			{/if}
-		</div>
+		<Figure
+			title={figTitle[idx]}
+			subtitle="The Oceanic Niño Index — Niño&nbsp;3.4 sea-surface temperature anomaly (°C), one bar per year, 1979–2025"
+			source="NOAA Climate Prediction Center"
+		>
+			{#snippet body({ h })}
+				{#if data}
+					<LazyEnso
+						years={data.years}
+						progress={sweep(progress, N)}
+						colored={idx >= 1}
+						marks={idx >= 2 && idx < 3 ? GREATS : []}
+						height={h}
+						ariaLabel="Bar chart of the Oceanic Niño Index from 1979 to 2025. Bars point up in El Niño years — sharply in 1982, 1997, 2015 and 2023 — and down in La Niña years. The 2025 season is not yet classified."
+					/>
+				{/if}
+			{/snippet}
+		</Figure>
 	{/snippet}
 
 	{#snippet flow({ progress })}
 		{@const idx = cardIndex(progress, N)}
 		<div class="card-slot first" class:active={idx === 0}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">The measurement</span>
 				<p>
 					Scientists log the temperature of the <span class="hl hl-cool">Niño&nbsp;3.4 region</span>
@@ -82,6 +95,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">2/4</span>
 				<span class="card-kicker">What the tips mean</span>
 				<p>
 					Most years it sits near zero. Every few years it tips — hard. Up is
@@ -93,6 +107,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">3/4</span>
 				<span class="card-kicker">The big ones</span>
 				<p>
 					<strong>1982. 1997. 2015. 2023.</strong> The great El Niños of the modern record.
@@ -102,6 +117,7 @@
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
+				<span class="card-step" aria-hidden="true">4/4</span>
 				<span class="card-kicker">The last column</span>
 				<p>
 					And the season forming right now? Still a <strong>?</strong> — the ocean writes this

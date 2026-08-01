@@ -202,14 +202,17 @@
 </div>
 
 <style>
+	/* fill the measured figure box, scaled to fit */
 	.wrap {
 		width: 100%;
+		height: 100%;
+		display: flex;
 	}
 
 	svg {
 		display: block;
 		width: 100%;
-		height: auto;
+		height: 100%;
 	}
 
 	.sky {
