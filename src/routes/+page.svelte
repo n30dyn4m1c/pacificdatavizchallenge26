@@ -18,6 +18,10 @@
 	 * one estimate are labelled as such.
 	 */
 	import Hero from '$lib/components/Hero.svelte';
+	// chapter nine's headline numbers, written by prep/make_real_data.mjs — the
+	// BigStat and the colophon quote the same values the chapter does, and both
+	// follow automatically when NOAA appends a month
+	import { now } from '$lib/generated/now-copy.js';
 	import BigStat from '$lib/components/BigStat.svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
 	import SceneMap from '$lib/components/scenes/SceneMap.svelte';
@@ -42,7 +46,7 @@
 	<title>The Ocean Knows First — Papua New Guinea and the far ocean that takes its rain</title>
 	<meta
 		name="description"
-		content="Papua New Guinea's worst droughts start in the temperature of seawater seven thousand kilometres east, months before the rain fails — and in mid-2026 that water is warming faster than in 1982, 1997, 2015 or 2023. A scrollytelling journey through 176 years of the official Pacific climate record, with the real coverage of 1997, 2015 and the unfolding 2026 event, a clearly-labelled estimate of the months ahead, and one ask: prepare for the predictable."
+		content="Papua New Guinea's worst droughts start in the temperature of seawater seven thousand kilometres east, months before the rain fails — and in 2026 that water is warming faster than in 1982, 1997, 2015 or 2023, with the official outlook now on a very strong event. A scrollytelling journey through 176 years of the official Pacific climate record, with the real coverage of 1997, 2015 and the unfolding 2026 event, a clearly-labelled estimate of the months ahead, and one ask: prepare for the predictable."
 	/>
 </svelte:head>
 
@@ -110,9 +114,11 @@
 	<SceneWatchers />
 
 	<BigStat
-		kicker="June 2026"
-		stat="+1.44 °C"
-		caption="the far ocean, right now — warmer at June than 1982, 1997, 2015 or 2023 stood at the same point in their onset years."
+		kicker={now.latest.label}
+		stat="{now.latest.text} °C"
+		caption="the far ocean, warmer at {now.latest.month} than {now.standings
+			.map((s) => s.onset)
+			.join(', ')} stood at the same point in their onset years — and still climbing: the quoted weekly index reached about {now.scoring.readingText} °C by mid-{now.scoring.month}."
 		accent="warm"
 	/>
 
@@ -142,11 +148,15 @@
 		cross-section, the field notes and the aftermath hillside are explicitly labelled illustrations
 		of mechanisms, and carry no dataset numbers; the two paper-trail sections link to external
 		reporting, summarised by this piece. Chapter nine adds the one monthly series — the
-		<strong>Niño 3.4 anomaly from NOAA's Physical Sciences Laboratory</strong>, observations through
-		June 2026 — and the piece's one forward-looking panel: an analogue estimate computed in
+		<strong>Niño 3.4 anomaly from NOAA's Physical Sciences Laboratory</strong>, monthly observations
+		through {now.latest.label} — and the piece's one forward-looking panel: an analogue estimate computed in
 		<code>/prep</code> from the four documented precedents, drawn dashed, labelled as an estimate on
-		the graphic, and checked against the official <strong>NOAA CPC / IRI</strong> mid-June 2026
-		outlook. No synthetic values presented as observations. No cookies, no tracking, fully static.
+		the graphic, and checked against the official <strong>NOAA CPC / IRI</strong> and
+		<strong>WMO</strong> outlooks of early August 2026. One further number is quoted rather than
+		measured — the CPC <em>weekly</em> Niño 3.4 index for the {now.scoring.readingLabel} — and it is
+		drawn as a marked point, never joined to the monthly line. No synthetic values presented as
+		observations. Live coverage current to <strong>6 August 2026</strong>. No cookies, no tracking,
+		fully static.
 	</p>
 </footer>
 
