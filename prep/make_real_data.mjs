@@ -431,6 +431,39 @@ function pearson(pairs) {
 		});
 	}
 
+	// ── the same four trajectories, started from where 2026 actually is ───────
+	// The estimate above is the precedents at their own levels; it therefore
+	// says nothing about the fact that 2026 is *above* all four at the anchor
+	// month. The anchored companion adds each precedent's month-on-month change
+	// from its own anchor to 2026's observed anchor value — same shapes, higher
+	// start. It is quoted as a second number in the copy (the chart still draws
+	// the precedent band, which is what was actually measured), and it exists so
+	// the piece does not present the precedent path as a ceiling when the
+	// official outlook has moved above it. Also untuned.
+	const anchored = [];
+	for (let m = lastObs.m + 1; m < SPAN; m++) {
+		const shifted = events
+			.map((ev) => {
+				const here = ev.months.find((d) => d.m === m);
+				const anchor = ev.months.find((d) => d.m === lastObs.m);
+				return here && anchor
+					? { onset: ev.onset, v: lastObs.anomaly + (here.anomaly - anchor.anomaly) }
+					: null;
+			})
+			.filter(Boolean);
+		if (!shifted.length) continue;
+		const mean =
+			shifted.reduce((s, d) => s + d.v / weights.find((w) => w.onset === d.onset).rmse, 0) /
+			shifted.reduce((s, d) => s + 1 / weights.find((w) => w.onset === d.onset).rmse, 0);
+		anchored.push({
+			m,
+			mean: round(mean, 2),
+			lo: round(Math.min(...shifted.map((d) => d.v)), 2),
+			hi: round(Math.max(...shifted.map((d) => d.v)), 2)
+		});
+	}
+	const peakA = anchored.reduce((a, b) => (b.mean > a.mean ? b : a));
+
 	const peakF = forecast.reduce((a, b) => (b.mean > a.mean ? b : a));
 	// "the hardest months": estimate ≥ +1.0 °C (event fully in force)…
 	const hard = forecast.filter((d) => d.mean >= 1);
@@ -439,16 +472,55 @@ function pearson(pairs) {
 
 	// The official outlook the estimate is checked against (cited reference values,
 	// not a dataset — same pattern as the EDGAR world-average number in chapter 7).
+	// Refreshed 6 Aug 2026: between the mid-June outlook and now, the official
+	// expectation moved from "strong" to "very strong", so the check the scene
+	// runs against the estimate had to move with it.
 	const OFFICIAL = {
-		name: 'NOAA CPC / IRI ENSO outlook, mid-June 2026',
+		name: 'NOAA CPC / IRI ENSO outlook · WMO update, early August 2026',
+		as_of: '2026-08-06',
 		url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml',
 		iri_url: 'https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/',
+		wmo_url: 'https://wmo.int/publication-series/el-ninola-nina-updates',
+		verify:
+			'Cited reference points, read from the published outlooks and the reporting on them; ' +
+			'the build environment cannot reach noaa.gov (see prep/README.md §3). Re-check against ' +
+			'the CPC discussion and the IRI Quick Look before submission.',
 		points: [
-			'El Niño conditions are present and expected to strengthen through late 2026.',
-			'Probability of El Niño ≈100% through Sep–Nov 2026 and ≈99% through Dec 2026–Feb 2027.',
-			'Forecast peak in Sep–Nov 2026; 13 of 24 models reach “very strong” (Niño 3.4 ≥ +2.0 °C).'
+			'An El Niño Advisory is in effect: El Niño is present and still strengthening.',
+			'Continuation through the 2026–27 season is all but certain — about a 97 % chance it holds into early 2027.',
+			'A very strong peak (Niño 3.4 ≥ +2.0 °C) is now the central expectation, late 2026; reported odds for the Oct–Dec / Nov–Jan window run in the 60–80 % range.',
+			'WMO’s August update expects further intensification through August–October 2026.'
 		]
 	};
+
+	// The most recent reading of the far ocean at the time of writing. It is NOT
+	// part of the monthly series: it is the CPC *weekly* index (a different,
+	// higher-frequency product on a different SST basis), quoted as a cited
+	// reference point and drawn as a single labelled marker, never joined to the
+	// monthly line. It earns its place because it is the news: it sits above the
+	// precedent envelope for the same month.
+	const LATEST_READING = {
+		date: '2026-07-15',
+		label: 'week centred 15 Jul 2026',
+		m: 6, // July of the onset year, on the aligned axis
+		anomaly: 2.1,
+		kind: 'weekly',
+		name: 'NOAA CPC weekly Niño 3.4 index (OISST basis)',
+		url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/lanina/enso_evolution-status-fcsts-web.pdf',
+		note:
+			'Weekly index, quoted — a different product from the monthly series this chart draws, ' +
+			'so it is marked, not connected to the line.'
+	};
+	{
+		const est = forecast.find((d) => d.m === LATEST_READING.m);
+		if (est) {
+			LATEST_READING.vs_estimate = {
+				mean: est.mean,
+				hi: est.hi,
+				above_envelope: LATEST_READING.anomaly > est.hi
+			};
+		}
+	}
 
 	// June standings: 2026 against each great event at the same point in the year.
 	const juneM = lastObs.m;
@@ -461,13 +533,25 @@ function pearson(pairs) {
 		source: SOURCE,
 		nino_source: NINO_SOURCE,
 		official: OFFICIAL,
+		latest_reading: LATEST_READING,
 		span: SPAN,
 		month_names: MONTHS,
 		recent,
 		events: events.map(({ onset, label, peak, months }) => ({ onset, label, peak, months })),
 		current: { onset: CURRENT_ONSET, months: current, latest: { ...lastObs, date: nino.at(-1).date } },
 		june_standings: june,
-		analogue: { weights, forecast },
+		analogue: {
+			weights,
+			forecast,
+			anchored,
+			anchored_peak: {
+				m: peakA.m,
+				label: mLabel(CURRENT_ONSET, peakA.m),
+				mean: peakA.mean,
+				lo: peakA.lo,
+				hi: peakA.hi
+			}
+		},
 		timing: {
 			peak: { m: peakF.m, label: mLabel(CURRENT_ONSET, peakF.m), mean: peakF.mean, lo: peakF.lo, hi: peakF.hi },
 			hardest: hard.length
@@ -484,6 +568,12 @@ function pearson(pairs) {
 	console.log(`  · analogue weights: ${weights.map((w) => `${w.onset}=${w.weight} (rmse ${w.rmse})`).join('  ')}`);
 	console.log(`  · June standings: 2026=${lastObs.anomaly} vs ${june.map((d) => `${d.onset}=${d.value}`).join(' ')}`);
 	console.log(`  · estimate peak ${peakF.mean} (${peakF.lo}–${peakF.hi}) at ${mLabel(CURRENT_ONSET, peakF.m)}`);
+	console.log(`  · anchored peak ${peakA.mean} (${peakA.lo}–${peakA.hi}) at ${mLabel(CURRENT_ONSET, peakA.m)}`);
+	console.log(
+		`  · latest cited reading ${LATEST_READING.anomaly} (${LATEST_READING.label}) — ` +
+			`${LATEST_READING.vs_estimate?.above_envelope ? 'above' : 'inside'} the estimate envelope ` +
+			`(${LATEST_READING.vs_estimate?.mean}, hi ${LATEST_READING.vs_estimate?.hi})`
+	);
 	console.log(`  · hardest ${hard[0]?.m}–${hard.at(-1)?.m}, swing-back from m=${swing?.m}`);
 }
 

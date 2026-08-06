@@ -6,6 +6,11 @@
 	 * impacts on the record (highlands frost and food-security warnings, the
 	 * Sirinumu drawdown and Port Moresby's power rationing). Same contract
 	 * as the 1997/2015 shelf: external links, our summaries.
+	 *
+	 * Kept current by hand — last refreshed 6 Aug 2026, when the Highlands
+	 * frost reports, the parliamentary funding exchange and the move of the
+	 * official outlook to "very strong" were added. The date in the shelf note
+	 * below is the "as of" line and must move with the items.
 	 */
 	import { reveal } from '$lib/reveal.js';
 
@@ -50,6 +55,19 @@
 			]
 		},
 		{
+			source: 'PNG National Weather Service · via The National',
+			date: 'July 2026',
+			title: 'Drought warning for six Highlands provinces — and a drought that runs into 2027',
+			url: 'https://www.thenational.com.pg/drought-to-go-on-until-2027/',
+			summary:
+				'The forecast horizon lengthens. The national service names the six Highlands provinces under warning and puts the end of the drought in the first quarter of 2027 — the same calendar chapter nine’s estimate arrives at from precedent alone.',
+			points: [
+				'Warning covers Jiwaka, Chimbu, Enga, Hela, Southern Highlands and Western Highlands; other provinces on the watch list.',
+				'Below-average rainfall and rising moisture stress expected to persist across the Highlands and southern coast.',
+				'Agriculture, health and water named as the sectors at risk — into the first quarter of 2027.'
+			]
+		},
+		{
 			source: 'NARI · Drought Update',
 			date: 'February 2026',
 			title: 'Drought early-warning status: Jiwaka on Alert, five provinces on Watch',
@@ -87,6 +105,45 @@
 				'Load shedding in the capital; diesel generation brought in to cover the hydro shortfall.',
 				'Conservation measures flagged for up to ten months — the forecast length of the event.'
 			]
+		},
+		{
+			source: 'Commonwealth Union · citing Oxfam PNG',
+			date: 'July 2026',
+			title: 'When the Highlands turned white: frost, failed gardens and a food crisis taking shape',
+			url: 'https://www.commonwealthunion.com/when-the-highlands-turned-white-how-el-nino-is-pushing-papua-new-guinea-toward-a-major-food-crisis/',
+			summary:
+				'The mechanism of field note 02, reported from the gardens: a year of below-average Highlands rain, then cloudless nights, then frost on the kaukau — and rivers and creeks that have stopped running.',
+			points: [
+				'Frost reported over gardens at Tambul (Western Highlands), Gembogl (Chimbu), upper Mendi and Imbonggu (Southern Highlands) and parts of Hela.',
+				'Oxfam PNG puts roughly 1.9 million people at risk in the Highlands dry spell; reporting puts more than 3 million at risk of food shortage nationwide.',
+				'Highlands creeks and rivers no longer flowing — communities walking further for water, exactly as in field note 01.'
+			]
+		},
+		{
+			source: 'PNG Today · National Parliament',
+			date: 'July 2026',
+			title: 'PM tells MPs to fund the drought response from existing budgets',
+			url: 'https://news.pngfacts.com/2026/07/png-pm-urges-mps-to-prioritise-disaster.html',
+			summary:
+				'The money question, on the floor of Parliament — and the reason this piece argues for moving early: the response is being paid for out of budgets already allocated, not new emergency funds.',
+			points: [
+				'MPs told to draw on existing district and provincial allocations; no additional emergency funding released.',
+				'Lower-priority district projects asked to stand aside for drought relief.',
+				'Cabinet reviewing how provinces and districts can reach disaster funds faster.'
+			]
+		},
+		{
+			source: 'NOAA CPC / IRI · WMO',
+			date: 'August 2026',
+			title: 'The outlook moves from “strong” to “very strong”',
+			url: 'https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/',
+			summary:
+				'The far-ocean signal chapter nine reads, updated. Between June and August the official expectation for this event crossed the threshold that 1982, 1997 and 2015 defined.',
+			points: [
+				'El Niño Advisory in force; continuation into early 2027 put at roughly 97 %.',
+				'A very strong peak — Niño 3.4 at or above +2.0 °C — is now the central expectation for late 2026.',
+				'The quoted weekly index reached about +2.1 °C in mid-July; WMO’s August update expects further intensification through October.'
+			]
 		}
 	];
 </script>
@@ -98,7 +155,9 @@
 		<p class="standfirst" use:reveal={{ delay: 200 }}>
 			The 1997 and 2015 shelves above were assembled from archives. This one is being written now
 			— the declaration, the directives, the drought tiers and the first impacts of the 2026
-			event, as reported. Six documents, summarised; follow any of them to the source.
+			event, as reported. Nine documents, summarised; follow any of them to the source. The last
+			three are the state of it in August: frost in the gardens, the money question in Parliament,
+			and an outlook that has crossed from <em>strong</em> to <em>very strong</em>.
 		</p>
 	</header>
 
@@ -118,10 +177,10 @@
 	</div>
 
 	<p class="shelf-note">
-		External links; summaries are this piece's own reading of each document as of early July 2026.
-		Official drought updates continue monthly (the April 2026 update is on ReliefWeb). Compare this
-		shelf with the 1997 and 2015 shelf above: the same provinces, the same altitudes, the same
-		rivers — and this time, the warnings came first.
+		External links; summaries are this piece's own reading of each document as of <strong>6 August
+		2026</strong>. Official drought updates continue monthly (the April 2026 update is on
+		ReliefWeb). Compare this shelf with the 1997 and 2015 shelf above: the same provinces, the same
+		altitudes, the same rivers — and this time, the warnings came first.
 	</p>
 </section>
 

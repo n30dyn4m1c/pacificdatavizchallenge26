@@ -52,10 +52,42 @@ the four great El Niños (1982, 1997, 2015, 2023) by calendar month over
 Jan(onset)–Jun(onset+1); weight each by inverse RMSE against 2026's
 observed January–June; the dashed path is the weighted mean of the four
 trajectories, the band their min–max envelope. Nothing is tuned by hand.
-The scene quotes the official **NOAA CPC / IRI mid-June 2026 outlook**
-beside it (El Niño ≈100% through Sep–Nov 2026, ≈99% through Dec–Feb;
-peak forecast Sep–Nov; 13/24 models "very strong") as cited reference
-points with their source URL — the same pattern as the EDGAR number below.
+
+A second, **anchored** variant is computed alongside it
+(`analogue.anchored`, `analogue.anchored_peak`): the same four
+trajectories, but each shifted so that it starts at 2026's observed
+anchor month instead of its own level — same shapes, higher start. It is
+computed because 2026 sits *above* all four precedents at the anchor, so
+the level-based path would otherwise be read as a ceiling. It is not
+drawn; the scene quotes its peak (≈ +2.8 °C) as a second number in the
+copy, and the chart keeps drawing the precedent band, which is what was
+actually measured.
+
+> ⚠️ **Two cited numbers in this chapter, and the reason for the
+> warning.** The build environment's egress policy blocks `noaa.gov`,
+> `iri.columbia.edu` and `wmo.int`, so `fetch_nino34.py` could not be
+> re-run and the two blocks below were read from the published outlooks
+> and the reporting on them rather than fetched. Both carry their source
+> URLs in `scene_now.json` and an `as_of` / `verify` field. Re-check them
+> — and re-run the fetch, which will append July 2026 onwards to the
+> monthly series and recompute everything downstream — from a network
+> that can reach NOAA, before submission.
+
+- `official` — the **NOAA CPC / IRI outlook and the WMO update of early
+  August 2026**: El Niño Advisory in effect; continuation into early 2027
+  ≈97%; a very strong peak (Niño 3.4 ≥ +2.0 °C) in late 2026 now the
+  central expectation (reported odds for the Oct–Dec / Nov–Jan window run
+  60–80%, which is why the scene quotes the direction rather than a single
+  percentage); further intensification expected through Aug–Oct. This
+  replaced the mid-June 2026 outlook, which read "strong".
+- `latest_reading` — the **CPC weekly Niño 3.4 index for the week centred
+  15 July 2026, ≈ +2.1 °C**. This is a *different product on a different
+  SST basis* from the monthly series the chart draws, so it is never
+  appended to `nino34_monthly.csv` and never joined to the plotted line:
+  the scene draws it as a ringed, unconnected marker that names itself as
+  a quoted weekly value. The pipeline also records whether it falls above
+  the estimate's envelope for the same month (`vs_estimate`) — as of this
+  writing it does, which is the point chapter nine now makes.
 
 ### 4. One reference number — world-average emissions
 
@@ -84,7 +116,7 @@ rainfall anomaly by ENSO phase — and writes:
 | `scene_exposure.json` | Ch. 6 | SST 1850–2025 + sea level 1993–2023 + r_local (the "alibi") |
 | `scene_gap.json` | Ch. 7 | GHG per capita 1970–2024 + the EDGAR world reference |
 | `scene_watch.json` | Ch. 8 | meteorological monitoring network 1951–2026 |
-| `scene_now.json` | Ch. 9 | monthly Niño 3.4: recent months 2023–26, the four great events aligned by month, 2026 so far, the analogue estimate + weights, timing windows, the official-outlook citation |
+| `scene_now.json` | Ch. 9 | monthly Niño 3.4: recent months 2023–26, the four great events aligned by month, 2026 so far, the analogue estimate + weights + anchored variant, timing windows, the official-outlook citation, the latest cited weekly reading |
 | `scene_record.json` | Epilogue | small multiples: six PG indicators with first/last values |
 
 Re-running the script rewrites `static/data/`. To update the
@@ -104,8 +136,10 @@ and is labelled as such in the scene.
 1. **Real data only — and the one estimate says it is one.** Every numeric
    value in `static/data/` traces to a row in one of the committed source
    files (or, for `scene_map.json`, to Natural Earth geometry), with two
-   documented exceptions: the reference citations (EDGAR; the CPC/IRI
-   outlook points) carry their source URLs in the JSON, and chapter nine's
+   documented exceptions: the reference citations (EDGAR; the CPC/IRI/WMO
+   outlook points; the cited weekly Niño 3.4 reading) carry their source
+   URLs in the JSON and are drawn as citations rather than as series
+   members — a quoted number never joins a plotted line — and chapter nine's
    analogue estimate is computed here by the published method above and
    labelled as an estimate on the graphic, in the legend and in the data
    table. The illustrative elements in the piece — the warm-pool motion on

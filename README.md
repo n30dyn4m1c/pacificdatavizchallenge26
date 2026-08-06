@@ -7,8 +7,11 @@ don't start in its own sky — they start in the temperature of seawater
 seven thousand kilometres east, months earlier. Nine chapters follow that
 signal from the far ocean, across the island at every altitude, out the
 other side of the emergency — and into the present: the ninth chapter
-reads the El Niño developing **right now, in mid-2026**, month by month,
-against its four great precedents. Because the piece is also an
+reads the El Niño developing **right now, in 2026**, month by month,
+against its four great precedents — an event that as of August 2026 is
+running above all four, with the official outlook on a *very strong* peak
+in late 2026 and Papua New Guinea's own weather service putting the end of
+the drought in the first quarter of 2027. Because the piece is also an
 educational one: this has all happened before, it is documented, it is
 happening again on schedule, and it can still be prepared for.
 
@@ -28,13 +31,14 @@ happening again on schedule, and it can still be prepared for.
 | 6 | The long record | The 176-year sea record under a giant year counter → 2025 record → sea level; the local "alibi" (r = +0.48) | `SST_ANOM`, `SEA_LVL` |
 | 7 | The ledger | Emissions as countable dots: the world's 66 (≈6.6 t) vs PNG's 10 (1.0 t) | `GHG_EMI_CAPITA` + **EDGAR ref.** |
 | 8 | The watchers | Monitoring network step chart, 1 station (1951) → 6 (2026); a remote signal is an early one | `METEO_MONITOR_NET` |
-| 9 | Now | **The one monthly chapter, because the reader is inside the event**: the recent see-saw in months (2023–24 El Niño → weak double La Niña → the fast flip of 2026), the 2026 onset laid over 1982/1997/2015/2023 (above all four at June), the unwritten months as a labelled **analogue estimate** (weighted mean + min–max envelope of the four precedents, checked against the official CPC/IRI outlook), and the calendar it implies — the hard months to ~Mar 2027, the swing back ~May–Jun 2027 | **NOAA PSL Niño 3.4 monthly** |
-| — | The live paper trail | Six real documents of the 2026 event as it unfolds: the NWS El Niño declaration, the PM's preparedness directive, RNZ, NARI's drought-tier updates, highlands frost/food-security reporting, and the Sirinumu Dam drawdown / Port Moresby load-shedding coverage | external reporting |
+| 9 | Now | **The one monthly chapter, because the reader is inside the event**: the recent see-saw in months (2023–24 El Niño → weak double La Niña → the fast flip of 2026), the 2026 onset laid over 1982/1997/2015/2023 (above all four at June), the unwritten months as a labelled **analogue estimate** read as a *floor* (weighted mean + min–max envelope of the four precedents, plus one cited weekly reading marked above that envelope, checked against the official CPC/IRI/WMO outlook of early Aug 2026), and the calendar it implies — the hard months to ~Mar 2027, the swing back ~May–Jun 2027 | **NOAA PSL Niño 3.4 monthly** |
+| — | The live paper trail | Nine real documents of the 2026 event as it unfolds, current to 6 Aug 2026: the NWS El Niño declaration and its six-province Highlands drought warning, the PM's preparedness directive and the funding exchange in Parliament, RNZ, NARI's drought-tier updates, the Highlands frost / Oxfam food-security reporting, the Sirinumu Dam drawdown / Port Moresby load-shedding coverage, and the outlook's move to "very strong" | external reporting |
 | — | The ask | The CTA: **prepare for the predictable** — read the signal, plan on the known exposure map, move money early, teach the pattern | — |
 | — | Epilogue | The whole record, small multiples (prints to one page) | six SPC series |
 
 Three `BigStat` interludes let the numbers land between chapters (8/10,
-+1.1 °C, and June 2026's +1.44 °C).
++1.1 °C, and June 2026's +1.44 °C — with the mid-July weekly reading of
+≈ +2.1 °C carried in the caption).
 
 ## Data
 
@@ -56,9 +60,16 @@ cannot:
   (`prep/source/nino34_monthly.csv`, re-exportable with
   `prep/fetch_nino34.py`) — chapter 9's monthly series, 1970 → June 2026,
   from <https://psl.noaa.gov/data/correlation/nina34.anom.data>.
-- **NOAA CPC / IRI ENSO outlook, mid-June 2026** — three cited reference
-  points (event probabilities, forecast peak season, model consensus)
-  quoted beside chapter 9's estimate, source URLs carried in the JSON.
+- **NOAA CPC / IRI ENSO outlook and WMO update, early August 2026** — four
+  cited reference points (advisory status, persistence probability, the
+  move of the central expectation to a *very strong* peak, expected further
+  intensification) quoted beside chapter 9's estimate, source URLs carried
+  in the JSON.
+- **NOAA CPC weekly Niño 3.4 index, week centred 15 July 2026
+  (≈ +2.1 °C)** — one cited reading, drawn on chapter 9's chart as a
+  ringed, unconnected marker. It is a different product on a different SST
+  basis from the monthly series, so it is never appended to that series and
+  never joined to the plotted line.
 - **EDGAR (EC-JRC) world-average GHG per capita** — a single reference
   value (≈6.6 t CO₂e, 2023) in chapter 7.
 - **Natural Earth** (public domain) — the real coastlines and rivers on
@@ -70,18 +81,32 @@ All correlations and rankings (r = +0.48, r = −0.64, the driest-ten list)
 are **computed by the pipeline** (`prep/make_real_data.mjs`) from those
 sources — nothing is asserted by hand.
 
-**The one forward-looking panel is labelled as such.** Chapter 9 continues
-the observed 2026 line with an *analogue estimate*: the four great El
-Niños aligned by calendar month, weighted by inverse RMSE against 2026's
-observed January–June, drawn as a dashed weighted-mean path inside their
-min–max envelope. It is computed entirely by the pipeline, declared an
-estimate on the graphic, in the legend and in the table view, and
-cross-checked on-scene against the official CPC/IRI outlook. Nothing
-synthetic is presented as an observation. The 2026 "live paper trail"
-section links the unfolding coverage — the PNG NWS declaration, the
-Prime Minister's directive, NARI/DEWS drought updates, and the Sirinumu
-Dam / Port Moresby power-rationing reporting — as external links with
-this piece's own summaries.
+**The one forward-looking panel is labelled as such — and it is a floor.**
+Chapter 9 continues the observed 2026 line with an *analogue estimate*:
+the four great El Niños aligned by calendar month, weighted by inverse
+RMSE against 2026's observed January–June, drawn as a dashed weighted-mean
+path inside their min–max envelope. It is computed entirely by the
+pipeline, declared an estimate on the graphic, in the legend and in the
+table view, and cross-checked on-scene against the official CPC/IRI/WMO
+outlook. Nothing synthetic is presented as an observation.
+
+The event has since outrun that estimate, and the chapter says so rather
+than quietly re-fitting: the cited mid-July weekly reading (≈ +2.1 °C)
+sits above the precedent envelope for its month, and the official
+expectation has moved from *strong* to *very strong*. The pipeline also
+computes an **anchored** variant — the same four trajectories started from
+where 2026 actually is rather than from the precedents' own levels, which
+peaks near +2.8 °C — and the copy quotes it as the upper reading of the
+same method. The scene's third card is now framed around that: the
+precedents are a floor, not a ceiling.
+
+The 2026 "live paper trail" section links the unfolding coverage — the PNG
+NWS declaration and its six-province Highlands drought warning, the Prime
+Minister's directive and the funding exchange in Parliament, NARI/DEWS
+drought updates, the Highlands frost and food-security reporting, and the
+Sirinumu Dam / Port Moresby power-rationing coverage — as external links
+with this piece's own summaries. It carries an explicit "as of" date and
+is current to **6 August 2026**.
 
 **Where the record is coarse, the chart says so.** The SPC sea-level
 series is published rounded to 0.1 m. Drawn as a smooth line it reads as a

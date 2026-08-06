@@ -15,6 +15,13 @@
 	 *    nowhere else in the piece). phase 3 adds the two timing brackets
 	 *    (the hard months / the swing back).
 	 *
+	 * From phase 1 a single hollow marker carries the latest *cited* reading —
+	 * the CPC weekly index, a different product on a different SST basis. It is
+	 * deliberately drawn as a ringed point on a dotted leader rather than as
+	 * part of the line, and says so in its own label and in the legend, because
+	 * the one thing this chart must never do is imply that a quoted weekly
+	 * number is a measurement in the monthly series it draws.
+	 *
 	 * Data: static/data/scene_now.json (NOAA PSL Niño 3.4 monthly; the
 	 * estimate is computed by /prep, never here).
 	 */
@@ -42,6 +49,9 @@
 
 	const aligned = $derived(phase >= 1);
 	const frac = $derived(Math.max(0, Math.min(1, progress)));
+	// below this the plot is too small to carry secondary on-chart labels; they
+	// move into the legend rather than piling up on the lines
+	const narrow = $derived(W < 560);
 
 	// one shared y scale across both views, so the crossfade keeps its ground
 	const y = $derived(scaleLinear([-2.6, 3.05], [height - PAD.b, PAD.t]));
@@ -95,6 +105,8 @@
 	const current = $derived(data?.current);
 	const fc = $derived(data?.analogue?.forecast ?? []);
 	const timing = $derived(data?.timing);
+	// the one cited (weekly) reading — marked, never joined to the monthly line
+	const latest = $derived(data?.latest_reading);
 
 	const mTicks = $derived.by(() => {
 		const names = data?.month_names ?? [];
@@ -202,28 +214,40 @@
 					stroke-dasharray="6 5"
 					stroke-linecap="round"
 				/>
-				{#if timing}
+				<!-- the estimate's own caption, parked in the empty upper-left corner
+				     so it never has to share a line with the ghosts' peak labels -->
+				{#if timing && !narrow}
 					<text
-						x={xA(7)}
-						y={PAD.t + 4}
-						text-anchor="middle"
+						x={PAD.l + 4}
+						y={PAD.t - 22}
 						font-size="11.5"
 						font-weight="600"
 						fill={inkC.secondary}
 						paint-order="stroke"
 						stroke={surface}
 						stroke-width="3.5"
-					>estimate — the four precedents’ range</text>
+					>estimate — where the four precedents actually ran</text>
 					<text
-						x={xA(7)}
-						y={PAD.t + 18}
-						text-anchor="middle"
+						x={PAD.l + 4}
+						y={PAD.t - 8}
 						font-size="11.5"
 						fill={inkC.muted}
 						paint-order="stroke"
 						stroke={surface}
 						stroke-width="3.5"
 					>weighted path peaks ≈ {fmt(timing.peak.mean)} °C · {timing.peak.label}</text>
+					{#if latest?.vs_estimate?.above_envelope && !narrow}
+						<text
+							x={PAD.l + 4}
+							y={PAD.t + 6}
+							font-size="11.5"
+							font-weight="600"
+							fill={imp.drought}
+							paint-order="stroke"
+							stroke={surface}
+							stroke-width="3.5"
+						>— and 2026 is already above it</text>
+					{/if}
 				{/if}
 			</g>
 
@@ -269,9 +293,9 @@
 				{@const last = current.months.at(-1)}
 				<circle cx={xA(last.m)} cy={y(last.anomaly)} r="5" fill={colors.accent} stroke={surface} stroke-width="2" />
 				<text
-					x={xA(last.m)}
+					x={xA(last.m) + (narrow && latest ? -8 : 0)}
 					y={y(last.anomaly) - 12}
-					text-anchor="middle"
+					text-anchor={narrow && latest ? 'end' : 'middle'}
 					font-size="12.5"
 					font-weight="800"
 					fill={colors.accent}
@@ -279,6 +303,36 @@
 					stroke={surface}
 					stroke-width="3.5"
 				>2026 · {fmt(last.anomaly)}</text>
+			{/if}
+
+			<!-- the cited weekly reading: an unconnected marked point. No leader, no
+			     join to the 2026 line — it is a different product on a different SST
+			     basis, and the legend says so. It is on the chart because it is the
+			     news: it sits above the precedent envelope for the same month. -->
+			{#if latest}
+				<g class="fade" opacity={phase >= 1 ? 1 : 0}>
+					<circle
+						cx={xA(latest.m)}
+						cy={y(latest.anomaly)}
+						r="5"
+						fill={surface}
+						stroke={colors.accent}
+						stroke-width="2.4"
+					/>
+					{#if !narrow}
+						<text
+							x={xA(latest.m)}
+							y={y(latest.anomaly) - 13}
+							text-anchor="middle"
+							font-size="11.5"
+							font-weight="700"
+							fill={colors.accent}
+							paint-order="stroke"
+							stroke={surface}
+							stroke-width="3.5"
+						>{fmt(latest.anomaly)} °C · mid-July, weekly</text>
+					{/if}
+				</g>
 			{/if}
 
 			<!-- month axis -->
@@ -346,8 +400,18 @@
 		{:else}
 			<span><i class="sw line" style:background={colors.accent}></i>2026, observed</span>
 			<span><i class="sw line" style:background={colors.ghost1}></i>the four great El Niños</span>
+			{#if latest}
+				<span
+					><i class="sw ring" style:border-color={colors.accent}></i>latest weekly reading,
+					{fmt(latest.anomaly)} °C — cited, {latest.label}</span
+				>
+			{/if}
 			{#if phase >= 2}
-				<span><i class="sw dash" style:border-color={colors.accent}></i>analogue estimate — not a measurement</span>
+				<span
+					><i class="sw dash" style:border-color={colors.accent}></i>analogue estimate — not a
+					measurement{#if narrow && timing}, peaks ≈ {fmt(timing.peak.mean)} °C · {timing.peak
+							.label}{/if}</span
+				>
 			{/if}
 		{/if}
 	</div>
@@ -409,6 +473,14 @@
 		background: none;
 		border-top: 2px dashed;
 		vertical-align: 3px;
+	}
+	.sw.ring {
+		width: 9px;
+		height: 9px;
+		background: none;
+		border: 2px solid;
+		border-radius: 50%;
+		vertical-align: -1px;
 	}
 	.readout {
 		position: absolute;
