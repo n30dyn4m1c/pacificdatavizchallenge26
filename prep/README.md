@@ -58,10 +58,12 @@ A second, **anchored** variant is computed alongside it
 trajectories, but each shifted so that it starts at 2026's observed
 anchor month instead of its own level — same shapes, higher start. It is
 computed because 2026 sits *above* all four precedents at the anchor, so
-the level-based path would otherwise be read as a ceiling. It is not
-drawn; the scene quotes its peak (≈ +2.8 °C) as a second number in the
-copy, and the chart keeps drawing the precedent band, which is what was
-actually measured.
+the level-based path would otherwise be read as a ceiling. The chart's band
+and headline dashed path stay level-based — that is what was actually
+measured — and the anchored path appears only from the chapter's scoring
+card onward, as a lighter dashed line with no band of its own, so the
+graphic never carries two envelopes at once. Its peak (≈ +2.8 °C) is
+quoted in the copy.
 
 > ⚠️ **Two cited numbers in this chapter, and the reason for the
 > warning.** The build environment's egress policy blocks `noaa.gov`,
@@ -119,7 +121,17 @@ rainfall anomaly by ENSO phase — and writes:
 | `scene_now.json` | Ch. 9 | monthly Niño 3.4: recent months 2023–26, the four great events aligned by month, 2026 so far, the analogue estimate + weights + anchored variant, timing windows, the official-outlook citation, the latest cited weekly reading |
 | `scene_record.json` | Epilogue | small multiples: six PG indicators with first/last values |
 
-Re-running the script rewrites `static/data/`. To update the
+It also writes one JavaScript module, `src/lib/generated/now-copy.js`.
+Scene JSON is fetched lazily as a scene approaches — right for a chart,
+wrong for a sentence: a card that read its own numbers from that fetch
+would render numberless in the prerendered HTML and for anyone without
+JavaScript. So every number chapter nine's *copy* quotes — the cards, the
+prose equivalent, the chart's aria-label, the figure title, the table
+caption, the `BigStat` on the page and the colophon — is baked into that
+module and imported at build time. Nothing is hand-typed twice: re-running
+this script is the whole update. Do not edit the module by hand.
+
+Re-running the script rewrites `static/data/` and that module. To update the
 piece when SPC republishes the dataflow, re-export the CSV from .Stat
 Explorer, drop it in `source/`, and re-run; same for the ONI table.
 

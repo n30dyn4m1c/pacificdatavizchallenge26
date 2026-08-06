@@ -31,14 +31,15 @@ happening again on schedule, and it can still be prepared for.
 | 6 | The long record | The 176-year sea record under a giant year counter → 2025 record → sea level; the local "alibi" (r = +0.48) | `SST_ANOM`, `SEA_LVL` |
 | 7 | The ledger | Emissions as countable dots: the world's 66 (≈6.6 t) vs PNG's 10 (1.0 t) | `GHG_EMI_CAPITA` + **EDGAR ref.** |
 | 8 | The watchers | Monitoring network step chart, 1 station (1951) → 6 (2026); a remote signal is an early one | `METEO_MONITOR_NET` |
-| 9 | Now | **The one monthly chapter, because the reader is inside the event**: the recent see-saw in months (2023–24 El Niño → weak double La Niña → the fast flip of 2026), the 2026 onset laid over 1982/1997/2015/2023 (above all four at June), the unwritten months as a labelled **analogue estimate** read as a *floor* (weighted mean + min–max envelope of the four precedents, plus one cited weekly reading marked above that envelope, checked against the official CPC/IRI/WMO outlook of early Aug 2026), and the calendar it implies — the hard months to ~Mar 2027, the swing back ~May–Jun 2027 | **NOAA PSL Niño 3.4 monthly** |
+| 9 | Now | **The one monthly chapter, because the reader is inside the event**, in five cards: the recent see-saw in months (2023–24 El Niño → weak double La Niña → the fast flip of 2026), the 2026 onset laid over 1982/1997/2015/2023 (above all four at June), the unwritten months as a labelled **analogue estimate** (weighted mean + min–max envelope of the four precedents, checked against the official CPC/IRI/WMO outlook of early Aug 2026), then the chapter **marking its own homework** — the cited weekly reading came in above the whole band, and the anchored path shows why — and the calendar it implies: the hard months to ~Mar 2027, the swing back ~May–Jun 2027 | **NOAA PSL Niño 3.4 monthly** |
 | — | The live paper trail | Nine real documents of the 2026 event as it unfolds, current to 6 Aug 2026: the NWS El Niño declaration and its six-province Highlands drought warning, the PM's preparedness directive and the funding exchange in Parliament, RNZ, NARI's drought-tier updates, the Highlands frost / Oxfam food-security reporting, the Sirinumu Dam drawdown / Port Moresby load-shedding coverage, and the outlook's move to "very strong" | external reporting |
 | — | The ask | The CTA: **prepare for the predictable** — read the signal, plan on the known exposure map, move money early, teach the pattern | — |
 | — | Epilogue | The whole record, small multiples (prints to one page) | six SPC series |
 
 Three `BigStat` interludes let the numbers land between chapters (8/10,
 +1.1 °C, and June 2026's +1.44 °C — with the mid-July weekly reading of
-≈ +2.1 °C carried in the caption).
+≈ +2.1 °C carried in the caption; the last of the three reads its numbers
+from the generated copy module, so it never disagrees with chapter nine).
 
 ## Data
 
@@ -81,6 +82,15 @@ All correlations and rankings (r = +0.48, r = −0.64, the driest-ten list)
 are **computed by the pipeline** (`prep/make_real_data.mjs`) from those
 sources — nothing is asserted by hand.
 
+**Chapter nine's prose is generated too.** Scene JSON is fetched lazily as
+a scene approaches, which is right for a chart and wrong for a sentence, so
+the pipeline writes `src/lib/generated/now-copy.js` and the components
+import it at build time: the five cards, the prose equivalent, the chart's
+aria-label, the figure title, the table caption, the `BigStat` and the
+colophon all quote the same generated values, and the sentences are
+complete in the prerendered HTML and without JavaScript. Re-running the
+pipeline after NOAA appends a month updates the copy with the chart.
+
 **The one forward-looking panel is labelled as such — and it is a floor.**
 Chapter 9 continues the observed 2026 line with an *analogue estimate*:
 the four great El Niños aligned by calendar month, weighted by inverse
@@ -96,9 +106,15 @@ sits above the precedent envelope for its month, and the official
 expectation has moved from *strong* to *very strong*. The pipeline also
 computes an **anchored** variant — the same four trajectories started from
 where 2026 actually is rather than from the precedents' own levels, which
-peaks near +2.8 °C — and the copy quotes it as the upper reading of the
-same method. The scene's third card is now framed around that: the
-precedents are a floor, not a ceiling.
+peaks near +2.8 °C.
+
+The chapter's fourth card, *marking our own homework*, is built on that
+miss: it states what the estimate expected for the month (+1.19, +1.56 at
+the top of the band) against what was read (≈ +2.10), names the structural
+reason — every analogue was cooler than 2026 at the anchor month, so their
+own levels carry that deficit forward — and only then draws the anchored
+path. Reading the precedents as a floor is earned on the chart rather than
+asserted in the caption.
 
 The 2026 "live paper trail" section links the unfolding coverage — the PNG
 NWS declaration and its six-province Highlands drought warning, the Prime

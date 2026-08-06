@@ -12,15 +12,22 @@
 	 *    accent line. phase 2 adds the analogue estimate — a min–max envelope
 	 *    of the four precedents plus a similarity-weighted dashed mean,
 	 *    labelled as an estimate on the graphic (dashes mean projection,
-	 *    nowhere else in the piece). phase 3 adds the two timing brackets
+	 *    nowhere else in the piece). phase 3 marks the estimate's homework: the
+	 *    gap between what it expected for the latest month and what was
+	 *    actually read, plus the anchored path (the same four trajectories
+	 *    started from 2026's own level). phase 4 adds the two timing brackets
 	 *    (the hard months / the swing back).
 	 *
 	 * From phase 1 a single hollow marker carries the latest *cited* reading —
 	 * the CPC weekly index, a different product on a different SST basis. It is
-	 * deliberately drawn as a ringed point on a dotted leader rather than as
-	 * part of the line, and says so in its own label and in the legend, because
-	 * the one thing this chart must never do is imply that a quoted weekly
-	 * number is a measurement in the monthly series it draws.
+	 * deliberately drawn as an unconnected ringed point rather than as part of
+	 * the line, and says so in its own label and in the legend, because the one
+	 * thing this chart must never do is imply that a quoted weekly number is a
+	 * measurement in the monthly series it draws.
+	 *
+	 * The vertical scale is derived from everything drawn, not hard-coded: an
+	 * event that verifies above its own precedents must never clip against the
+	 * top of the chart that is arguing it is running hot.
 	 *
 	 * Data: static/data/scene_now.json (NOAA PSL Niño 3.4 monthly; the
 	 * estimate is computed by /prep, never here).
@@ -31,16 +38,26 @@
 
 	let {
 		data, //           scene_now.json
-		phase = 0, //      0 recent · 1 aligned · 2 +estimate · 3 +timing
+		phase = 0, //      0 recent · 1 aligned · 2 +estimate · 3 +scoring · 4 +timing
 		progress = 1, //   0–1 draw-in within the current phase
 		mode = 'light',
 		height = 470,
 		ariaLabel
 	} = $props();
 
-	const PAD = { l: 46, r: 104, t: 58, b: 66 };
 	let w = $state(720);
 	const W = $derived(Math.max(w, 300));
+	// below this the plot is too small to carry secondary on-chart labels; they
+	// move into the legend rather than piling up on the lines
+	const narrow = $derived(W < 560);
+	// On a phone the pin is split vertically and this chart gets a band a couple
+	// of hundred pixels tall — so the margins stop paying for themselves. The
+	// wide layout's right margin exists only to hold the threshold caption; on
+	// narrow that caption moves to the legend and the margin goes back to the
+	// plot, along with the room the (also relocated) top captions were using.
+	const PAD = $derived(
+		narrow ? { l: 32, r: 16, t: 26, b: 62 } : { l: 46, r: 104, t: 58, b: 66 }
+	);
 
 	const inkC = $derived(ink[mode]);
 	const imp = $derived(impact[mode]);
@@ -49,12 +66,39 @@
 
 	const aligned = $derived(phase >= 1);
 	const frac = $derived(Math.max(0, Math.min(1, progress)));
-	// below this the plot is too small to carry secondary on-chart labels; they
-	// move into the legend rather than piling up on the lines
-	const narrow = $derived(W < 560);
 
-	// one shared y scale across both views, so the crossfade keeps its ground
-	const y = $derived(scaleLinear([-2.6, 3.05], [height - PAD.b, PAD.t]));
+	// one shared y scale across both views, so the crossfade keeps its ground —
+	// and derived from every mark either view draws, so nothing can clip
+	const yDomain = $derived.by(() => {
+		const v = [];
+		for (const d of data?.recent ?? []) v.push(d.anomaly);
+		for (const ev of data?.events ?? []) for (const d of ev.months) v.push(d.anomaly);
+		for (const d of data?.current?.months ?? []) v.push(d.anomaly);
+		for (const d of data?.analogue?.forecast ?? []) v.push(d.lo, d.hi);
+		// the anchored path is drawn as a line, so only its mean can clip
+		for (const d of data?.analogue?.anchored ?? []) v.push(d.mean);
+		if (data?.latest_reading) v.push(data.latest_reading.anomaly);
+		if (!v.length) return [-1, 3];
+		// pad, generously at the top where the peak labels live, then round out
+		// to a half degree so the gridline story stays stable between rebuilds
+		const out = (x, s) => (x < 0 ? Math.floor(x / s) : Math.ceil(x / s)) * s;
+		return [
+			Math.min(out(Math.min(...v) - 0.25, 0.5), -0.5),
+			Math.max(out(Math.max(...v) + 0.55, 0.5), 1)
+		];
+	});
+	// the legend is part of the figure's measured body, so the drawing surface
+	// is what is left after it — otherwise a legend that wraps to four lines on
+	// a phone pushes itself out of the body and over the figure's foot
+	let legendH = $state(26);
+	const svgH = $derived(Math.max(150, height - legendH - 6));
+	const y = $derived(scaleLinear(yDomain, [svgH - PAD.b, PAD.t]));
+	// whole-degree gridline labels inside whatever domain we ended up with
+	const yTicks = $derived.by(() => {
+		const out = [];
+		for (let t = Math.ceil(yDomain[0]); t <= Math.floor(yDomain[1]); t++) if (t !== 0) out.push(t);
+		return out;
+	});
 
 	// ── recent view: monthly bars, Jan 2023 → now ────────────────────────────
 	const recent = $derived(data?.recent ?? []);
@@ -74,9 +118,16 @@
 		const lanina = minIn(seg('2024-05', '2026-01'));
 		const now = recent.at(-1);
 		return [
-			{ i: elnino.i, v: elnino.anomaly, dy: -10, text: 'El Niño 2023–24', color: imp.drought },
-			{ i: lanina.i, v: lanina.anomaly, dy: 20, text: 'La Niña, twice — weak', color: imp.frost },
-			{ i: recent.length - 1, v: now.anomaly, dy: -10, text: 'now', color: imp.drought }
+			{ i: elnino.i, y: y(elnino.anomaly) - 10, text: 'El Niño 2023–24', color: imp.drought },
+			{
+				i: lanina.i,
+				// normally under its own trough; on narrow the tick row is right
+				// there, so it goes into the empty positive field above instead
+				y: narrow ? y(0) - 12 : y(lanina.anomaly) + 28,
+				text: 'La Niña, twice — weak',
+				color: imp.frost
+			},
+			{ i: recent.length - 1, y: y(now.anomaly) - 10, text: 'now', color: imp.drought }
 		];
 	});
 
@@ -89,6 +140,13 @@
 	const genMean = $derived(
 		d3line().x((d) => xA(d.m)).y((d) => y(d.mean)).curve(curveMonotoneX)
 	);
+	// the anchored path starts one month after the last observation, so it is
+	// stitched to that point to avoid a floating stub
+	const anchoredLine = $derived.by(() => {
+		const lastObs = current?.months?.at(-1);
+		if (!lastObs || !anchoredPath.length) return null;
+		return genMean([{ m: lastObs.m, mean: lastObs.anomaly }, ...anchoredPath]);
+	});
 	const genBand = $derived(
 		d3area().x((d) => xA(d.m)).y0((d) => y(d.lo)).y1((d) => y(d.hi)).curve(curveMonotoneX)
 	);
@@ -104,9 +162,13 @@
 	const events = $derived(data?.events ?? []);
 	const current = $derived(data?.current);
 	const fc = $derived(data?.analogue?.forecast ?? []);
+	const anchoredPath = $derived(data?.analogue?.anchored ?? []);
 	const timing = $derived(data?.timing);
 	// the one cited (weekly) reading — marked, never joined to the monthly line
 	const latest = $derived(data?.latest_reading);
+	// phase 3 scores the estimate: what it expected for the cited month against
+	// what was actually read there
+	const missAt = $derived(latest ? fc.find((d) => d.m === latest.m) : null);
 
 	const mTicks = $derived.by(() => {
 		const names = data?.month_names ?? [];
@@ -139,7 +201,7 @@
 
 <div class="wrap" bind:clientWidth={w}>
 	<svg
-		viewBox="0 0 {W} {height}"
+		viewBox="0 0 {W} {svgH}"
 		role="img"
 		aria-label={ariaLabel}
 		onpointermove={onMove}
@@ -148,10 +210,14 @@
 		<!-- shared frame: zero line + the El Niño threshold -->
 		<line x1={PAD.l} x2={W - PAD.r} y1={y(0)} y2={y(0)} stroke={inkC.axis} stroke-width="1.4" />
 		<line x1={PAD.l} x2={W - PAD.r} y1={y(0.5)} y2={y(0.5)} stroke={inkC.grid} stroke-width="1" />
-		<text x={W - PAD.r - 4} y={y(0.5) - 5} text-anchor="end" font-size="10" fill={inkC.muted}>
-			+0.5 °C — the El Niño threshold
-		</text>
-		{#each [-2, -1, 1, 2, 3] as t (t)}
+		<!-- the threshold caption lives in the right margin, outside the plot: the
+		     right edge of the plot is exactly where all four precedents converge
+		     on their way down, and it used to be written over by them -->
+		{#if !narrow}
+			<text x={W - PAD.r + 6} y={y(0.5) - 3} font-size="10" fill={inkC.muted}>+0.5 °C</text>
+			<text x={W - PAD.r + 6} y={y(0.5) + 9} font-size="10" fill={inkC.muted}>El Niño threshold</text>
+		{/if}
+		{#each yTicks as t (t)}
 			<text x={PAD.l - 7} y={y(t) + 3.5} text-anchor="end" font-size="10.5" fill={inkC.muted}>
 				{t > 0 ? '+' + t : t}
 			</text>
@@ -160,12 +226,16 @@
 
 		<!-- ── view 1: the recent see-saw, in months ─────────────────────────── -->
 		<g class="fade" opacity={aligned ? 0 : 1} style:pointer-events="none">
-			<text x={PAD.l + 2} y={PAD.t - 34} font-size="12.5" font-weight="700" fill={imp.drought}>
-				El Niño ↑ warm water drains east
-			</text>
-			<text x={PAD.l + 2} y={height - PAD.b + 40} font-size="12.5" font-weight="700" fill={imp.frost}>
-				La Niña ↓ warmth piles back west
-			</text>
+			<!-- the two orientation labels live in the margins the narrow layout
+			     gives back to the plot; there, the legend's swatches carry them -->
+			{#if !narrow}
+				<text x={PAD.l + 2} y={PAD.t - 34} font-size="12.5" font-weight="700" fill={imp.drought}>
+					El Niño ↑ warm water drains east
+				</text>
+				<text x={PAD.l + 2} y={svgH - PAD.b + 40} font-size="12.5" font-weight="700" fill={imp.frost}>
+					La Niña ↓ warmth piles back west
+				</text>
+			{/if}
 			{#each recent as d, i (d.date)}
 				{@const on = i / Math.max(recent.length - 1, 1) <= (aligned ? 1 : frac) + 0.001}
 				<rect
@@ -180,14 +250,14 @@
 				/>
 			{/each}
 			{#each janTicks as t (t.date)}
-				<text x={xR(t.i)} y={height - PAD.b + 22} text-anchor="middle" font-size="11" fill={inkC.muted}>
+				<text x={xR(t.i)} y={svgH - PAD.b + 22} text-anchor="middle" font-size="11" fill={inkC.muted}>
 					{t.date.slice(0, 4)}
 				</text>
 			{/each}
 			{#each annR as a (a.text)}
 				<text
 					x={Math.min(xR(a.i), W - PAD.r)}
-					y={y(Math.max(0, a.v)) + (a.dy < 0 ? a.dy : 0) + (a.v < 0 ? y(a.v) - y(0) + a.dy + 8 : 0)}
+					y={a.y}
 					text-anchor={a.i > recent.length - 6 ? 'end' : 'middle'}
 					font-size="12"
 					font-weight="700"
@@ -251,6 +321,71 @@
 				{/if}
 			</g>
 
+			<!-- phase 3 — marking the estimate's homework: the range it gave for the
+			     cited month, the gap up to what was actually read there, and the
+			     anchored path that closes most of it -->
+			<g class="fade" opacity={phase >= 3 ? 1 : 0}>
+				{#if anchoredLine}
+					<path
+						d={anchoredLine}
+						fill="none"
+						stroke={colors.accent}
+						stroke-width="1.8"
+						stroke-dasharray="3 4"
+						stroke-linecap="round"
+						opacity="0.55"
+					/>
+					<!-- no direct label: the anchored path runs the width of the chart
+					     and every place it ends up is already occupied. The legend
+					     names it and card 4 explains it. -->
+				{/if}
+				{#if missAt && latest}
+					<!-- what the estimate allowed for that month… -->
+					<line
+						x1={xA(latest.m)}
+						x2={xA(latest.m)}
+						y1={y(missAt.lo)}
+						y2={y(missAt.hi)}
+						stroke={inkC.secondary}
+						stroke-width="2.2"
+						stroke-linecap="round"
+					/>
+					<!-- …and the distance up to what was read -->
+					<line
+						x1={xA(latest.m)}
+						x2={xA(latest.m)}
+						y1={y(missAt.hi)}
+						y2={y(latest.anomaly)}
+						stroke={imp.drought}
+						stroke-width="1.6"
+						stroke-dasharray="2 3"
+					/>
+					{#if !narrow}
+						<text
+							x={xA(latest.m) - 9}
+							y={(y(missAt.hi) + y(latest.anomaly)) / 2 + 4}
+							text-anchor="end"
+							font-size="11"
+							font-weight="700"
+							fill={imp.drought}
+							paint-order="stroke"
+							stroke={surface}
+							stroke-width="3.5"
+						>missed low</text>
+						<text
+							x={xA(latest.m) - 9}
+							y={y(missAt.lo) + 4}
+							text-anchor="end"
+							font-size="10.5"
+							fill={inkC.muted}
+							paint-order="stroke"
+							stroke={surface}
+							stroke-width="3.5"
+						>the estimate’s range here</text>
+					{/if}
+				{/if}
+			</g>
+
 			<!-- ghost lines: the four great El Niños, labelled at their peaks -->
 			{#each events as ev, i (ev.onset)}
 				<path
@@ -265,19 +400,23 @@
 					stroke-dashoffset={phase >= 2 ? 0 : 1 - frac}
 				/>
 				{@const n = NUDGE[ev.onset] ?? { dx: 8, dy: 0, anchor: 'start' }}
-				<text
-					x={xA(ev.peak.m) + n.dx}
-					y={y(ev.peak.anomaly) + n.dy}
-					text-anchor={n.anchor}
-					font-size="11.5"
-					font-weight="600"
-					fill={inkC.secondary}
-					paint-order="stroke"
-					stroke={surface}
-					stroke-width="3.5"
-					opacity={phase >= 2 || frac > 0.6 ? 1 : 0}
-					style="transition: opacity 0.4s"
-				>{ev.label}</text>
+				<!-- four direct labels need four clear peaks; below 560 px they do not
+				     have them, so they hand off to the legend rather than pile up -->
+				{#if !narrow}
+					<text
+						x={xA(ev.peak.m) + n.dx}
+						y={y(ev.peak.anomaly) + n.dy}
+						text-anchor={n.anchor}
+						font-size="11.5"
+						font-weight="600"
+						fill={inkC.secondary}
+						paint-order="stroke"
+						stroke={surface}
+						stroke-width="3.5"
+						opacity={phase >= 2 || frac > 0.6 ? 1 : 0}
+						style="transition: opacity 0.4s"
+					>{ev.label}</text>
+				{/if}
 			{/each}
 
 			<!-- 2026 so far: the accent line, ending in the open present -->
@@ -330,53 +469,53 @@
 							paint-order="stroke"
 							stroke={surface}
 							stroke-width="3.5"
-						>{fmt(latest.anomaly)} °C · mid-July, weekly</text>
+						>{fmt(latest.anomaly)} °C · {data.month_names[latest.m % 12]}, weekly</text>
 					{/if}
 				</g>
 			{/if}
 
 			<!-- month axis -->
 			{#each mTicks as t (t.m)}
-				<text x={xA(t.m)} y={height - PAD.b + 22} text-anchor="middle" font-size="11" fill={inkC.muted}>
+				<text x={xA(t.m)} y={svgH - PAD.b + 22} text-anchor="middle" font-size="11" fill={inkC.muted}>
 					{t.label}
 				</text>
 			{/each}
 
 			<!-- the two timing brackets (phase 3) -->
 			{#if timing}
-				<g class="fade" opacity={phase >= 3 ? 1 : 0}>
+				<g class="fade" opacity={phase >= 4 ? 1 : 0}>
 					{#if timing.hardest}
 						<line
 							x1={xA(timing.hardest.from)}
 							x2={xA(timing.hardest.to)}
-							y1={height - PAD.b + 40}
-							y2={height - PAD.b + 40}
+							y1={svgH - PAD.b + 40}
+							y2={svgH - PAD.b + 40}
 							stroke={imp.drought}
 							stroke-width="4"
 							stroke-linecap="round"
 						/>
 						<text
 							x={(xA(timing.hardest.from) + xA(timing.hardest.to)) / 2}
-							y={height - PAD.b + 56}
+							y={svgH - PAD.b + 56}
 							text-anchor="middle"
 							font-size="11.5"
 							font-weight="700"
 							fill={imp.drought}
-						>the hard months — {timing.hardest.label}</text>
+						>{narrow ? 'the hard months' : `the hard months — ${timing.hardest.label}`}</text>
 					{/if}
 					{#if timing.swingback}
 						<line
 							x1={xA(timing.swingback.from)}
 							x2={xA(timing.swingback.to)}
-							y1={height - PAD.b + 40}
-							y2={height - PAD.b + 40}
+							y1={svgH - PAD.b + 40}
+							y2={svgH - PAD.b + 40}
 							stroke={imp.frost}
 							stroke-width="4"
 							stroke-linecap="round"
 						/>
 						<text
 							x={xA(timing.swingback.to)}
-							y={height - PAD.b + 56}
+							y={svgH - PAD.b + 56}
 							text-anchor="end"
 							font-size="11.5"
 							font-weight="700"
@@ -387,30 +526,48 @@
 			{/if}
 
 			{#if hoverM != null}
-				<line x1={xA(hoverM)} x2={xA(hoverM)} y1={PAD.t} y2={height - PAD.b} stroke={inkC.axis} />
+				<line x1={xA(hoverM)} x2={xA(hoverM)} y1={PAD.t} y2={svgH - PAD.b} stroke={inkC.axis} />
 			{/if}
 		</g>
 	</svg>
 
 	<!-- legend: identity never rides on color alone -->
-	<div class="legend" style:color={inkC.secondary}>
+	<div class="legend" style:color={inkC.secondary} bind:clientHeight={legendH}>
 		{#if !aligned}
-			<span><i class="sw" style:background={imp.drought}></i>El Niño (warm)</span>
-			<span><i class="sw" style:background={imp.frost}></i>La Niña (cool)</span>
+			<span
+				><i class="sw" style:background={imp.drought}></i>El Niño (warm){#if narrow} — warm water
+					drains east{/if}</span
+			>
+			<span
+				><i class="sw" style:background={imp.frost}></i>La Niña (cool){#if narrow} — warmth piles
+					back west{/if}</span
+			>
 		{:else}
 			<span><i class="sw line" style:background={colors.accent}></i>2026, observed</span>
-			<span><i class="sw line" style:background={colors.ghost1}></i>the four great El Niños</span>
+			{#if narrow}
+				<span><i class="sw thin" style:background={inkC.grid}></i>+0.5 °C — the El Niño threshold</span>
+			{/if}
+			<span
+				><i class="sw line" style:background={colors.ghost1}></i>the four great El Niños{#if narrow}
+					{' '}({events.map((e) => e.onset).join(', ')}){/if}</span
+			>
 			{#if latest}
 				<span
-					><i class="sw ring" style:border-color={colors.accent}></i>latest weekly reading,
-					{fmt(latest.anomaly)} °C — cited, {latest.label}</span
+					><i class="sw ring" style:border-color={colors.accent}></i>{narrow
+						? `weekly reading ${fmt(latest.anomaly)} °C — cited`
+						: `latest weekly reading, ${fmt(latest.anomaly)} °C — cited, ${latest.label}`}</span
 				>
 			{/if}
 			{#if phase >= 2}
 				<span
 					><i class="sw dash" style:border-color={colors.accent}></i>analogue estimate — not a
-					measurement{#if narrow && timing}, peaks ≈ {fmt(timing.peak.mean)} °C · {timing.peak
-							.label}{/if}</span
+					measurement</span
+				>
+			{/if}
+			{#if phase >= 3 && anchoredPath.length}
+				<span
+					><i class="sw dash faint" style:border-color={colors.accent}></i>the same shapes started
+					from 2026’s level</span
 				>
 			{/if}
 		{/if}
@@ -456,6 +613,16 @@
 		font-size: 0.74rem;
 		padding-top: 0.35rem;
 	}
+	/* on a phone the legend is carrying labels the plot used to hold, so it has
+	   more entries exactly where there is least room — tighten it, because every
+	   line it takes comes straight out of the chart's own height */
+	@media (max-width: 559px) {
+		.legend {
+			gap: 0.22rem 0.7rem;
+			font-size: 0.68rem;
+			line-height: 1.25;
+		}
+	}
 	.sw {
 		display: inline-block;
 		width: 12px;
@@ -473,6 +640,14 @@
 		background: none;
 		border-top: 2px dashed;
 		vertical-align: 3px;
+	}
+	.sw.thin {
+		height: 1px;
+		vertical-align: 3px;
+	}
+	.sw.dash.faint {
+		opacity: 0.55;
+		border-top-width: 2px;
 	}
 	.sw.ring {
 		width: 9px;

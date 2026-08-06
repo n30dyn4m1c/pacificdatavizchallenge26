@@ -18,6 +18,10 @@
 	 * one estimate are labelled as such.
 	 */
 	import Hero from '$lib/components/Hero.svelte';
+	// chapter nine's headline numbers, written by prep/make_real_data.mjs — the
+	// BigStat and the colophon quote the same values the chapter does, and both
+	// follow automatically when NOAA appends a month
+	import { now } from '$lib/generated/now-copy.js';
 	import BigStat from '$lib/components/BigStat.svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
 	import SceneMap from '$lib/components/scenes/SceneMap.svelte';
@@ -110,9 +114,11 @@
 	<SceneWatchers />
 
 	<BigStat
-		kicker="June 2026"
-		stat="+1.44 °C"
-		caption="the far ocean, warmer at June than 1982, 1997, 2015 or 2023 stood at the same point in their onset years — and still climbing: the quoted weekly index reached about +2.1 °C by mid-July."
+		kicker={now.latest.label}
+		stat="{now.latest.text} °C"
+		caption="the far ocean, warmer at {now.latest.month} than {now.standings
+			.map((s) => s.onset)
+			.join(', ')} stood at the same point in their onset years — and still climbing: the quoted weekly index reached about {now.scoring.readingText} °C by mid-{now.scoring.month}."
 		accent="warm"
 	/>
 
@@ -143,11 +149,11 @@
 		of mechanisms, and carry no dataset numbers; the two paper-trail sections link to external
 		reporting, summarised by this piece. Chapter nine adds the one monthly series — the
 		<strong>Niño 3.4 anomaly from NOAA's Physical Sciences Laboratory</strong>, monthly observations
-		through June 2026 — and the piece's one forward-looking panel: an analogue estimate computed in
+		through {now.latest.label} — and the piece's one forward-looking panel: an analogue estimate computed in
 		<code>/prep</code> from the four documented precedents, drawn dashed, labelled as an estimate on
 		the graphic, and checked against the official <strong>NOAA CPC / IRI</strong> and
 		<strong>WMO</strong> outlooks of early August 2026. One further number is quoted rather than
-		measured — the CPC <em>weekly</em> Niño 3.4 index for the week centred 15 July 2026 — and it is
+		measured — the CPC <em>weekly</em> Niño 3.4 index for the {now.scoring.readingLabel} — and it is
 		drawn as a marked point, never joined to the monthly line. No synthetic values presented as
 		observations. Live coverage current to <strong>6 August 2026</strong>. No cookies, no tracking,
 		fully static.
