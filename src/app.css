@@ -300,6 +300,26 @@ a {
 	}
 }
 
+/* figure chrome inherits its surface's ink — the default tokens above are
+   the light surface's; the dark scene overrides them here (extra .graphic
+   qualifier so the later light-surface rules don't win the tie) */
+.surface-dark .graphic .fig-title {
+	color: var(--ink-dark-primary);
+}
+
+.surface-dark .graphic .fig-sub {
+	color: var(--ink-dark-secondary);
+}
+
+.surface-dark .graphic .fig-foot {
+	color: var(--ink-dark-muted);
+	border-top-color: var(--ink-dark-grid);
+}
+
+.surface-dark .graphic .fig-note {
+	color: var(--ink-dark-secondary);
+}
+
 /* ── chapter headers: the editorial connective tissue between scrollies ──── */
 .chapter-head {
 	max-width: 44rem;
@@ -490,6 +510,24 @@ a {
 .surface-light ::selection {
 	background: var(--accent-light);
 	color: var(--paper);
+}
+
+/* the one dark surface: the "engine beneath" scene, where the story dives
+   under the water. Ink flips to the dark tokens; step cards stay paper so
+   the two-lane rule keeps its contrast. */
+.surface-dark {
+	background: var(--ocean);
+	color: var(--ink-dark-primary);
+	--beat-accent: var(--warm);
+	--beat-surface: color-mix(in srgb, var(--ocean-raised) 88%, transparent);
+	--beat-ink: var(--ink-dark-primary);
+	--beat-ink-2: var(--ink-dark-secondary);
+	--beat-line: var(--ink-dark-axis);
+}
+
+.surface-dark ::selection {
+	background: var(--cool);
+	color: var(--ocean);
 }
 
 /* ── scene prose (a11y equivalent / reader mode) ────────────────────────── */

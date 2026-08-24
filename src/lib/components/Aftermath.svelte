@@ -21,7 +21,7 @@
 	});
 </script>
 
-<section class="aftermath" aria-label="The aftermath: floods and landslides when the rain returns">
+<section id="ch-aftermath" class="aftermath" aria-label="The aftermath: floods and landslides when the rain returns">
 	<header class="chapter-head">
 		<p class="chapter-no" use:reveal>Interlude · the aftermath</p>
 		<h2 use:reveal={{ delay: 90 }}>The drought ends in water.</h2>

@@ -25,6 +25,7 @@
 	import BigStat from '$lib/components/BigStat.svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
 	import SceneMap from '$lib/components/scenes/SceneMap.svelte';
+	import SceneEngine from '$lib/components/scenes/SceneEngine.svelte';
 	import SceneSeeSaw from '$lib/components/scenes/SceneSeeSaw.svelte';
 	import SceneSignal from '$lib/components/scenes/SceneSignal.svelte';
 	import SceneIsland from '$lib/components/scenes/SceneIsland.svelte';
@@ -37,6 +38,7 @@
 	import SceneLedger from '$lib/components/scenes/SceneLedger.svelte';
 	import SceneWatchers from '$lib/components/scenes/SceneWatchers.svelte';
 	import SceneNow from '$lib/components/scenes/SceneNow.svelte';
+	import TheClock from '$lib/components/TheClock.svelte';
 	import NewsShelf2026 from '$lib/components/NewsShelf2026.svelte';
 	import CallToAction from '$lib/components/CallToAction.svelte';
 	import SceneRecord from '$lib/components/scenes/SceneRecord.svelte';
@@ -84,6 +86,7 @@
 	</section>
 
 	<SceneMap />
+	<SceneEngine />
 	<SceneSeeSaw />
 	<SceneSignal />
 
@@ -123,6 +126,7 @@
 	/>
 
 	<SceneNow />
+	<TheClock />
 	<NewsShelf2026 />
 	<CallToAction />
 

@@ -12,11 +12,14 @@ The country's worst droughts don't start in its own sky — they start in the te
 
 ## Features
 
-- Nine scroll-pinned chapters plus two interactive "field note" sections (a drying-river slider, a highland frost-night toggle)
+- Nine scroll-pinned chapters — including chapter one's underwater continuation, **the engine beneath**, a dark full-bleed cross-section where the trade winds, the warm pool, the thermocline and the Walker circulation tween between normal, El Niño and La Niña — plus two interactive "field note" sections (a drying-river slider, a highland frost-night toggle)
+- **The page breathes with the story**: a fixed thermal wash tints the whole surface toward the warm arm through the drought chapters, cools at the dive and the flood, and runs hottest through chapter nine; the hero's rain dies as you scroll into the piece
+- **Chapter nine exits into a live clock** — months since the NWS declaration, to the expected peak, to the swing back, computed from the reader's current month in PNG time — and the 2026 line's last point pulses
+- **The ask is a planner**: the four asks are plotted onto a preparation calendar built from chapter nine's forecast windows (with a live "you are here" needle), each commitment is tickable and persisted to localStorage only, and the whole plan copies out as text
 - Real, unaltered SPC Pacific Data Hub climate indicators for Papua New Guinea, joined with NOAA ONI/Niño 3.4, EDGAR, and Natural Earth data
 - All correlations, rankings, and the chapter-nine analogue forecast are computed by the data pipeline — nothing is asserted by hand
 - Generated prose: chapter nine's cards, aria-labels, captions, and `BigStat` all read from one pipeline-written copy module, so text and chart never disagree
-- Full prose-equivalent accessibility tree, `prefers-reduced-motion` support, and a `?notap=1` mode that freezes every interactive at its full-drought state
+- Full prose-equivalent accessibility tree, `prefers-reduced-motion` support (the wash, the pulse, the count-ups and every tween included), and a `?notap=1` mode that freezes every interactive at its full-drought state
 - Fully static SvelteKit build, deployed to GitHub Pages
 
 ## The journey
@@ -24,6 +27,7 @@ The country's worst droughts don't start in its own sky — they start in the te
 | # | Chapter | Sticky graphic (morphs card by card) | Source |
 |---|---|---|---|
 | 1 | The map | Real-coastline map of the tropical Pacific: PNG west, the **Niño 3.4 detection box** east; the warm pool (schematic) slides east (El Niño) and piles back west (La Niña) | Natural Earth geometry |
+| — | The engine beneath | **Chapter one, continued — the one dark scene.** The equatorial Pacific in cross-section: trade winds, the warm layer, the tilting thermocline and the Walker circulation tween between normal → El Niño → La Niña; schematic, labelled as such | labelled illustration |
 | 2 | The far ocean | The ENSO see-saw: ONI bars, gray → meaning colors → the four great El Niños; the current season an open "?" | **NOAA ONI** |
 | 3 | The rain | The mirror: PNG rainfall alone, then the far ocean fades in above it — **8 of the 10 driest years are El Niño years**, r = −0.64 | `RAIN_ANOM` + **NOAA ONI** |
 | 4 | The island | The real PNG map (A–B cut marked) crossfades to a sideways **elevation profile** walked in drought: coast & islands → lowland rivers → Highlands by day → the frost night → the whole island | Natural Earth + labelled illustration |
@@ -35,12 +39,12 @@ The country's worst droughts don't start in its own sky — they start in the te
 | 6 | The long record | The 176-year sea record under a giant year counter → 2025 record → sea level; the local "alibi" (r = +0.48) | `SST_ANOM`, `SEA_LVL` |
 | 7 | The ledger | Emissions as countable dots: the world's 66 (≈6.6 t) vs PNG's 10 (1.0 t) | `GHG_EMI_CAPITA` + **EDGAR ref.** |
 | 8 | The watchers | Monitoring network step chart, 1 station (1951) → 6 (2026); a remote signal is an early one | `METEO_MONITOR_NET` |
-| 9 | Now | **The one monthly chapter, because the reader is inside the event**, in five cards: the recent see-saw in months (2023–24 El Niño → weak double La Niña → the fast flip of 2026), the 2026 onset laid over 1982/1997/2015/2023 (above all four at June), the unwritten months as a labelled **analogue estimate** (weighted mean + min–max envelope of the four precedents, checked against the official CPC/IRI/WMO outlook of early Aug 2026), then the chapter **marking its own homework** — the cited weekly reading came in above the whole band, and the anchored path shows why — and the calendar it implies: the hard months to ~Mar 2027, the swing back ~May–Jun 2027 | **NOAA PSL Niño 3.4 monthly** |
+| 9 | Now | **The one monthly chapter, because the reader is inside the event**, in five cards: the recent see-saw in months (2023–24 El Niño → weak double La Niña → the fast flip of 2026), the 2026 onset laid over 1982/1997/2015/2023 (above all four at June), the unwritten months as a labelled **analogue estimate** (weighted mean + min–max envelope of the four precedents, checked against the official CPC/IRI/WMO outlook of early Aug 2026), then the chapter **marking its own homework** — the cited weekly reading came in above the whole band, and the anchored path shows why — and the calendar it implies: the hard months to ~Mar 2027, the swing back ~May–Jun 2027. The line's last point **pulses** (the present, alive), and the chapter exits into **the clock**: three month-resolution counters — since the declaration, to the expected peak, to the swing back — computed from the reader's current month | **NOAA PSL Niño 3.4 monthly** |
 | — | The live paper trail | Nine real documents of the 2026 event as it unfolds, current to 6 Aug 2026: the NWS El Niño declaration and its six-province Highlands drought warning, the PM's preparedness directive and the funding exchange in Parliament, RNZ, NARI's drought-tier updates, the Highlands frost / Oxfam food-security reporting, the Sirinumu Dam drawdown / Port Moresby load-shedding coverage, and the outlook's move to "very strong" | external reporting |
-| — | The ask | The CTA: **prepare for the predictable** — read the signal, plan on the known exposure map, move money early, teach the pattern | — |
+| — | The ask | The CTA: **prepare for the predictable** — the four asks plotted onto a **preparation calendar** built from chapter nine's forecast windows (hard months → ~Mar 2027, swing back ~May–Jun 2027) with a live "you are here" needle; each ask is a tickable commitment (localStorage only — nothing is sent anywhere) and the plan copies out as text | — |
 | — | Epilogue | The whole record, small multiples (prints to one page) | six SPC series |
 
-Three `BigStat` interludes let the numbers land between chapters (8/10, +1.1 °C, and June 2026's +1.44 °C — with the mid-July weekly reading of ≈ +2.1 °C carried in the caption; the last of the three reads its numbers from the generated copy module, so it never disagrees with chapter nine).
+Three `BigStat` interludes let the numbers land between chapters (8/10, +1.1 °C, and June 2026's +1.44 °C — with the mid-July weekly reading of ≈ +2.1 °C carried in the caption; the last of the three reads its numbers from the generated copy module, so it never disagrees with chapter nine). Each numeral **counts up to its value** as it settles into view.
 
 ## Data
 
@@ -93,7 +97,7 @@ Four rules hold the whole piece together:
 - Scroll orchestration: [scrollama], wrapped once in `src/lib/components/ScrollScene.svelte` (pin + 0–1 progress + lazy scene-scoped JSON loading + the card column via its `flow` snippet). `src/lib/scrolly.js` holds the one card convention: N cards → runway of `LEAD_VH + N·SLOT_VH`, active card = nearest slot centre. `SLOT_VH` is under 100 (a card does not need a full screen of travel to be read) and the runway ends shortly after the last card instead of parking an empty viewport of graphic at the end of every chapter — together those trim roughly a sixth off a nine-chapter scroll. `SLOT_VH` is mirrored into CSS as `--slot-vh`; the two must stay equal.
 - Charts and maps: hand-authored SVG via small reusable components — `AnnualLines`, `EnsoBars`, `MirrorBars`, `DotUnits`, plus `PacificMap`, `PngMap` and `IslandProfile` (all geometry pre-projected by the pipeline; no geo library ships to the client). D3 for scales/shapes only.
 - Interactives: `RiverDry` (range slider) and `FrostNight` (radiogroup toggle) are self-contained "field note" sections. **The scroll alone tells the complete story** — append `?notap=1` and every optional control disappears, each figure freezing at its full-drought state.
-- Static animation: the hero's two-depth CSS rain field and opening choreography (type settles in, the highlights wipe on, a single drop falls down the scroll cue), chart draw-ins, the warm pool's slide, layer crossfades, and one shared entrance convention for editorial blocks (`src/lib/reveal.js` — chapter heads, big stats and shelf cards settle up into place once, on approach) — all disabled or frozen under `prefers-reduced-motion`, and never present in the prerendered HTML.
+- Static animation: the hero's two-depth CSS rain field (which dies as the reader scrolls — the drought, foreshadowed) and opening choreography (type settles in, the highlights wipe on, a single drop falls down the scroll cue), chart draw-ins, the warm pool's slide, the engine scene's parameter tweens (the water sloshes between states — numbers interpolate, not keyframes), the thermal wash, the pulse on chapter nine's last point, layer crossfades, and one shared entrance convention for editorial blocks (`src/lib/reveal.js` — chapter heads, big stats and shelf cards settle up into place once) — all disabled or frozen under `prefers-reduced-motion`, and never present in the prerendered HTML.
 - Wayfinding & tactility: the chapter rail described above (hidden over the hero), a whisper of SVG paper grain over the whole surface (excluded from print), and the ONI-band ornament growing from its baseline as it enters view. The hero states the commitment up front — nine chapters, about fifteen minutes.
 - `src/lib/palette.js` is the **single source of truth for every color**.
 
@@ -112,8 +116,10 @@ Four rules hold the whole piece together:
 src/
   routes/                 SvelteKit page(s) — the single scrolling route
   lib/
-    components/            Figure, ScrollScene, ChapterNav, RiverDry, FrostNight, ...
-    components/scenes/      per-chapter chart/map components (AnnualLines, EnsoBars, MirrorBars, DotUnits, PacificMap, PngMap, IslandProfile)
+    components/            Figure, ScrollScene, ChapterNav, RiverDry, FrostNight,
+                           ThermalWash (the story's ambient temperature), TheClock
+                           (chapter nine's exit counters), ...
+    components/scenes/      per-chapter chart/map components (AnnualLines, EnsoBars, MirrorBars, DotUnits, PacificMap, PngMap, IslandProfile, EngineSection)
     generated/              now-copy.js — chapter 9 prose, written by the pipeline
     scrolly.js              shared scroll/runway/card convention
     reveal.js                shared entrance-animation convention

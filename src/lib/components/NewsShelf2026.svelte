@@ -148,7 +148,7 @@
 	];
 </script>
 
-<section class="newsshelf" aria-label="Live coverage of the 2026 El Niño in Papua New Guinea">
+<section id="ch-shelf26" class="newsshelf" aria-label="Live coverage of the 2026 El Niño in Papua New Guinea">
 	<header class="chapter-head">
 		<p class="chapter-no" use:reveal>Interlude · the live paper trail</p>
 		<h2 use:reveal={{ delay: 90 }}>The third writing has begun.</h2>

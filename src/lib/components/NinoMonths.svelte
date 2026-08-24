@@ -430,6 +430,18 @@
 					stroke-linejoin="round"
 				/>
 				{@const last = current.months.at(-1)}
+				<!-- the pulse: the line's last point is *now*, and it is alive -->
+				{#if phase >= 1}
+					<circle
+						class="pulse"
+						cx={xA(last.m)}
+						cy={y(last.anomaly)}
+						r="5"
+						fill="none"
+						stroke={colors.accent}
+						stroke-width="1.6"
+					/>
+				{/if}
 				<circle cx={xA(last.m)} cy={y(last.anomaly)} r="5" fill={colors.accent} stroke={surface} stroke-width="2" />
 				<text
 					x={xA(last.m) + (narrow && latest ? -8 : 0)}
@@ -601,9 +613,38 @@
 	.fade {
 		transition: opacity 0.55s;
 	}
+
+	/* the present, pulsing: an expanding ring on the line's last point.
+	   transform-box keeps the scale centred on the circle itself. */
+	.pulse {
+		transform-box: fill-box;
+		transform-origin: center;
+		animation: now-pulse 2.6s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+		opacity: 0;
+	}
+
+	@keyframes now-pulse {
+		0% {
+			transform: scale(1);
+			opacity: 0.85;
+		}
+		70% {
+			transform: scale(3.6);
+			opacity: 0;
+		}
+		100% {
+			transform: scale(3.6);
+			opacity: 0;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.fade {
 			transition: none;
+		}
+
+		.pulse {
+			animation: none;
 		}
 	}
 	.legend {

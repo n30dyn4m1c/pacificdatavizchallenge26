@@ -11,6 +11,7 @@
 	import { ui } from '$lib/state.svelte.js';
 	import { surfaces, ink, series, impact } from '$lib/palette.js';
 	import ChapterNav from '$lib/components/ChapterNav.svelte';
+	import ThermalWash from '$lib/components/ThermalWash.svelte';
 
 	let { children } = $props();
 
@@ -81,6 +82,10 @@
 {/if}
 
 <ChapterNav />
+
+<!-- the page breathes with the story: a whisper of the climate's own
+     temperature, mapped to where the reader is -->
+<ThermalWash />
 
 {@render children()}
 

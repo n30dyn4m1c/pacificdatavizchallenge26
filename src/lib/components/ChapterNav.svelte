@@ -22,6 +22,7 @@
 
 	const CHAPTERS = [
 		{ id: 'ch-1', n: 'One', name: 'The map' },
+		{ id: 'ch-engine', n: '', name: 'The engine beneath' },
 		{ id: 'ch-2', n: 'Two', name: 'The far ocean' },
 		{ id: 'ch-3', n: 'Three', name: 'The rain' },
 		{ id: 'ch-4', n: 'Four', name: 'The island' },
