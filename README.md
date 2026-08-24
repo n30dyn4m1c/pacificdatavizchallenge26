@@ -27,7 +27,7 @@ The charts are the official Challenge dataset: the Pacific Community (SPC) clima
 Documented companions supply what a national dataset cannot:
 
 - **NOAA CPC Oceanic Niño Index** (`prep/source/oni_cpc.csv`) — names the El Niño years. *Transcribed table; verify against the NOAA page before submission — see `prep/README.md`.*
-- **NOAA PSL Niño 3.4 monthly anomalies** (`prep/source/nino34_monthly.csv`, re-exportable with `prep/fetch_nino34.py`) — chapter 9's monthly series, 1970 → June 2026.
+- **NOAA PSL Niño 3.4 monthly anomalies** (`prep/source/nino34_monthly.csv`, re-exportable with `prep/fetch_nino34.py`) — chapter 9's monthly series, 1970 → July 2026.
 - **NOAA CPC / IRI and WMO outlooks, early August 2026** — the official expectations quoted beside chapter 9's estimate, with source URLs in the JSON.
 - **NOAA CPC weekly Niño 3.4 index, week centred 15 July 2026 (≈ +2.1 °C)** — one quoted reading, drawn as a ringed marker, never joined to the monthly line (a different product on a different SST basis).
 - **EDGAR (EC-JRC)** — the world-average GHG-per-capita reference (≈6.6 t CO₂e, 2023) in chapter 7.

@@ -7,56 +7,56 @@
 
 export const now = {
 	"latest": {
-		"m": 5,
-		"month": "June",
-		"anomaly": 1.44,
-		"text": "+1.44",
-		"label": "June 2026",
-		"date": "2026-06"
+		"m": 6,
+		"month": "July",
+		"anomaly": 1.73,
+		"text": "+1.73",
+		"label": "July 2026",
+		"date": "2026-07"
 	},
 	"flip": [
 		{
 			"m": 0,
 			"month": "January",
-			"anomaly": -0.58,
-			"text": "−0.58"
+			"anomaly": -0.4,
+			"text": "−0.40"
 		},
 		{
 			"m": 3,
 			"month": "April",
-			"anomaly": 0.29,
-			"text": "+0.29"
+			"anomaly": 0.74,
+			"text": "+0.74"
 		},
 		{
-			"m": 5,
-			"month": "June",
-			"anomaly": 1.44,
-			"text": "+1.44"
+			"m": 6,
+			"month": "July",
+			"anomaly": 1.73,
+			"text": "+1.73"
 		}
 	],
 	"standings": [
 		{
 			"onset": 1982,
-			"value": 0.53,
-			"text": "+0.53"
+			"value": 0.34,
+			"text": "+0.34"
 		},
 		{
 			"onset": 2023,
-			"value": 0.84,
-			"text": "+0.84"
+			"value": 0.97,
+			"text": "+0.97"
 		},
 		{
 			"onset": 1997,
-			"value": 1.09,
-			"text": "+1.09"
+			"value": 1.21,
+			"text": "+1.21"
 		},
 		{
 			"onset": 2015,
-			"value": 1.18,
-			"text": "+1.18"
+			"value": 1.35,
+			"text": "+1.35"
 		}
 	],
-	"anchorMonth": "June",
+	"anchorMonth": "July",
 	"events": 4,
 	"record": {
 		"fromYear": 1970,
@@ -64,19 +64,19 @@ export const now = {
 		"years": 57
 	},
 	"estimate": {
-		"mean": 2.27,
-		"text": "+2.27",
-		"lo": 1.92,
-		"hi": 2.72,
-		"loText": "+1.92",
-		"hiText": "+2.72",
+		"mean": 1.85,
+		"text": "+1.85",
+		"lo": 1.4,
+		"hi": 2.21,
+		"loText": "+1.40",
+		"hiText": "+2.21",
 		"month": "November",
 		"label": "November 2026",
 		"bestOnset": 1997
 	},
 	"anchored": {
-		"mean": 2.77,
-		"text": "+2.77",
+		"mean": 2.56,
+		"text": "+2.56",
 		"label": "November 2026"
 	},
 	"scoring": {
@@ -84,17 +84,21 @@ export const now = {
 		"reading": 2.1,
 		"readingText": "+2.10",
 		"readingLabel": "week centred 15 Jul 2026",
-		"estMean": 1.19,
-		"estMeanText": "+1.19",
-		"estHi": 1.56,
-		"estHiText": "+1.56",
+		"estMean": 1.73,
+		"estMeanText": "+1.73",
+		"estHi": 1.73,
+		"estHiText": "+1.73",
 		"aboveEnvelope": true,
-		"anchoredHere": 1.7,
-		"anchoredHereText": "+1.70"
+		"anchoredHere": null,
+		"anchoredHereText": null
 	},
 	"calendar": {
 		"hardestEnd": "March 2027",
 		"hardestEndAnchored": "May 2027",
-		"swingback": "May–June 2027"
+		"swingback": "June 2027"
+	},
+	"updated": {
+		"date": "2026-08-06",
+		"label": "6 August 2026"
 	}
 };

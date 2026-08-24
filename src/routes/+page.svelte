@@ -18,6 +18,7 @@
 	 * one estimate are labelled as such.
 	 */
 	import Hero from '$lib/components/Hero.svelte';
+	import { reveal } from '$lib/reveal.js';
 	// chapter nine's headline numbers, written by prep/make_real_data.mjs — the
 	// BigStat and the colophon quote the same values the chapter does, and both
 	// follow automatically when NOAA appends a month
@@ -50,6 +51,35 @@
 		name="description"
 		content="Papua New Guinea's worst droughts begin 7,000 kilometres away, in the temperature of the Pacific — months before the rain fails. In 2026 that ocean is warming faster than in any of the four strongest El Niños on record, and PNG's own weather service expects the drought to run into 2027. What El Niño does to PNG, and what to do about it — told through the official Pacific climate record."
 	/>
+	<!-- social cards: the piece is meant to be shared; give the link a face -->
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="The Ocean Knows First" />
+	<meta property="og:url" content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/" />
+	<meta property="og:title" content="The Ocean Knows First — El Niño and Papua New Guinea" />
+	<meta
+		property="og:description"
+		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is the fastest on record — what El Niño does to PNG, and what to do about it."
+	/>
+	<meta
+		property="og:image"
+		content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/share/og.png"
+	/>
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta
+		property="og:image:alt"
+		content="Title card: The Ocean Knows First, above a bar chart of El Niño and La Niña years with 2026 the tallest bar."
+	/>
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="The Ocean Knows First — El Niño and Papua New Guinea" />
+	<meta
+		name="twitter:description"
+		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is the fastest on record — what El Niño does to PNG, and what to do about it."
+	/>
+	<meta
+		name="twitter:image"
+		content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/share/og.png"
+	/>
 </svelte:head>
 
 <main>
@@ -79,6 +109,22 @@
 			drought comes from, what it does to Papua New Guinea — and what can still be done about it.
 		</p>
 		<div class="intro-band" aria-hidden="true"><OniBand /></div>
+	</section>
+
+	<!-- the whole piece in three numbers, for the ten-second reader -->
+	<section class="tldr" aria-label="The story in three numbers">
+		<div class="tldr-item" use:reveal>
+			<p class="tldr-n">8 / 10</p>
+			<p class="tldr-l">of PNG’s driest years since 1979 were El Niño years</p>
+		</div>
+		<div class="tldr-item" use:reveal={{ delay: 110 }}>
+			<p class="tldr-n">Fastest on record</p>
+			<p class="tldr-l">in 2026 the ocean signal outran 1982, 1997, 2015 and 2023</p>
+		</div>
+		<div class="tldr-item" use:reveal={{ delay: 220 }}>
+			<p class="tldr-n">To ~{now.calendar.hardestEnd}</p>
+			<p class="tldr-l">the hard months ahead — and what to do in them is the last chapter</p>
+		</div>
 	</section>
 
 	<SceneMap />
@@ -143,7 +189,7 @@
 		<strong>Natural Earth</strong>. Drawings of mechanisms are labelled as illustrations; chapter
 		nine's one forward-looking panel is labelled an estimate and checked against the official
 		<strong>NOAA CPC / IRI</strong> and <strong>WMO</strong> outlooks. Live coverage current to
-		<strong>6 August 2026</strong>. No cookies, no tracking, fully static.
+		<strong>{now.updated.label}</strong>. No cookies, no tracking, fully static.
 	</p>
 </footer>
 
@@ -165,6 +211,46 @@
 		justify-content: center;
 		padding: 2rem 0 0;
 		color: var(--ink-light-axis);
+	}
+
+	.tldr {
+		max-width: 62rem;
+		margin: 0 auto;
+		padding: 0 1.5rem clamp(2.5rem, 7vh, 4rem);
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1px;
+		background: var(--ink-light-grid);
+		border: 1px solid var(--ink-light-grid);
+		border-radius: 14px;
+		overflow: hidden;
+	}
+
+	.tldr-item {
+		background: var(--paper-raised);
+		padding: 1.2rem 1.3rem 1.1rem;
+	}
+
+	.tldr-n {
+		font-family: Fraunces, Georgia, serif;
+		font-weight: 900;
+		font-size: clamp(1.3rem, 2.8vw, 1.8rem);
+		line-height: 1.1;
+		margin: 0 0 0.35em;
+		max-width: none;
+	}
+
+	.tldr-l {
+		font-size: 0.86rem;
+		line-height: 1.5;
+		color: var(--ink-light-secondary);
+		margin: 0;
+	}
+
+	@media (max-width: 700px) {
+		.tldr {
+			grid-template-columns: 1fr;
+		}
 	}
 
 	.colophon {

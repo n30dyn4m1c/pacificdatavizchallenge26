@@ -673,6 +673,16 @@ function pearson(pairs) {
 					hardestEnd: hard.length ? fullLabel(hard.at(-1).m) : null,
 					hardestEndAnchored: hardA.length ? fullLabel(hardA.at(-1).m) : null,
 					swingback: swingSpan
+				},
+				// the piece's one "as of" line — every surface that states a
+				// freshness date (chapter nine's dateline, the live shelf note,
+				// the colophon) reads it from here, so they cannot disagree
+				updated: {
+					date: OFFICIAL.as_of,
+					label: (() => {
+						const [y, mo, dd] = OFFICIAL.as_of.split('-').map(Number);
+						return `${dd} ${FULL[mo - 1]} ${y}`;
+					})()
 				}
 			}
 		});

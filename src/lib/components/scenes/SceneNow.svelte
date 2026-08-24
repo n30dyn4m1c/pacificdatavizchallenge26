@@ -74,6 +74,7 @@
 	title="This time is <span class='hl hl-warm'>now</span>."
 	standfirst="Every chapter so far reads the past, one year at a time. This one runs month by month, because it is happening now: in the first half of 2026 the far ocean warmed faster than in any event on record, and by August the official outlook expected a <em>very strong</em> El&nbsp;Niño. The one chart here that looks ahead is labelled as an estimate — on the chart itself."
 />
+<p class="ch9-dateline">Ocean data through {now.latest.label} · live coverage to {now.updated.label}</p>
 
 <ScrollScene
 	id="9-now"
@@ -101,15 +102,14 @@
 		</p>
 		<p>
 			The estimate should be read as a floor, not a ceiling. The quoted weekly Niño 3.4 index
-			for the {now.scoring.readingLabel} was about {now.scoring.readingText} °C — above the whole
-			precedent range for that month (highest: {now.scoring.estHiText}), and well above the
-			{now.scoring.estMeanText} the weighted path expected. All {now.events} precedents were
-			cooler than 2026 at {now.anchorMonth}, which is why paths drawn from their own levels run
-			low. Started from where 2026 actually is, the same {now.events} trajectories put
-			{now.scoring.month} at {now.scoring.anchoredHereText} and peak near {now.anchored.text} °C.
-			The official outlook agrees: as of early August 2026 an El Niño Advisory is in effect,
-			continuation into early 2027 is put at roughly 97 %, and a very strong peak (+2.0 °C or
-			more) in late 2026 is the central expectation.
+			for the {now.scoring.readingLabel} was about {now.scoring.readingText} °C — above anything
+			the four precedents reached by that month. All {now.events} precedents were cooler than
+			2026 at {now.anchorMonth}, which is why paths drawn from their own levels run low. Started
+			from where 2026 actually is, the same {now.events} trajectories put {now.scoring.month} at
+			{now.scoring.anchoredHereText} and peak near {now.anchored.text} °C. The official outlook
+			agrees: as of early August 2026 an El Niño Advisory is in effect, continuation into early
+			2027 is put at roughly 97 %, and a very strong peak (+2.0 °C or more) in late 2026 is the
+			central expectation.
 		</p>
 		<p>
 			On a calendar, that means the hard months — failing rain, falling rivers, frost-prone
@@ -184,9 +184,10 @@
 							? ' '
 							: ''}{s.onset} stood at {s.text}{GLOSS[s.onset] ?? ''}.{/each}
 					<strong>2026 stands at {now.latest.text} — above all four.</strong> No event in this
-					{now.record.years}-year record has started this fast. The ringed marker just past the
-					line is the quoted weekly reading for mid&#8209;{now.scoring.month}: about
-					<strong>{now.scoring.readingText}&nbsp;°C</strong>.
+					{now.record.years}-year record has started this fast. The ringed marker by the
+					line’s end is the quoted weekly reading for mid&#8209;{now.scoring.month}: about
+					<strong>{now.scoring.readingText}&nbsp;°C</strong> — a different product from the
+					monthly series, marked, never joined to the line.
 				</p>
 			</div>
 		</div>
@@ -236,3 +237,17 @@
 		</div>
 	{/snippet}
 </ScrollScene>
+
+<style>
+	.ch9-dateline {
+		max-width: 44rem;
+		margin: -0.75rem auto 0;
+		padding: 0 1.5rem;
+		text-align: center;
+		font-size: 0.72rem;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink-light-muted);
+	}
+</style>

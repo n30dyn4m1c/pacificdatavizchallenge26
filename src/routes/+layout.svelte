@@ -77,7 +77,7 @@
 		aria-pressed={ui.readerMode}
 		onclick={() => (ui.readerMode = !ui.readerMode)}
 	>
-		{ui.readerMode ? 'Hide' : 'Read'} scene text
+		{ui.readerMode ? 'Hide' : 'Show'} plain-text version
 	</button>
 {/if}
 

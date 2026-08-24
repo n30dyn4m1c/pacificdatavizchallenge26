@@ -9,10 +9,12 @@
 	 *
 	 * Kept current by hand — last refreshed 6 Aug 2026, when the Highlands
 	 * frost reports and the move of the official outlook to "very strong" were
-	 * added. The date in the shelf note below is the "as of" line and must
-	 * move with the items.
+	 * added. The "as of" line in the shelf note below comes from the pipeline
+	 * (now.updated) — update OFFICIAL.as_of in prep/make_real_data.mjs and
+	 * re-run it, and every freshness surface moves together.
 	 */
 	import { reveal } from '$lib/reveal.js';
+	import { now } from '$lib/generated/now-copy.js';
 
 	const ITEMS = [
 		{
@@ -136,9 +138,10 @@
 	</div>
 
 	<p class="shelf-note">
-		External links; summaries are our own reading of each document as of <strong>6 August
-		2026</strong>. Compare with the 1997 and 2015 shelf above: the same provinces, the same
-		altitudes, the same rivers. The difference this time — the warning came first.
+		External links; summaries are our own reading of each document as of
+		<strong>{now.updated.label}</strong>. Compare with the 1997 and 2015 shelf above: the same
+		provinces, the same altitudes, the same rivers. The difference this time — the warning came
+		first.
 	</p>
 </section>
 

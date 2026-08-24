@@ -40,6 +40,10 @@ jobs:
           BASE_PATH: /${{ github.event.repository.name }}
         run: npm run build
 
+      # never deploy a page that builds but ships broken content
+      - name: Smoke-test the build
+        run: npm run smoke
+
       - name: Publish build/ to the gh-pages branch
         run: |
           cd build

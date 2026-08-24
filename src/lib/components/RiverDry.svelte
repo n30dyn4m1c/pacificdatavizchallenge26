@@ -24,6 +24,29 @@
 	const months = $derived(ui.noTap ? 6 : monthsRaw);
 
 	let figure;
+	// WCAG 2.2.2: an auto-running loop needs a pause control
+	let paused = $state(false);
+	let onScreen = false;
+	let timer = 0;
+	const SEQ = [0, 1, 2, 3, 4, 5, 6, 6, 6]; // fill to six dry months, hold, restart
+	let step = 0;
+
+	const start = () => {
+		if (timer || paused) return;
+		timer = setInterval(() => {
+			step = (step + 1) % SEQ.length;
+			monthsRaw = SEQ[step];
+		}, 900);
+	};
+	const stop = () => {
+		clearInterval(timer);
+		timer = 0;
+	};
+	const toggleLoop = () => {
+		paused = !paused;
+		if (paused) stop();
+		else if (onScreen) start();
+	};
 
 	onMount(() => {
 		if (ui.noTap) return;
@@ -31,23 +54,12 @@
 			monthsRaw = 6; // static full-drought frame
 			return;
 		}
-		// the loop: fill up to six dry months, hold, then start over
-		const SEQ = [0, 1, 2, 3, 4, 5, 6, 6, 6];
-		let step = 0;
-		let timer = 0;
-		const start = () => {
-			if (timer) return;
-			timer = setInterval(() => {
-				step = (step + 1) % SEQ.length;
-				monthsRaw = SEQ[step];
-			}, 900);
-		};
-		const stop = () => {
-			clearInterval(timer);
-			timer = 0;
-		};
 		const io = new IntersectionObserver(
-			(entries) => (entries.some((e) => e.isIntersecting) ? start() : stop()),
+			(entries) => {
+				onScreen = entries.some((e) => e.isIntersecting);
+				if (onScreen) start();
+				else stop();
+			},
 			{ threshold: 0.3 }
 		);
 		if (figure) io.observe(figure);
@@ -172,9 +184,16 @@
 		</div>
 	</div>
 
-	<p class="loop-note" aria-hidden="true">
-		Months without real rain: <strong>{months}</strong> of 6
-	</p>
+	<div class="loop-row">
+		<p class="loop-note" aria-hidden="true">
+			Months without real rain: <strong>{months}</strong> of 6
+		</p>
+		{#if !ui.noTap && !ui.reducedMotion}
+			<button class="loop-toggle" aria-pressed={paused} onclick={toggleLoop}>
+				{paused ? '▶ play' : '⏸ pause'}
+			</button>
+		{/if}
+	</div>
 </section>
 
 <style>
@@ -275,14 +294,43 @@
 		color: var(--warm);
 	}
 
-	.loop-note {
+	.loop-row {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 		margin-top: 1.25rem;
+	}
+
+	.loop-note {
+		margin: 0;
 		font-size: 0.78rem;
 		font-weight: 600;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
 		color: var(--ink-light-muted);
 		font-variant-numeric: tabular-nums;
+	}
+
+	.loop-toggle {
+		min-height: 34px;
+		font: 600 0.72rem/1 'Public Sans', system-ui, sans-serif;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--ink-light-secondary);
+		background: var(--paper-raised);
+		border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+		border-radius: 999px;
+		padding: 0.35rem 0.85rem;
+		cursor: pointer;
+	}
+
+	.loop-toggle:hover {
+		border-color: currentColor;
+	}
+
+	.loop-toggle:focus-visible {
+		outline: 2px solid var(--accent-light);
+		outline-offset: 3px;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

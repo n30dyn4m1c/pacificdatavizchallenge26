@@ -24,6 +24,24 @@
 	const clear = $derived(ui.noTap ? true : clearRaw);
 
 	let figure;
+	// WCAG 2.2.2: an auto-running loop needs a pause control
+	let paused = $state(false);
+	let onScreen = false;
+	let timer = 0;
+
+	const start = () => {
+		if (timer || paused) return;
+		timer = setInterval(() => (clearRaw = !clearRaw), 2800);
+	};
+	const stop = () => {
+		clearInterval(timer);
+		timer = 0;
+	};
+	const toggleLoop = () => {
+		paused = !paused;
+		if (paused) stop();
+		else if (onScreen) start();
+	};
 
 	onMount(() => {
 		if (ui.noTap) return;
@@ -31,17 +49,12 @@
 			clearRaw = true; // static drought-night frame
 			return;
 		}
-		let timer = 0;
-		const start = () => {
-			if (timer) return;
-			timer = setInterval(() => (clearRaw = !clearRaw), 2800);
-		};
-		const stop = () => {
-			clearInterval(timer);
-			timer = 0;
-		};
 		const io = new IntersectionObserver(
-			(entries) => (entries.some((e) => e.isIntersecting) ? start() : stop()),
+			(entries) => {
+				onScreen = entries.some((e) => e.isIntersecting);
+				if (onScreen) start();
+				else stop();
+			},
 			{ threshold: 0.3 }
 		);
 		if (figure) io.observe(figure);
@@ -75,9 +88,16 @@
 		</p>
 	</header>
 
-	<p class="loop-note" aria-hidden="true">
-		{clear ? '✳ a drought night' : '☁ an ordinary night'}
-	</p>
+	<div class="loop-row">
+		<p class="loop-note" aria-hidden="true">
+			{clear ? '✳ a drought night' : '☁ an ordinary night'}
+		</p>
+		{#if !ui.noTap && !ui.reducedMotion}
+			<button class="loop-toggle" aria-pressed={paused} onclick={toggleLoop}>
+				{paused ? '▶ play' : '⏸ pause'}
+			</button>
+		{/if}
+	</div>
 
 	<figure bind:this={figure}>
 		<svg viewBox="0 0 900 430" role="img" aria-label={label}>
@@ -196,13 +216,42 @@
 		color: var(--ink-light-secondary);
 	}
 
-	.loop-note {
+	.loop-row {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 		margin: 1.1rem 0 0.9rem;
+	}
+
+	.loop-note {
+		margin: 0;
 		font-size: 0.78rem;
 		font-weight: 600;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
 		color: var(--ink-light-muted);
+	}
+
+	.loop-toggle {
+		min-height: 34px;
+		font: 600 0.72rem/1 'Public Sans', system-ui, sans-serif;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--ink-light-secondary);
+		background: var(--paper-raised);
+		border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+		border-radius: 999px;
+		padding: 0.35rem 0.85rem;
+		cursor: pointer;
+	}
+
+	.loop-toggle:hover {
+		border-color: currentColor;
+	}
+
+	.loop-toggle:focus-visible {
+		outline: 2px solid var(--accent-light);
+		outline-offset: 3px;
 	}
 
 	figure {
