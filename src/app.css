@@ -183,6 +183,9 @@ a {
 .step-card {
 	pointer-events: auto;
 	background: var(--paper-raised);
+	/* the card is a paper object on EVERY surface: without its own ink it
+	   inherits the dark scene's near-white ink and turns grey on white */
+	color: var(--ink-light-primary);
 	border: 1px solid var(--ink-light-grid);
 	border-radius: 16px;
 	box-shadow:

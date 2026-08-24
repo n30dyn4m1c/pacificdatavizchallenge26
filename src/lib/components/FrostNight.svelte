@@ -22,6 +22,13 @@
 	let clearRaw = $state(false);
 	const clear = $derived(ui.noTap ? true : clearRaw);
 
+	// the pulse on "a drought night" invites the first tap, then retires
+	let touched = $state(false);
+	const pick = (v) => {
+		clearRaw = v;
+		touched = true;
+	};
+
 	const STARS = [
 		[60, 50], [140, 92], [225, 38], [305, 74], [395, 46], [470, 108],
 		[550, 34], [635, 86], [710, 52], [790, 98], [855, 44], [500, 66]
@@ -47,11 +54,20 @@
 	</header>
 
 	{#if !ui.noTap}
+		<p class="switch-hint" use:reveal={{ delay: 280 }}>
+			Tap one to see the same night, two ways:
+		</p>
 		<div class="switch" role="radiogroup" aria-label="Choose the night">
-			<button class="beat-pill" role="radio" aria-checked={!clear} onclick={() => (clearRaw = false)}>
+			<button class="beat-pill" role="radio" aria-checked={!clear} onclick={() => pick(false)}>
 				☁ an ordinary night
 			</button>
-			<button class="beat-pill" role="radio" aria-checked={clear} onclick={() => (clearRaw = true)}>
+			<button
+				class="beat-pill"
+				class:beat-idle-pulse={!touched}
+				role="radio"
+				aria-checked={clear}
+				onclick={() => pick(true)}
+			>
 				✳ a drought night
 			</button>
 		</div>
@@ -174,16 +190,28 @@
 		color: var(--ink-light-secondary);
 	}
 
+	.switch-hint {
+		margin: 1.1rem 0 0.55rem;
+		font-size: 0.74rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink-light-secondary);
+	}
+
 	.switch {
 		display: flex;
 		gap: 0.6rem;
 		flex-wrap: wrap;
-		margin: 1rem 0 1.25rem;
+		margin: 0 0 1.25rem;
 	}
 
+	/* the selected night is unmissable: a solid chip, not a tint */
 	.switch .beat-pill[aria-checked='true'] {
 		border-color: var(--beat-accent);
-		background: color-mix(in srgb, var(--beat-accent) 14%, var(--beat-surface));
+		background: var(--beat-accent);
+		color: var(--paper-raised);
+		font-weight: 700;
 	}
 
 	figure {
