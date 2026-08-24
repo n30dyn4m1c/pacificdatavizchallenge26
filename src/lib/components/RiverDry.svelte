@@ -88,7 +88,7 @@
 	</header>
 
 	<div class="figure-row">
-		<figure bind:this={section}>
+		<figure bind:this={figure}>
 			<svg viewBox="0 0 900 420" role="img" aria-label="Cross-section of a lowland river between two banks. {valuetext}">
 				<rect width="900" height="420" rx="8" fill="color-mix(in srgb, {imp.frost} 5%, {surfaces.paper})" />
 
