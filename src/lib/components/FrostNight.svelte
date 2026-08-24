@@ -76,7 +76,7 @@
 	</header>
 
 	<p class="loop-note" aria-hidden="true">
-		{clear ? '✳ a drought night' : '☁ an ordinary night'} — the loop repeats
+		{clear ? '✳ a drought night' : '☁ an ordinary night'}
 	</p>
 
 	<figure bind:this={figure}>

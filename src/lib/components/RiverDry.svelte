@@ -173,7 +173,7 @@
 	</div>
 
 	<p class="loop-note" aria-hidden="true">
-		Months without real rain: <strong>{months}</strong> of 6 — the loop repeats
+		Months without real rain: <strong>{months}</strong> of 6
 	</p>
 </section>
 
