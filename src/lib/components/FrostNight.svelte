@@ -12,6 +12,7 @@
 	 * follows the state. Under ?notap=1 the buttons disappear and the figure
 	 * freezes on the drought night, so the story still reads.
 	 */
+	import { onMount } from 'svelte';
 	import { ink, impact, surfaces } from '$lib/palette.js';
 	import { ui } from '$lib/state.svelte.js';
 	import { reveal } from '$lib/reveal.js';
@@ -22,12 +23,40 @@
 	let clearRaw = $state(false);
 	const clear = $derived(ui.noTap ? true : clearRaw);
 
-	// the pulse on "a drought night" invites the first tap, then retires
+	// auto-demo: the first time the figure scrolls into view it switches
+	// itself from the ordinary night to the drought night — the comparison
+	// plays once, and any tap on the buttons takes over from then on.
+	// Skipped under prefers-reduced-motion and ?notap=1.
+	let figure;
 	let touched = $state(false);
 	const pick = (v) => {
 		clearRaw = v;
 		touched = true;
 	};
+
+	onMount(() => {
+		if (ui.noTap) return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		let timer = 0;
+		const io = new IntersectionObserver(
+			(entries) => {
+				if (!entries.some((e) => e.isIntersecting)) return;
+				io.disconnect();
+				// hold the ordinary night for a beat so the reader registers it
+				timer = setTimeout(() => {
+					if (touched) return;
+					clearRaw = true;
+					touched = true; // retire the invite pulse once the demo has run
+				}, 1400);
+			},
+			{ threshold: 0.45 }
+		);
+		if (figure) io.observe(figure);
+		return () => {
+			io.disconnect();
+			clearTimeout(timer);
+		};
+	});
 
 	const STARS = [
 		[60, 50], [140, 92], [225, 38], [305, 74], [395, 46], [470, 108],
@@ -55,7 +84,7 @@
 
 	{#if !ui.noTap}
 		<p class="switch-hint" use:reveal={{ delay: 280 }}>
-			Tap one to see the same night, two ways:
+			It switches itself the first time — tap either night to compare:
 		</p>
 		<div class="switch" role="radiogroup" aria-label="Choose the night">
 			<button class="beat-pill" role="radio" aria-checked={!clear} onclick={() => pick(false)}>
@@ -73,7 +102,7 @@
 		</div>
 	{/if}
 
-	<figure>
+	<figure bind:this={figure}>
 		<svg viewBox="0 0 900 430" role="img" aria-label={label}>
 			<!-- night sky -->
 			<rect width="900" height="430" rx="8" fill={surfaces.ocean} />
