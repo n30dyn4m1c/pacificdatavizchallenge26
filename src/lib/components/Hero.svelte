@@ -1,26 +1,37 @@
 <script>
 	/**
-	 * Hero — the typographic opener. Warm paper, one huge headline with the
-	 * piece's two meaning colors baked into it, and a quiet two-depth field of
-	 * falling rain drawn in CSS (deterministic positions, no JS animation
-	 * loop; removed entirely under prefers-reduced-motion).
+	 * Hero — the animated cover. A full-bleed Pacific at night (OceanCover,
+	 * a living canvas whose horizon glow IS the latest Niño 3.4 anomaly)
+	 * fills the viewport Medium-style; the title sits over it in warm
+	 * white Fraunces on a quiet scrim, with the piece's two meaning colors
+	 * wiped into the headline. A two-depth field of rain falls across the
+	 * whole cover (deterministic positions, CSS-only; removed entirely
+	 * under prefers-reduced-motion, where the canvas holds a still frame).
 	 *
 	 * The opening choreography is CSS-only: kicker → headline → highlight
 	 * wipes → standfirst → byline → ONI band → scroll cue, each settling up
 	 * into place once. The scroll cue is a single drop falling down a
 	 * hairline — the story's first raindrop.
 	 *
-	 * And the rain is the first character: it falls while the hero fills the
-	 * screen, thins as the reader scrolls, and has stopped entirely by the
-	 * time the intro's first line lands. The drought, foreshadowed in the
-	 * first ten seconds of scrolling — before a single chart or claim.
+	 * And the rain is the first character: it falls while the cover fills
+	 * the screen, thins as the reader scrolls (the canvas dimming with it),
+	 * and has stopped entirely by the time the intro's first line lands.
+	 * The drought, foreshadowed in the first ten seconds of scrolling —
+	 * before a single chart or claim.
+	 *
+	 * The small caption bottom-left is the cover's provenance: the glow is
+	 * not decoration, it is this month's number.
 	 */
 	import { onMount } from 'svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
+	import OceanCover from '$lib/components/OceanCover.svelte';
+	import { impact } from '$lib/palette.js';
+	import { now } from '$lib/generated/now-copy.js';
 
 	// deterministic drop fields: pseudo-random from index, stable across builds.
 	// FAR drops are thin, slow and faint (depth); NEAR drops are wider, faster
-	// and slightly stronger, so the field reads as rain, not specks.
+	// and slightly stronger, so the field reads as rain, not specks. Opacities
+	// are tuned for the dark cover, in the dark-surface frost arm.
 	const mkDrops = (n, seed, base) =>
 		Array.from({ length: n }, (_, i) => {
 			const h = ((i + seed) * 2654435761) % 1000;
@@ -33,11 +44,12 @@
 			};
 		});
 
-	const FAR = mkDrops(30, 0, { dur: 3.4, op: 0.09, opJitter: 9, len: 12, lenJitter: 14 });
-	const NEAR = mkDrops(14, 7, { dur: 2.1, op: 0.18, opJitter: 12, len: 24, lenJitter: 20 });
+	const FAR = mkDrops(30, 0, { dur: 3.4, op: 0.13, opJitter: 9, len: 12, lenJitter: 14 });
+	const NEAR = mkDrops(14, 7, { dur: 2.1, op: 0.24, opJitter: 12, len: 24, lenJitter: 20 });
 
 	// scroll-linked die-off: 1 over the hero, 0 just past it. rAF-throttled;
-	// when fully dry the field stops animating (and paints nothing).
+	// when fully dry the field stops animating (and paints nothing) — and
+	// OceanCover's loop stands down with it.
 	let wet = $state(1);
 
 	onMount(() => {
@@ -59,7 +71,15 @@
 	});
 </script>
 
-<section class="hero" aria-label="The Ocean Knows First — title">
+<section
+	class="hero"
+	aria-label="The Ocean Knows First — title"
+	style:--drop-color={impact.dark.frost}
+	style:--hl-cool={impact.dark.frost}
+	style:--hl-warm={impact.dark.drought}
+>
+	<OceanCover {wet} />
+	<div class="scrim no-print" aria-hidden="true"></div>
 	<div
 		class="rain no-print"
 		class:dry={wet <= 0}
@@ -109,6 +129,11 @@
 			<span class="cue-line"><span class="cue-drop"></span></span>
 		</div>
 	</div>
+
+	<!-- the cover is data: the horizon glow is this month's anomaly -->
+	<p class="cover-chip">
+		<span class="chip-dot" aria-hidden="true"></span>Niño 3.4 anomaly {now.latest.text} °C · {now.latest.label}
+	</p>
 </section>
 
 <style>
@@ -119,6 +144,28 @@
 		place-items: center;
 		overflow: hidden;
 		padding: 3rem 1.5rem;
+		background: var(--ocean);
+		color: var(--ink-dark-primary);
+	}
+
+	/* legibility without a billboard: darkest behind the type and at the
+	   edges, transparent where the glow does its work */
+	.scrim {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background:
+			radial-gradient(
+				62% 52% at 50% 46%,
+				color-mix(in srgb, var(--ocean) 62%, transparent),
+				transparent 72%
+			),
+			linear-gradient(
+				to bottom,
+				color-mix(in srgb, var(--ocean) 45%, transparent),
+				transparent 24% 76%,
+				color-mix(in srgb, var(--ocean) 78%, transparent)
+			);
 	}
 
 	.rain {
@@ -131,7 +178,7 @@
 		position: absolute;
 		top: -48px;
 		border-radius: 2px;
-		background: var(--cool);
+		background: var(--drop-color);
 		animation-name: fall;
 		animation-timing-function: linear;
 		animation-iteration-count: infinite;
@@ -176,6 +223,8 @@
 
 	.kicker {
 		animation-delay: 0.05s;
+		color: var(--ink-dark-secondary);
+		opacity: 0.9;
 	}
 
 	.hero-inner > h1 {
@@ -187,7 +236,7 @@
 
 	.standfirst {
 		font-size: clamp(1.05rem, 2.4vw, 1.3rem);
-		color: var(--ink-light-secondary);
+		color: var(--ink-dark-secondary);
 		max-width: 34em;
 		text-wrap: pretty;
 		animation-delay: 0.48s;
@@ -195,7 +244,7 @@
 
 	.byline {
 		font-size: 0.8rem;
-		color: var(--ink-light-muted);
+		color: var(--ink-dark-muted);
 		margin-top: 0.25rem;
 		margin-bottom: 0;
 		animation-delay: 0.64s;
@@ -205,7 +254,7 @@
 		font-size: 0.72rem;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		color: var(--ink-light-muted);
+		color: var(--ink-dark-muted);
 		margin: 0.9rem 0 0;
 		animation-delay: 0.76s;
 	}
@@ -217,7 +266,8 @@
 		}
 	}
 
-	/* the headline highlights wipe in after the type has landed */
+	/* the headline highlights wipe in after the type has landed; on the
+	   dark cover they carry more pigment than on paper */
 	.hero .hl {
 		background-color: transparent;
 		background-repeat: no-repeat;
@@ -227,16 +277,16 @@
 
 	.hero .hl-cool {
 		background-image: linear-gradient(
-			color-mix(in srgb, var(--cool) 18%, transparent),
-			color-mix(in srgb, var(--cool) 18%, transparent)
+			color-mix(in srgb, var(--hl-cool) 30%, transparent),
+			color-mix(in srgb, var(--hl-cool) 30%, transparent)
 		);
 		animation-delay: 0.85s;
 	}
 
 	.hero .hl-warm {
 		background-image: linear-gradient(
-			color-mix(in srgb, var(--warm) 20%, transparent),
-			color-mix(in srgb, var(--warm) 20%, transparent)
+			color-mix(in srgb, var(--hl-warm) 32%, transparent),
+			color-mix(in srgb, var(--hl-warm) 32%, transparent)
 		);
 		animation-delay: 1.1s;
 	}
@@ -250,7 +300,7 @@
 	/* the signature data-mark, faint, under the byline */
 	.hero-band {
 		margin-top: 1.9rem;
-		color: var(--ink-light-axis);
+		color: var(--ink-dark-muted);
 		animation-delay: 0.85s;
 	}
 
@@ -283,7 +333,7 @@
 		width: 4px;
 		height: 7px;
 		border-radius: 2px;
-		background: var(--cool);
+		background: var(--drop-color);
 		animation: cue-fall 1.9s cubic-bezier(0.45, 0, 0.6, 1) infinite;
 	}
 
@@ -304,12 +354,45 @@
 		}
 	}
 
+	/* the cover's provenance: the glow is this month's number, not decor */
+	.cover-chip {
+		position: absolute;
+		left: 1.25rem;
+		bottom: 1.1rem;
+		display: flex;
+		align-items: center;
+		gap: 0.45em;
+		font-size: 0.72rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink-dark-muted);
+		margin: 0;
+		animation: hero-up 0.9s cubic-bezier(0.16, 0.6, 0.24, 1) 1.4s both;
+	}
+
+	.chip-dot {
+		width: 0.5em;
+		height: 0.5em;
+		border-radius: 50%;
+		background: var(--hl-warm);
+		flex: none;
+	}
+
+	@media (max-width: 40rem) {
+		.cover-chip {
+			left: 50%;
+			transform: translateX(-50%);
+			white-space: nowrap;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.rain {
 			display: none;
 		}
 
 		.hero-inner > *,
+		.cover-chip,
 		.hero .hl {
 			animation: none;
 		}
@@ -320,6 +403,35 @@
 
 		.cue-drop {
 			display: none;
+		}
+	}
+
+	/* the cover is dark ink on paper's inverse: print reverts to the
+	   editorial surface (canvas, scrim and rain are .no-print) */
+	@media print {
+		.hero {
+			background: #fff;
+			color: #1d1a14;
+			min-height: auto;
+		}
+
+		.hero-inner > h1 {
+			color: #1d1a14;
+		}
+
+		.kicker,
+		.standfirst {
+			color: #55503f;
+		}
+
+		.byline,
+		.meta,
+		.cover-chip {
+			color: #8a8578;
+		}
+
+		.hero-band {
+			color: #c9c0aa;
 		}
 	}
 </style>
