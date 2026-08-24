@@ -42,7 +42,7 @@
 			title: 'As Papua New Guinea faces worsening drought, a past disaster could save lives',
 			url: 'https://theconversation.com/as-papua-new-guinea-faces-worsening-drought-a-past-disaster-could-save-lives-46390',
 			summary:
-				'Researchers argue, mid-crisis, exactly what this piece argues: 1997 already taught the lessons — use them.',
+				'Researchers argue, mid-crisis, that 1997 already taught the lessons — and that using them would save lives.',
 			points: [
 				'The 1997–98 event was studied village by village; the response playbook existed.',
 				'Knowing which communities are exposed (very high altitude, atolls, the dry fringes) lets aid move early.',
@@ -91,12 +91,11 @@
 
 <section class="newsshelf" aria-label="Real coverage of Papua New Guinea's El Niño emergencies">
 	<header class="chapter-head">
-		<p class="chapter-no" use:reveal>Interlude · the paper trail</p>
+		<p class="chapter-no" use:reveal>Interlude · the evidence</p>
 		<h2 use:reveal={{ delay: 90 }}>None of this is hypothetical.</h2>
 		<p class="standfirst" use:reveal={{ delay: 200 }}>
-			Every mechanism in the chapters above is on the public record, twice over — reported as it
-			happened in 1997–98 and again in 2015–16. Six documents, summarised; follow any of them to
-			the source.
+			Everything in the chapters above is on the public record, twice over — reported as it
+			happened in 1997–98 and again in 2015–16. Six documents; follow any of them to the source.
 		</p>
 	</header>
 
@@ -116,8 +115,8 @@
 	</div>
 
 	<p class="shelf-note">
-		External links; summaries are this piece's own reading of each document. The pattern to take
-		away: the same provinces, the same altitudes, the same rivers — eighteen years apart.
+		External links; summaries are our own reading of each document. The pattern to take away:
+		the same provinces, the same altitudes, the same rivers — eighteen years apart.
 	</p>
 </section>
 

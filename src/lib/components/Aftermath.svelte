@@ -26,8 +26,8 @@
 		<p class="chapter-no" use:reveal>Interlude · the aftermath</p>
 		<h2 use:reveal={{ delay: 90 }}>The drought ends in water.</h2>
 		<p class="standfirst" use:reveal={{ delay: 200 }}>
-			El&nbsp;Niño's exit is as dangerous as its stay. The see&#8209;saw tips back, the rain
-			returns months of debt in weeks — and it lands on slopes the drought has stripped bare.
+			The end of an El&nbsp;Niño is its own disaster. The rain returns all at once, onto slopes
+			the drought has stripped bare — and brings floods and landslides.
 		</p>
 	</header>
 
@@ -78,19 +78,18 @@
 
 	<div class="aftermath-prose">
 		<p>
-			It is the pattern's cruellest joke. A drought kills the ground cover, bakes the soil hard,
-			and sends people to plant in the riverbeds — the only damp land left. Then the see-saw tips.
-			When the 2015–16 El Niño broke, the Wahgi valley in Jiwaka Province went almost straight
-			from drought into
+			A drought kills the ground cover and bakes the soil hard. Hungry families move their
+			gardens down into the riverbeds — the only damp land left. Then the ocean swings back. When
+			the 2015–16 El Niño broke, the Wahgi valley in Jiwaka Province went almost straight from
+			drought into
 			<a href="https://reliefweb.int/report/papua-new-guinea/floods-and-landslides-follow-drought-png-highlands"
-				rel="external noopener">floods and landslides that affected around five thousand households</a>
+				rel="external noopener">floods and landslides that hit around five thousand households</a>
 			— the same communities that had just spent a year hungry.
 		</p>
 		<p>
-			So the full price of an El Niño year is paid twice: once in the drought, and once when it
-			ends. A community that knows this plants the flood-safe ground first, keeps the drains and
-			slopes maintained through the dry, and treats the first big rain as a warning, not a
-			celebration.
+			So an El Niño year is paid for twice: once in the drought, once when it ends. The
+			prepared response is known too — plant the flood-safe ground first, keep drains and slopes
+			clear through the dry, and treat the first big rain as a warning, not a celebration.
 		</p>
 	</div>
 </section>

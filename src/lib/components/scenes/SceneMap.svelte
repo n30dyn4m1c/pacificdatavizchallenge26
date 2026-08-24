@@ -24,10 +24,10 @@
 	// the reader is looking at right now, not describe the file it came from
 	const figTitle = [
 		'Two places, seven thousand kilometres apart',
-		'A normal year: the warm pool on Papua New Guinea’s doorstep',
-		'El Niño: the pool — and the rain — slide east',
-		'La Niña: the warmth piles back west',
-		'The empty rectangle is an instrument'
+		'A normal year: warm water — and rain — on PNG’s doorstep',
+		'El Niño: the warm water and the rain move east',
+		'La Niña: the warm water piles back west',
+		'An empty rectangle that reads the future'
 	];
 
 	const stateLabel = [
@@ -42,8 +42,8 @@
 <ChapterHead
 	id="ch-1"
 	no="Chapter one · the map"
-	title="Two patches of one ocean."
-	standfirst="Everything in this story happens between two places on this map: Papua New Guinea, and a rectangle of open water on the equator, seven thousand kilometres east. What moves between them is the rain."
+	title="The rain’s switch sits an ocean away."
+	standfirst="Two places on this map run Papua New Guinea’s weather: the country itself, and a rectangle of open water on the equator, seven thousand kilometres east. What moves between them is the rain."
 />
 
 <ScrollScene
@@ -100,7 +100,7 @@
 				<p>
 					West, in dark ink: <strong>Papua New Guinea</strong>. East, past the date line: a
 					dashed rectangle of open ocean called <span class="hl hl-ink">Niño&nbsp;3.4</span>.
-					No land, no towns — just water and weather. Hold both in view.
+					No land, no towns — just water. But that water decides PNG’s weather.
 				</p>
 			</div>
 		</div>
@@ -109,9 +109,9 @@
 				<span class="card-step" aria-hidden="true">2/5</span>
 				<span class="card-kicker">Most years</span>
 				<p>
-					The sea off Papua New Guinea is the warmest open ocean on Earth —
-					<span class="hl hl-warm">the warm pool</span>. Warm water lifts the air above it, and
-					rising air makes rain. The country's gardens drink from that pool.
+					The sea next to PNG is the warmest open ocean on Earth. Warm water lifts the air
+					above it, and rising air makes rain. That is where the country’s
+					<span class="hl hl-cool">rain</span> comes from.
 				</p>
 			</div>
 		</div>
@@ -120,9 +120,10 @@
 				<span class="card-step" aria-hidden="true">3/5</span>
 				<span class="card-kicker">El Niño</span>
 				<p>
-					Every few years the pool <strong>slides east</strong> along the equator — and the rain
-					machine goes with it. Watch it settle into the rectangle. Over Papua New Guinea, the
-					sky goes quiet: this is where the <span class="hl hl-warm">droughts</span> come from.
+					Every few years the warm water <strong>slides east</strong> along the equator — and
+					the rain goes with it, into the rectangle. Over Papua New Guinea the sky dries out.
+					That is an El Niño: the start of PNG’s
+					<span class="hl hl-warm">droughts</span>.
 				</p>
 			</div>
 		</div>
@@ -131,9 +132,9 @@
 				<span class="card-step" aria-hidden="true">4/5</span>
 				<span class="card-kicker">La Niña</span>
 				<p>
-					Then the swing back: warmth piles up in the far west, over the country's doorstep, and
-					the rain <span class="hl hl-cool">comes home hard</span>. Drought and deluge are the two
-					ends of one motion.
+					Then the ocean swings back. Warm water piles up against PNG again, and the rain
+					returns — often <span class="hl hl-cool">too much of it</span>. Drought and flood are
+					the two ends of the same swing.
 				</p>
 			</div>
 		</div>
@@ -143,8 +144,8 @@
 				<span class="card-kicker">Why the rectangle matters</span>
 				<p>
 					The water in Niño&nbsp;3.4 warms <span class="hl hl-ink">months before</span> the rain
-					fails over Papua New Guinea. That empty rectangle is an early-warning instrument the
-					size of a sea — and reading it is the next chapter.
+					fails over Papua New Guinea. So PNG’s droughts are never a surprise — they are
+					announced, far out at sea, with time to prepare.
 				</p>
 			</div>
 		</div>

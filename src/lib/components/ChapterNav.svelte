@@ -31,7 +31,7 @@
 		{ id: 'ch-7', n: 'Seven', name: 'The ledger' },
 		{ id: 'ch-8', n: 'Eight', name: 'The watchers' },
 		{ id: 'ch-9', n: 'Nine', name: 'Now' },
-		{ id: 'ch-ask', n: '', name: 'The ask' },
+		{ id: 'ch-ask', n: '', name: 'What to do' },
 		{ id: 'ch-record', n: '', name: 'The whole record' }
 	];
 

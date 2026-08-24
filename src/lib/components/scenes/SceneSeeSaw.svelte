@@ -17,10 +17,10 @@
 	const GREATS = [1982, 1997, 2015, 2023];
 
 	const figTitle = [
-		'One number a year, for half a century',
+		'One number a year, for nearly half a century',
 		'Up is El Niño. Down is La Niña.',
-		'Four times, it tipped hard',
-		'And the current season is still blank'
+		'Four times, it tipped hard: 1982, 1997, 2015, 2023',
+		'The newest season is still being written'
 	];
 	const phaseName = { elnino: 'El Niño', lanina: 'La Niña', neutral: 'neutral', pending: '—' };
 </script>
@@ -29,7 +29,7 @@
 	id="ch-2"
 	no="Chapter two · the far ocean"
 	title="The Pacific runs on a see&#8209;saw."
-	standfirst="The dashed rectangle from chapter one is an instrument, and it has been read for decades. Its temperature, condensed to one number per season, is the Oceanic Niño Index — and the index has a see&#8209;saw in it."
+	standfirst="The temperature of the Niño&nbsp;3.4 rectangle, condensed to one number a year, is the Oceanic Niño Index. It is the simplest summary of PNG’s drought risk ever devised — here are nearly fifty years of it."
 />
 
 <ScrollScene
@@ -87,21 +87,20 @@
 				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">The measurement</span>
 				<p>
-					Scientists log the temperature of the <span class="hl hl-cool">Niño&nbsp;3.4 region</span>
-					season after season, year after year. Condensed to one bar per year, the record
-					looks like this.
+					One bar per year: how much warmer or cooler the
+					<span class="hl hl-cool">Niño&nbsp;3.4 region</span> was than normal, since 1979.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">2/4</span>
-				<span class="card-kicker">What the tips mean</span>
+				<span class="card-kicker">How to read it</span>
 				<p>
-					Most years it sits near zero. Every few years it tips — hard. Up is
-					<span class="hl hl-warm">El Niño</span>: the Pacific’s warm water drains east,
-					<em>away</em> from Papua New Guinea. Down is <span class="hl hl-cool">La Niña</span>:
-					the warmth piles back west, overhead.
+					Most years sit near zero. When the index tips up —
+					<span class="hl hl-warm">El Niño</span> — the Pacific’s warm water has moved east,
+					away from Papua New Guinea, and PNG’s rain is at risk. Down is
+					<span class="hl hl-cool">La Niña</span>: the warmth, and the rain, pile back west.
 				</p>
 			</div>
 		</div>
@@ -110,8 +109,8 @@
 				<span class="card-step" aria-hidden="true">3/4</span>
 				<span class="card-kicker">The big ones</span>
 				<p>
-					<strong>1982. 1997. 2015. 2023.</strong> The great El Niños of the modern record.
-					The next chapter holds these same years against Papua New Guinea’s rain.
+					<strong>1982. 1997. 2015. 2023.</strong> The four strongest El Niños of the modern
+					record. Remember these years — the next chapter puts PNG’s rain underneath them.
 				</p>
 			</div>
 		</div>
@@ -120,8 +119,8 @@
 				<span class="card-step" aria-hidden="true">4/4</span>
 				<span class="card-kicker">The last column</span>
 				<p>
-					And the season forming right now? Still a <strong>?</strong> — the ocean writes this
-					chart one season at a time. Hold that thought for the end.
+					The newest season is still a <strong>?</strong> on this yearly chart. Answering it
+					— month by month — is what chapter nine is for.
 				</p>
 			</div>
 		</div>

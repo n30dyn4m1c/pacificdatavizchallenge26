@@ -149,8 +149,8 @@
 
 	<p class="post">
 		That is why 1997 and 2015 hurt twice at altitude: the drought browned the gardens by day, and
-		its cloudless nights froze what was left — killing the planting material for the next crop with
-		it. The frost didn’t follow the drought; it <em>was</em> the drought, seen at 2 a.m.
+		its cloudless nights froze what was left — killing the planting material for the next crop
+		too. In the Highlands, an El Niño warning is also a frost warning.
 	</p>
 </section>
 

@@ -16,9 +16,9 @@
 
 	const figTitle = [
 		'In 1951 the country reported one weather station',
-		'Today it reports six',
-		'A remote drought-maker is a readable one',
-		'The see-saw’s last column is still open'
+		'Today it reports six — and their records fill this piece',
+		'A drought made far away can be seen coming',
+		'In May 2026, the watchers called it'
 	];
 </script>
 
@@ -26,7 +26,7 @@
 	id="ch-8"
 	no="Chapter eight · the watchers"
 	title="A signal is only a warning if someone reads it."
-	standfirst="The last chart isn’t a temperature. It’s attention — measured in monitoring stations, one number a year, since 1951."
+	standfirst="The last chart of the record isn’t a temperature. It’s attention — PNG’s meteorological monitoring network, one number a year, since 1951."
 />
 
 <ScrollScene
@@ -89,8 +89,9 @@
 				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">The last chart</span>
 				<p>
-					It isn’t a temperature — it’s <em>who’s watching</em>. In <strong>1951</strong>, Papua
-					New Guinea reported exactly <strong>one</strong> meteorological monitoring station.
+					This one isn’t a temperature — it’s <em>who is watching</em>. In
+					<strong>1951</strong>, Papua New Guinea reported exactly <strong>one</strong>
+					meteorological monitoring station.
 				</p>
 			</div>
 		</div>
@@ -99,8 +100,8 @@
 				<span class="card-step" aria-hidden="true">2/4</span>
 				<span class="card-kicker">Today</span>
 				<p>
-					Today it reports <strong>six</strong> — and the record those stations and their
-					partners keep is every chart you just read.
+					Today it reports <strong>six</strong>. Every chart in this piece exists because
+					someone kept measuring.
 				</p>
 			</div>
 		</div>
@@ -109,19 +110,21 @@
 				<span class="card-step" aria-hidden="true">3/4</span>
 				<span class="card-kicker">Why it matters</span>
 				<p>
-					Because the drought-maker is a <span class="hl hl-cool">far ocean</span>, it tips its
-					hand <span class="hl hl-ink">months</span> before the rain fails at home. A signal read
-					early is a harvest saved, a tank filled, a warning sent up a valley in time.
+					PNG’s droughts are made by a <span class="hl hl-cool">far ocean</span> that tips
+					<span class="hl hl-ink">months</span> before the rain fails. So watching is not
+					bookkeeping — it is early warning: time to fill tanks, plant differently, move
+					supplies.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">4/4</span>
-				<span class="card-kicker">The open column</span>
+				<span class="card-kicker">The payoff</span>
 				<p>
-					Remember the see-saw’s last column — still a <strong>?</strong>. When it tips, the
-					ocean will say so first. This time, someone is listening.
+					On <strong>1 May 2026</strong>, this network — with the ocean instruments behind it —
+					issued the warning: El Niño, months before the expected peak. The next chapter is
+					that warning, month by month.
 				</p>
 			</div>
 		</div>

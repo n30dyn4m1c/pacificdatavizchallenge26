@@ -75,9 +75,8 @@
 				</div>
 
 				<p class="closing">
-					The ocean knows first. The record that proves it is public, annual and unambiguous —
-					and the years it names as the driest are the years people here already remember by
-					name.
+					The ocean knows first. The record that proves it is public — and the years it
+					names as the driest are the years people already remember by name.
 				</p>
 				<p class="source-line">
 					Source: {data.source.name} ({data.source.dataflow}), {data.source.hub} — the official

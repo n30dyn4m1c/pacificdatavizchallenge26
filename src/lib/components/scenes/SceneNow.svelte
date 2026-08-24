@@ -28,11 +28,11 @@
 	const N = 5;
 
 	const figTitle = [
-		'Three years of the see-saw, month by month',
-		`${now.latest.label} is above all four great onsets`,
-		'The precedents are a floor, not a ceiling',
-		'Marking our own homework',
-		'What that means on a calendar'
+		'The last three years, month by month',
+		`${now.latest.label}: ahead of all four great El Niños`,
+		'What the record says happens next — an estimate',
+		'That estimate has already been beaten',
+		'The months to prepare for'
 	];
 
 	// per-card draw-in: mostly drawn when a card centers, completing just past it
@@ -72,7 +72,7 @@
 	id="ch-9"
 	no="Chapter nine · now"
 	title="This time is <span class='hl hl-warm'>now</span>."
-	standfirst="Every chapter so far reads the record backwards, one number a year. This one runs at one number a <em>month</em>, because the reader is standing inside the event: through the first half of 2026 the far ocean warmed faster than in any onset year on this record, and by August the official outlook had moved from <em>strong</em> to <em>very strong</em>. The chart below is the only place this piece looks forward — and it says so, on the chart."
+	standfirst="Every chapter so far reads the past, one year at a time. This one runs month by month, because it is happening now: in the first half of 2026 the far ocean warmed faster than in any event on record, and by August the official outlook expected a <em>very strong</em> El&nbsp;Niño. The one chart here that looks ahead is labelled as an estimate — on the chart itself."
 />
 
 <ScrollScene
@@ -84,44 +84,40 @@
 	{#snippet prose({ data })}
 		<h3>Where we are, in prose</h3>
 		<p>
-			At monthly resolution, the last three years show the whole see-saw: the 2023–24 El Niño
-			peaking near +2 °C, a weak La Niña holding through 2024 and 2025, and then a fast reversal in
-			early 2026 — from {now.flip[0].text} °C in {now.flip[0].month} to {now.latest.text} °C by
-			{now.latest.month}. Laid over the {now.events} great El Niños of the record aligned by
-			calendar month, {now.latest.label} is warmer than {#each now.standings as s, i (s.onset)}{i >
-					0
+			Month by month, the last three years hold the whole see-saw: the 2023–24 El Niño peaking
+			near +2 °C, a weak La Niña through 2024 and 2025, then a fast reversal in early 2026 — from
+			{now.flip[0].text} °C in {now.flip[0].month} to {now.latest.text} °C by {now.latest.month}.
+			Laid over the {now.events} strongest El Niños of the record, 2026 at {now.anchorMonth} is
+			warmer than {#each now.standings as s, i (s.onset)}{i > 0
 					? i === now.standings.length - 1
 						? ' and '
 						: ', '
-					: ''}{s.onset} ({s.text}){/each} stood at the same point in their onset years: this event
-			is developing faster than any of its precedents. The months ahead are not yet measured, so the
-			piece estimates them from precedent and labels the estimate: weighting the four events by how
-			closely their January–{now.anchorMonth} matched 2026's, the combined path peaks around
-			{now.estimate.text} °C in {now.estimate.month} 2026, inside an envelope of
-			{now.estimate.loText} to {now.estimate.hiText}.
+					: ''}{s.onset} ({s.text}){/each} were at the same point: this event is developing
+			faster than any of its precedents. The months ahead are not yet measured, so the chart
+			continues the 2026 line along the four precedents, weighting each by how closely its
+			January–{now.anchorMonth} matched 2026's. That gives a peak around {now.estimate.text} °C
+			in {now.estimate.month} 2026, inside a range of {now.estimate.loText} to
+			{now.estimate.hiText} — an estimate, labelled as such.
 		</p>
 		<p>
-			Two things since have said that envelope is a floor rather than a forecast. The quoted weekly
-			Niño 3.4 index for the {now.scoring.readingLabel} was about {now.scoring.readingText} °C —
-			above the whole precedent range for that month ({now.scoring.estHiText} at its highest), and
-			well above the {now.scoring.estMeanText} the weighted path expected. And the official outlook
-			has moved with it: as of early August 2026 an El Niño Advisory is in effect, continuation into
-			early 2027 is put at roughly 97 %, a very strong peak (+2.0 °C or more) in late 2026 is now
-			the central expectation rather than a tail case, and the WMO's August update expects further
-			intensification through August–October. The reason the estimate reads low is structural, and
-			the chart shows it: all {now.events} analogues were cooler than 2026 at
-			{now.anchorMonth}, so their absolute levels carry that deficit forward. Started from where
-			2026 actually sits rather than from the precedents' own levels, the same
-			{now.events} trajectories put {now.scoring.month} at {now.scoring.anchoredHereText} and peak
-			near {now.anchored.text} °C.
+			The estimate should be read as a floor, not a ceiling. The quoted weekly Niño 3.4 index
+			for the {now.scoring.readingLabel} was about {now.scoring.readingText} °C — above the whole
+			precedent range for that month (highest: {now.scoring.estHiText}), and well above the
+			{now.scoring.estMeanText} the weighted path expected. All {now.events} precedents were
+			cooler than 2026 at {now.anchorMonth}, which is why paths drawn from their own levels run
+			low. Started from where 2026 actually is, the same {now.events} trajectories put
+			{now.scoring.month} at {now.scoring.anchoredHereText} and peak near {now.anchored.text} °C.
+			The official outlook agrees: as of early August 2026 an El Niño Advisory is in effect,
+			continuation into early 2027 is put at roughly 97 %, and a very strong peak (+2.0 °C or
+			more) in late 2026 is the central expectation.
 		</p>
 		<p>
-			The calendar the estimate implies does not move earlier for any of that: the hard months —
-			failing rain, falling rivers, frost-prone highland nights — run from now to about
-			{now.calendar.hardestEnd}, which is also where Papua New Guinea's National Weather Service now
-			puts the end of the drought, and the swing back toward heavy rain on drought-bared slopes
-			arrives around {now.calendar.swingback}. Read off the anchored path instead, the hard months
-			run later still, to about {now.calendar.hardestEndAnchored}. The calendar is a floor too.
+			On a calendar, that means the hard months — failing rain, falling rivers, frost-prone
+			highland nights — run from now to about {now.calendar.hardestEnd}, which is also where
+			Papua New Guinea's National Weather Service puts the end of the drought; on the faster
+			reading they run to about {now.calendar.hardestEndAnchored}. The swing back to heavy rain
+			arrives around {now.calendar.swingback}, and the first big rain on drought-bared slopes
+			brings floods and landslides of its own.
 		</p>
 		{#if data}
 			<DataTable
@@ -167,83 +163,74 @@
 		<div class="card-slot first" class:active={idx === 0}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">1/{N}</span>
-				<span class="card-kicker">The last three years, in months</span>
+				<span class="card-kicker">The flip</span>
 				<p>
-					Zoom the see-saw in to monthly resolution and there is the whole story of the moment:
-					the <span class="hl hl-warm">2023–24 El Niño</span>, a weak
-					<span class="hl hl-cool">La Niña</span> holding through two years — and then, in early
-					2026, the flip. {now.flip[0].month}: {now.flip[0].text}&nbsp;°C.
+					Month by month, the last three years: the <span class="hl hl-warm">2023–24 El
+					Niño</span>, a weak <span class="hl hl-cool">La Niña</span> through 2024–25 — then, in
+					early 2026, a fast flip. {now.flip[0].month}: {now.flip[0].text}&nbsp;°C.
 					{now.flip[1].month}: {now.flip[1].text}. {now.flip[2].month}:
-					<strong>{now.flip[2].text} and climbing</strong>. The Papua New Guinea National Weather
-					Service declared El Niño after its first advisory of 1 May 2026.
+					<strong>{now.flip[2].text} and climbing</strong>. PNG’s National Weather Service
+					issued its first El Niño advisory on 1 May 2026.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">2/{N}</span>
-				<span class="card-kicker">Against the four great onsets</span>
+				<span class="card-kicker">Faster than all four greats</span>
 				<p>
-					Lay 2026 over the {now.events} great El Niños, month for month. At {now.anchorMonth} of
-					the onset year, {#each now.standings as s, i (s.onset)}{i > 0 ? ' ' : ''}{s.onset} stood
-						at {s.text}{GLOSS[s.onset] ?? ''}.{/each}
-					<strong>2026 stands at {now.latest.text}, above all four.</strong> No El Niño in this
-					{now.record.years}-year monthly record has come on this fast — and it did not stop there:
-					the quoted weekly index for mid&#8209;{now.scoring.month}, ringed just beyond the end of
-					the line, reads about <strong>{now.scoring.readingText}&nbsp;°C</strong>.
+					Lay 2026 over the {now.events} strongest El Niños, month for month. At
+					{now.anchorMonth} of their first year, {#each now.standings as s, i (s.onset)}{i > 0
+							? ' '
+							: ''}{s.onset} stood at {s.text}{GLOSS[s.onset] ?? ''}.{/each}
+					<strong>2026 stands at {now.latest.text} — above all four.</strong> No event in this
+					{now.record.years}-year record has started this fast. The ringed marker just past the
+					line is the quoted weekly reading for mid&#8209;{now.scoring.month}: about
+					<strong>{now.scoring.readingText}&nbsp;°C</strong>.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">3/{N}</span>
-				<span class="card-kicker">The months nobody has measured yet</span>
+				<span class="card-kicker">What happens next</span>
 				<p>
-					The rest of the red line does not exist — so this chart continues it the only honest
-					way: along its {now.events} precedents, weighted by how closely each matched 2026 so far
-					({now.estimate.bestOnset} matches best). That path peaks near
-					<strong>{now.estimate.text}&nbsp;°C in {now.estimate.month}</strong>, inside the
-					precedents’ {now.estimate.loText}-to-{now.estimate.hiText} range —
-					<em>an estimate, drawn dashed</em>. The official outlook has moved past it: by early
-					August an El Niño Advisory is in force, continuation into early 2027 is put around 97 %,
-					and a <span class="hl hl-warm">very strong</span> peak — +2.0 °C or more — is the central
-					expectation, not the tail.
+					Nobody has measured the rest of 2026 — so the chart continues the red line along the
+					only guide that exists: the {now.events} precedents. That path peaks near
+					<strong>{now.estimate.text}&nbsp;°C around {now.estimate.month}</strong>, inside the
+					precedents’ {now.estimate.loText}-to-{now.estimate.hiText} range. It is
+					<em>an estimate, drawn dashed</em> — not an official forecast. The official outlook
+					points the same way: a <span class="hl hl-warm">very strong</span> event (above
+					+2.0&nbsp;°C) in late 2026, holding into early 2027.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">4/{N}</span>
-				<span class="card-kicker">Marking our own homework</span>
+				<span class="card-kicker">Already too low</span>
 				<p>
-					{now.scoring.month} has since been read, and the estimate above
-					<strong>missed low</strong>. It expected {now.scoring.estMeanText}&nbsp;°C, at most
-					{now.scoring.estHiText}; the quoted weekly index came in near
-					<strong>{now.scoring.readingText}</strong> — outside the band entirely. The reason is
-					structural, not bad luck: every one of the {now.events} analogues was
-					<em>cooler</em> than 2026 at {now.anchorMonth}, so their own levels carry that deficit
-					forward. Start the same {now.events} shapes from where 2026 actually is and they give
-					{now.scoring.anchoredHereText} for {now.scoring.month} and a peak near
-					<strong>{now.anchored.text}</strong> — the lighter dashed path. Read the precedents as a
-					<span class="hl hl-warm">floor</span>, not a forecast.
+					Treat that band as a <span class="hl hl-warm">floor, not a ceiling</span>.
+					{now.scoring.month}’s weekly reading — about
+					<strong>{now.scoring.readingText}&nbsp;°C</strong> — already sits above anything the
+					four precedents reached by that month. Re-run the same four paths from 2026’s own
+					level and they peak near <strong>{now.anchored.text}&nbsp;°C</strong> — the lighter
+					dashed line. Plan for at least the precedents, and possibly more.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 4}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">5/{N}</span>
-				<span class="card-kicker">What the calendar says</span>
+				<span class="card-kicker">The months to prepare for</span>
 				<p>
-					Read as a calendar, the estimate is a work plan.
-					<span class="hl hl-warm">Now to about {now.calendar.hardestEnd}</span>: the hard months —
-					failing rain, falling dams and rivers, cloudless frost nights above 2,200&nbsp;m. The
-					National Weather Service has put the same end date on it: the drought runs at least into
-					the first quarter of 2027. On the anchored reading it runs to about
-					{now.calendar.hardestEndAnchored} — later, never earlier. Water tanks, drought-hardy
-					plantings and river-town stocks bought <em>now</em> still arrive in time.
-					<span class="hl hl-cool">Around {now.calendar.swingback}</span>: the swing back — and the
-					record’s warning that the first heavy rain on drought-bared slopes brings floods and
-					landslips of its own.
+					<span class="hl hl-warm">Now to about {now.calendar.hardestEnd}</span>: the hard
+					months — failing rain, falling rivers and dams, frost nights above 2,200&nbsp;m. PNG’s
+					weather service gives the same end date, and on the faster reading it runs to about
+					{now.calendar.hardestEndAnchored}.
+					<span class="hl hl-cool">Around {now.calendar.swingback}</span>: the rain returns —
+					and the first heavy rain on drought-bared slopes brings floods and landslides.
+					<strong>What to do in each of these windows is the last chapter.</strong>
 				</p>
 			</div>
 		</div>

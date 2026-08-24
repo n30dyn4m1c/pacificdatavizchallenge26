@@ -8,9 +8,9 @@
 	 * as the 1997/2015 shelf: external links, our summaries.
 	 *
 	 * Kept current by hand — last refreshed 6 Aug 2026, when the Highlands
-	 * frost reports, the parliamentary funding exchange and the move of the
-	 * official outlook to "very strong" were added. The date in the shelf note
-	 * below is the "as of" line and must move with the items.
+	 * frost reports and the move of the official outlook to "very strong" were
+	 * added. The date in the shelf note below is the "as of" line and must
+	 * move with the items.
 	 */
 	import { reveal } from '$lib/reveal.js';
 
@@ -39,19 +39,6 @@
 				'Identify vulnerable communities and map water sources before the dry deepens.',
 				'Protect and repair community water systems; prepare food and agriculture contingencies.',
 				'The named risks are this piece’s chapters: dry spells, low rivers, crop stress, bushfires, highland frost.'
-			]
-		},
-		{
-			source: 'RNZ Pacific',
-			date: '2026',
-			title: 'Papua New Guinea urged to prepare for El Niño and potential food security crisis',
-			url: 'https://www.rnz.co.nz/news/pacific/596964/papua-new-guinea-urged-to-prepare-for-el-nino-and-potential-food-security-crisis',
-			summary:
-				'The international coverage, making the same argument as the 2015 researchers: the precedents are documented — act on them early.',
-			points: [
-				'Scientists advised the Pacific to expect a significant El Niño event from mid-2026.',
-				'Food security is the headline risk for subsistence-garden communities.',
-				'Some provincial leaders warn it could rank with the worst on record.'
 			]
 		},
 		{
@@ -107,32 +94,6 @@
 			]
 		},
 		{
-			source: 'Commonwealth Union · citing Oxfam PNG',
-			date: 'July 2026',
-			title: 'When the Highlands turned white: frost, failed gardens and a food crisis taking shape',
-			url: 'https://www.commonwealthunion.com/when-the-highlands-turned-white-how-el-nino-is-pushing-papua-new-guinea-toward-a-major-food-crisis/',
-			summary:
-				'The mechanism of field note 02, reported from the gardens: a year of below-average Highlands rain, then cloudless nights, then frost on the kaukau — and rivers and creeks that have stopped running.',
-			points: [
-				'Frost reported over gardens at Tambul (Western Highlands), Gembogl (Chimbu), upper Mendi and Imbonggu (Southern Highlands) and parts of Hela.',
-				'Oxfam PNG puts roughly 1.9 million people at risk in the Highlands dry spell; reporting puts more than 3 million at risk of food shortage nationwide.',
-				'Highlands creeks and rivers no longer flowing — communities walking further for water, exactly as in field note 01.'
-			]
-		},
-		{
-			source: 'PNG Today · National Parliament',
-			date: 'July 2026',
-			title: 'PM tells MPs to fund the drought response from existing budgets',
-			url: 'https://news.pngfacts.com/2026/07/png-pm-urges-mps-to-prioritise-disaster.html',
-			summary:
-				'The money question, on the floor of Parliament — and the reason this piece argues for moving early: the response is being paid for out of budgets already allocated, not new emergency funds.',
-			points: [
-				'MPs told to draw on existing district and provincial allocations; no additional emergency funding released.',
-				'Lower-priority district projects asked to stand aside for drought relief.',
-				'Cabinet reviewing how provinces and districts can reach disaster funds faster.'
-			]
-		},
-		{
 			source: 'NOAA CPC / IRI · WMO',
 			date: 'August 2026',
 			title: 'The outlook moves from “strong” to “very strong”',
@@ -150,14 +111,12 @@
 
 <section id="ch-shelf26" class="newsshelf" aria-label="Live coverage of the 2026 El Niño in Papua New Guinea">
 	<header class="chapter-head">
-		<p class="chapter-no" use:reveal>Interlude · the live paper trail</p>
-		<h2 use:reveal={{ delay: 90 }}>The third writing has begun.</h2>
+		<p class="chapter-no" use:reveal>Interlude · 2026, on the record</p>
+		<h2 use:reveal={{ delay: 90 }}>It is already happening, on schedule.</h2>
 		<p class="standfirst" use:reveal={{ delay: 200 }}>
-			The 1997 and 2015 shelves above were assembled from archives. This one is being written now
-			— the declaration, the directives, the drought tiers and the first impacts of the 2026
-			event, as reported. Nine documents, summarised; follow any of them to the source. The last
-			three are the state of it in August: frost in the gardens, the money question in Parliament,
-			and an outlook that has crossed from <em>strong</em> to <em>very strong</em>.
+			The 1997 and 2015 documents above come from archives. These are being written now: the
+			declaration, the directives, the frost reports and the first impacts of the 2026 event, as
+			reported. Seven documents — and they follow the old pattern exactly.
 		</p>
 	</header>
 
@@ -177,10 +136,9 @@
 	</div>
 
 	<p class="shelf-note">
-		External links; summaries are this piece's own reading of each document as of <strong>6 August
-		2026</strong>. Official drought updates continue monthly (the April 2026 update is on
-		ReliefWeb). Compare this shelf with the 1997 and 2015 shelf above: the same provinces, the same
-		altitudes, the same rivers — and this time, the warnings came first.
+		External links; summaries are our own reading of each document as of <strong>6 August
+		2026</strong>. Compare with the 1997 and 2015 shelf above: the same provinces, the same
+		altitudes, the same rivers. The difference this time — the warning came first.
 	</p>
 </section>
 

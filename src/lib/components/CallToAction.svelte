@@ -5,8 +5,9 @@
 	 * known sequence, announced months ahead by an ocean thermometer. This
 	 * section turns that into three things:
 	 *
-	 *  · the four asks (unchanged — plain, practical register);
-	 *  · THE PREPARATION CALENDAR: the asks plotted into the months the
+	 *  · four concrete jobs (follow the warnings, store water, plant for
+	 *    drought and frost, expect the flood after);
+	 *  · THE PREPARATION CALENDAR: the jobs plotted into the months the
 	 *    chapter-nine estimate actually implies (the hard months to ~Mar
 	 *    2027, the swing back ~May–Jun 2027), with a live "you are here"
 	 *    needle driven by the reader's current month;
@@ -25,31 +26,31 @@
 	const ASKS = [
 		{
 			no: '01',
-			title: 'Read the signal',
-			body: 'The Niño 3.4 thermometer is public and months ahead of the rain. Keep the national weather service and the drought early-warning system funded, staffed and heard — a warning that reaches a district office in June is worth more than a relief flight in December.',
+			title: 'Follow the warnings',
+			body: 'The ocean signal is public and runs months ahead of PNG’s rain. Follow the PNG National Weather Service and NARI’s drought updates — and when a drought alert is named for your province, treat it as a start date for action, not a headline.',
 			/** action window on the calendar, in timeline-month indexes */
 			at: 0,
 			side: 'top'
 		},
 		{
 			no: '02',
-			title: 'Plan on the known map',
-			body: 'The exposure map has not moved: very high altitude gardens, atolls and dry islands, and the river-supplied lowlands. Each has a known failure — frost, tanks, barges — so each can have a plan written before the year it is needed, not during it.',
-			at: 4,
+			title: 'Store water now',
+			body: 'Fill tanks and containers while rivers and rain still run; fix gutters and protect wells. Communities should map their water sources and agree on rationing before the dry deepens — after the taps fail, every option costs more.',
+			at: 3,
 			side: 'bottom'
 		},
 		{
 			no: '03',
-			title: 'Move money early',
-			body: 'Water storage, kaukau cutting banks, cassava and other frost-hardy plantings, school tanks, pre-positioned supplies for the river towns: all of it is cheap in the months the ONI is climbing and expensive after the gardens die. Budget on the ocean’s calendar, not the emergency’s.',
+			title: 'Plant for drought and frost',
+			body: 'Shift gardens toward drought-hardy staples — cassava, taro, banana, resilient kaukau varieties — and protect planting material. Above 2,200 m, prepare for frost nights: cover and mulch what you can, and hold back cuttings to replant after.',
 			at: 5,
 			side: 'top'
 		},
 		{
 			no: '04',
-			title: 'Teach the pattern',
-			body: 'Drought, then frost, then the flood when it breaks: the sequence is old enough that grandparents remember it and documented enough that schools can teach it. A community that knows what comes next — and in what order — loses gardens, not lives.',
-			at: 8,
+			title: 'Expect the flood after',
+			body: 'The drought ends in water. Through the dry months: clear drains and waterways, keep new gardens out of riverbeds, and plan where people and supplies go if slopes slip. Treat the first heavy rain around May–June 2027 as a warning, not a celebration.',
+			at: 11,
 			side: 'bottom'
 		}
 	];
@@ -117,12 +118,12 @@
 
 	async function copyPlan() {
 		const lines = [
-			'PREPARE FOR THE PREDICTABLE — the El Niño plan (The Ocean Knows First)',
-			`Hard months: now to about ${now.calendar.hardestEnd}. Swing back: about ${now.calendar.swingback}.`,
+			'PREPARING FOR THE 2026 EL NIÑO — the plan (The Ocean Knows First)',
+			`Hard months: now to about ${now.calendar.hardestEnd}. The rain returns: about ${now.calendar.swingback}.`,
 			'',
 			...ASKS.map((a, i) => `${done[i] ? '[x]' : '[ ]'} ${a.no} ${a.title} — ${a.body}`),
 			'',
-			'Sequence to teach: drought, then frost, then the flood when it breaks.'
+			'Remember the sequence: drought first, frost in the Highlands, then floods when the rain returns.'
 		];
 		const text = lines.join('\n');
 		try {
@@ -141,16 +142,15 @@
 	const nDone = $derived(done.filter(Boolean).length);
 </script>
 
-<section class="cta" aria-label="What the record asks of us">
+<section class="cta" aria-label="What to do, and when">
 	<header class="chapter-head" id="ch-ask">
-		<p class="chapter-no" use:reveal>The ask</p>
+		<p class="chapter-no" use:reveal>What to do</p>
 		<h2 use:reveal={{ delay: 90 }}>Prepare for the predictable.</h2>
 		<p class="standfirst" use:reveal={{ delay: 200 }}>
-			No one in Papua New Guinea can stop an El Niño, and no policy written in Port Moresby will
-			cool the far ocean. But nothing in this story arrived unannounced: the signal came months
-			early, the damage followed a sequence the record has already written down twice — and the
-			third writing has begun, with most of its hard months still ahead. That is what preparation
-			is for.
+			Nobody can stop an El Niño, and nothing will cool the far ocean. But this one has been
+			announced months in advance, and the record shows exactly what fails, in what order: water
+			first, then the rivers, then the gardens, then the frost — and the floods at the end. Here
+			is what to do with that warning, and when.
 		</p>
 	</header>
 
@@ -160,7 +160,7 @@
 		<svg
 			viewBox="0 0 {W} {H}"
 			role="img"
-			aria-label="The preparation calendar, May 2026 to July 2027. The hard months run from now to about March 2027 — failing rain, falling rivers and rivers, frost nights — and the ask of each month: read the signal from the declaration onward, plan on the known exposure map by September, move the money before the expected November peak, teach the pattern through the summer, and watch for floods when the swing back arrives around May 2027."
+			aria-label="The preparation calendar, May 2026 to July 2027. The hard months run from now to about March 2027 — failing rain, falling rivers, frost nights — with one job in each window: follow the warnings from the declaration onward, store water by August, plant for drought and frost before the expected November peak, and prepare for floods before the rain returns around May 2027."
 		>
 			<!-- zone: the hard months -->
 			<rect
@@ -235,7 +235,7 @@
 						font-size="10.5"
 						font-weight="700"
 						fill="var(--ink-light-primary)"
-					>{ask.title.replace('Teach', 'teach')}</text>
+					>{ask.title.toLowerCase()}</text>
 				</g>
 			{/each}
 
@@ -253,8 +253,8 @@
 		</svg>
 		</div>
 		<figcaption class="cal-foot">
-			The asks, on the ocean's calendar. Windows follow chapter nine's estimate and the National
-			Weather Service's own dates; the needle is your current month.
+			The four jobs, on the ocean’s calendar. Windows follow chapter nine’s estimate and the
+			National Weather Service’s own dates; the needle marks your current month.
 		</figcaption>
 	</figure>
 
@@ -280,10 +280,17 @@
 		{/each}
 	</div>
 
+	<p class="cta-institutions" use:reveal>
+		The same list exists at national scale: fund the weather service and the drought
+		early-warning system, pre-position food, fuel and medicine for the river towns, and release
+		drought funds on the ocean’s calendar — before the emergency, not after it.
+	</p>
+
 	<div class="plan-tools no-print">
 		<p class="plan-count" role="status">
-			<strong>{nDone} of {ASKS.length}</strong> committed
-			{nDone === ASKS.length ? '— the whole plan, owned.' : '— the plan is only worth what it moves.'}
+			<strong>{nDone} of {ASKS.length}</strong> ticked off{nDone === ASKS.length
+				? ' — the full plan.'
+				: ''}
 		</p>
 		<button class="copy-btn" onclick={copyPlan}>
 			{copied ? 'Copied ✓' : 'Copy the plan as text'}
@@ -291,9 +298,8 @@
 	</div>
 
 	<p class="cta-close" use:reveal>
-		The see-saw has tipped again — that much is already measured. The choice the record leaves is
-		whether this El Niño, in its hardest months, meets a country that has read its own history, or
-		one that has to live it again from the beginning.
+		The ocean has already announced this El Niño. 1997 and 2015 wrote the playbook, in hunger
+		and frost and flood. This time, Papua New Guinea can use it.
 	</p>
 </section>
 
@@ -463,6 +469,15 @@
 	.copy-btn:focus-visible {
 		outline: 2px solid var(--accent-light);
 		outline-offset: 3px;
+	}
+
+	.cta-institutions {
+		max-width: 44rem;
+		margin: 2rem auto 0;
+		font-size: 0.95rem;
+		line-height: 1.6;
+		color: var(--ink-light-secondary);
+		text-align: center;
 	}
 
 	.cta-close {

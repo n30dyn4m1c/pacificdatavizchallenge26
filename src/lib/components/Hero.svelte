@@ -94,16 +94,16 @@
 			The <span class="hl hl-cool">ocean</span> knows <span class="hl hl-warm">first</span>
 		</h1>
 		<p class="standfirst">
-			Papua New Guinea’s worst droughts don’t start in its own sky — they start in the temperature
-			of seawater seven thousand kilometres east, months earlier. A journey through 176 years of
-			the official Pacific climate record, from the far ocean down to a highland garden.
+			Papua New Guinea’s worst droughts begin seven thousand kilometres away, in the temperature
+			of the Pacific — months before the rain fails. In 2026 that ocean is warming fast. This is
+			what El Niño does to PNG, and what to do about it.
 		</p>
 		<p class="byline">
-			Built on the Pacific Community’s climate-change indicators · Pacific Data Hub
+			Built on the Pacific Community’s official climate record · Pacific Data Hub
 		</p>
 		<!-- what the reader is committing to: a long piece should say so up
 		     front rather than let the scrollbar break the news -->
-		<p class="meta">Nine chapters · about 15 minutes · scroll to read</p>
+		<p class="meta">Nine short chapters · about 12 minutes · scroll to read</p>
 		<div class="hero-band" aria-hidden="true"><OniBand /></div>
 		<div class="scroll-cue no-print" aria-hidden="true">
 			<span class="cue-line"><span class="cue-drop"></span></span>

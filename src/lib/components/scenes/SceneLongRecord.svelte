@@ -18,10 +18,10 @@
 
 	const figTitle = [
 		'The sea around Papua New Guinea, one reading a year since 1850',
-		'A century of wobble, and no trend worth naming',
-		'2025: the warmest in 176 years of record',
-		'The water is also higher',
-		'And warm local years are the <em>wet</em> ones'
+		'A century of wobble, with no trend',
+		'2025: the warmest sea in 176 years of record',
+		'The sea is also rising',
+		'And warm local years are actually the <em>wet</em> ones'
 	];
 	const fmt2 = (v) => (v > 0 ? '+' : '') + v.toFixed(2);
 </script>
@@ -29,8 +29,8 @@
 <ChapterHead
 	id="ch-6"
 	no="Chapter six · the long record"
-	title="The see&#8209;saw is bolted to a rising floor."
-	standfirst="El Niño comes and goes — it always has. What’s new sits underneath it: the ocean around Papua New Guinea itself, measured one number a year since 1850."
+	title="Underneath the see&#8209;saw, the ocean itself is warming."
+	standfirst="El Niño comes and goes — it always has. What is new sits underneath it: the sea around Papua New Guinea, measured one number a year since 1850."
 />
 
 <ScrollScene
@@ -124,8 +124,8 @@
 				<span class="card-step" aria-hidden="true">1/5</span>
 				<span class="card-kicker">Zoom all the way out</span>
 				<p>
-					This is the sea around Papua New Guinea itself — one temperature reading a year,
-					starting in <strong>1850</strong>. Watch the counter.
+					The sea around PNG itself — one temperature reading a year, starting in
+					<strong>1850</strong>. Watch the year counter.
 				</p>
 			</div>
 		</div>
@@ -133,7 +133,7 @@
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">2/5</span>
 				<span class="card-kicker">A century of wobble</span>
-				<p>For a hundred years: wobble. Warm years, cool years, no trend worth naming.</p>
+				<p>For the first hundred years: wobble. Warm years, cool years, no trend.</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
@@ -141,8 +141,8 @@
 				<span class="card-step" aria-hidden="true">3/5</span>
 				<span class="card-kicker">Then the climb</span>
 				<p>
-					Then the climb. <span class="hl hl-warm">2025: +1.1&nbsp;°C</span> — the warmest sea in
-					the whole 176-year record.
+					Then the climb. <span class="hl hl-warm">2025: +1.1&nbsp;°C</span> — the warmest
+					sea in the entire 176-year record.
 				</p>
 			</div>
 		</div>
@@ -151,8 +151,9 @@
 				<span class="card-step" aria-hidden="true">4/5</span>
 				<span class="card-kicker">Not just warmer</span>
 				<p>
-					Not just warmer — <strong>higher</strong>. The satellite record only begins in 1993,
-					and it has already climbed about <strong>0.3&nbsp;m</strong> around the country.
+					Not just warmer — <strong>higher</strong>. Sea level around PNG has risen about
+					<strong>0.3&nbsp;m</strong> since the satellite record began in 1993, which is why
+					king tides and storm surges reach further inland than they used to.
 				</p>
 			</div>
 		</div>
@@ -161,11 +162,11 @@
 				<span class="card-step" aria-hidden="true">5/5</span>
 				<span class="card-kicker">One thing it isn’t</span>
 				<p>
-					One thing the local sea is <em>not</em>: the drought-maker. Warm local years are
-					actually <span class="hl hl-cool">wetter</span> (correlation
-					<strong>+{data ? data.r_local.toFixed(2) : '0.48'}</strong>) — the rain lives on the
-					warm water. The dry signal truly comes from the far ocean… which is exactly why it can
-					be read in advance.
+					The local sea is <em>not</em> what dries the gardens — warm local years are actually
+					<span class="hl hl-cool">wetter</span> (correlation
+					<strong>+{data ? data.r_local.toFixed(2) : '0.48'}</strong>). PNG’s droughts really
+					are made by the far ocean. And that is the good news: a signal made far away can be
+					read <strong>months in advance</strong>.
 				</p>
 			</div>
 		</div>

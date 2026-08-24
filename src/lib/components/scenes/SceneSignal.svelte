@@ -16,9 +16,9 @@
 
 	const figTitle = [
 		'Papua New Guinea’s rain, one year at a time',
-		'Now put the far ocean above it',
+		'The same years, with the far ocean on top',
 		'Eight of the ten driest years were El Niño years',
-		'Correlation −0.64 — or: when the far ocean warms, carry water'
+		'When the far ocean warms, PNG’s rain fails'
 	];
 	const phaseName = { elnino: 'El Niño', lanina: 'La Niña', neutral: 'neutral', pending: '—' };
 	const fmt = (v) => (v == null ? '—' : (v > 0 ? '+' : '') + v.toFixed(1));
@@ -28,7 +28,7 @@
 	id="ch-3"
 	no="Chapter three · the rain"
 	title="When the far ocean tips, the rain follows."
-	standfirst="Papua New Guinea keeps its own record: how much rain each year brought, above or below normal. Put it under the see&#8209;saw and the pattern is hard to miss."
+	standfirst="Here is PNG’s own record: how much rain each year brought, above or below normal. Put it under the see&#8209;saw, and the connection is hard to miss."
 />
 
 <ScrollScene
@@ -91,8 +91,8 @@
 				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">The home record</span>
 				<p>
-					This is Papua New Guinea’s own rain: one bar per year, above or below its long-term
-					normal. The <span class="hl hl-warm">dry years</span> point down, the
+					PNG’s own rain, one bar per year, above or below its long-term normal.
+					<span class="hl hl-warm">Dry years</span> point down;
 					<span class="hl hl-cool">wet years</span> up.
 				</p>
 			</div>
@@ -102,8 +102,8 @@
 				<span class="card-step" aria-hidden="true">2/4</span>
 				<span class="card-kicker">Now, together</span>
 				<p>
-					Bring back the far ocean, same years, right on top. Read any El Niño spike above, then
-					drop your eye straight down.
+					Add the far ocean above, same years. Find any El Niño spike — then look straight
+					down at PNG’s rain in the same year.
 				</p>
 			</div>
 		</div>
@@ -112,22 +112,23 @@
 				<span class="card-step" aria-hidden="true">3/4</span>
 				<span class="card-kicker">The pattern</span>
 				<p>
-					<strong>1982. 1997. 2015.</strong> Every great spike above meets a collapse below.
-					<span class="hl hl-warm">Eight of the ten driest years</span> were El Niño years — and
-					the other two came in the long tail of one.
+					<strong>1982. 1997. 2015.</strong> Every big spike above meets a collapse below.
+					<span class="hl hl-warm">Eight of the ten driest years</span> were El Niño years —
+					and the other two came just after one.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">4/4</span>
-				<span class="card-kicker">Two ways to say it</span>
+				<span class="card-kicker">The rule</span>
 				<p>
-					A statistician says: correlation <strong>−0.64</strong>. El Niño years average
-					<strong>{data ? data.mean_rain_elnino : '−5.9'}&nbsp;mm</strong>; every other year,
-					<strong>+{data ? data.mean_rain_other : '3.5'}&nbsp;mm</strong>.
+					In El Niño years PNG’s rain runs
+					<strong>{data ? data.mean_rain_elnino : '−5.9'}&nbsp;mm</strong> below normal, on
+					average; in all other years,
+					<strong>+{data ? data.mean_rain_other : '3.5'}&nbsp;mm</strong> above it.
 				</p>
-				<p>A gardener says: when the far ocean warms, carry water.</p>
+				<p>Put simply: <strong>when the far ocean warms, store water.</strong></p>
 			</div>
 		</div>
 	{/snippet}

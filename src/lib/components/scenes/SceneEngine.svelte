@@ -23,9 +23,9 @@
 
 	const figTitle = [
 		'The engine, running as usual',
-		'El Niño: the engine stalls — and reverses',
-		'La Niña: the engine over-revs',
-		'One sloshing engine, two names'
+		'El Niño: the winds fail and the warm water slides east',
+		'La Niña: the winds strengthen and everything runs harder',
+		'One engine, two failure modes — and a gauge that reads them'
 	];
 
 	const stateLabel = [
@@ -40,7 +40,7 @@
 	id="ch-engine"
 	no="Chapter one · continued"
 	title="Under the surface, an <span class='hl hl-ink'>engine</span>."
-	standfirst="The map showed the warm pool sliding. This is why it slides: a cross-section through the equatorial Pacific, where the trade winds run a heat engine on a scale no machine could match — and where its two failure modes are written. The piece goes dark here, because this step goes underwater."
+	standfirst="Why does the warm water move? Go below the map: a cross-section of the equatorial Pacific, where the trade winds run a heat engine the width of an ocean — with two failure modes, El&nbsp;Niño and La&nbsp;Niña."
 />
 
 <ScrollScene
@@ -97,34 +97,33 @@
 				<span class="card-step" aria-hidden="true">1/{N}</span>
 				<span class="card-kicker">Running as usual</span>
 				<p>
-					The <span class="hl hl-cool">trade winds</span> sweep along the equator, herding
-					sun-warmed water west until it heaps up against Indonesia and
+					The <span class="hl hl-cool">trade winds</span> blow steadily along the equator,
+					pushing sun-warmed surface water west until it heaps up against Indonesia and
 					<strong>Papua New Guinea</strong> — a warm layer 150&nbsp;m thick. Air rises off it
-					all day: that is the country's ordinary rain.
+					every afternoon: PNG’s ordinary rain.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 1}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">2/{N}</span>
-				<span class="card-kicker">The stall</span>
+				<span class="card-kicker">El Niño: the stall</span>
 				<p>
-					Every few years the trades quit — sometimes blowing backwards for weeks. The heaped
-					warmth <span class="hl hl-warm">sloshes east</span>, the thermocline see-saws, and
-					the rising, rain-making half of the loop moves to mid-ocean. Over Papua New Guinea
-					the air <em>sinks</em>: the sky closes like a lid.
+					Every few years the trade winds fail — sometimes reversing for weeks. The heaped-up
+					warm water <span class="hl hl-warm">slides back east</span>, and the rising,
+					rain-making air moves with it to mid-ocean. Over PNG the air <em>sinks</em> instead:
+					clear skies, no rain.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">3/{N}</span>
-				<span class="card-kicker">The over-rev</span>
+				<span class="card-kicker">La Niña: the opposite</span>
 				<p>
-					The opposite failure runs the engine <em>harder</em>. Trades strengthen, more warmth
-					piles west, and the rain branch parks on the country with
-					<span class="hl hl-cool">flood-force deliveries</span> — while the eastern Pacific
-					turns bone dry. Same machine; both faults matter.
+					The other failure runs the engine <em>harder</em>: stronger winds, even more warm
+					water against PNG, and heavier rain — <span class="hl hl-cool">floods</span> — while
+					the eastern Pacific turns bone dry. Same machine, opposite fault.
 				</p>
 			</div>
 		</div>
@@ -133,9 +132,9 @@
 				<span class="card-step" aria-hidden="true">4/{N}</span>
 				<span class="card-kicker">The gauge on the machine</span>
 				<p>
-					Back up to the surface. Everything you just watched has one summary statistic — how
-					far the warm layer leans east or west — and there is a thermometer on it. That
-					gauge, and fifty years of its readings, is the next chapter.
+					All of this reduces to one number: how warm the water in the Niño&nbsp;3.4 rectangle
+					is, compared with normal. That number has been recorded for over fifty years — and
+					it is the next chapter.
 				</p>
 			</div>
 		</div>

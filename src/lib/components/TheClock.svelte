@@ -58,8 +58,8 @@
 		</div>
 	</div>
 	<p class="note" use:reveal={{ delay: 200 }}>
-		Read in {here}. Counters run at month resolution — the resolution the estimate itself is
-		honest to. They are a floor: read off the anchored path, every hard month runs later.
+		Read in {here}. Month resolution is the honest one — the record supports nothing finer.
+		Every counter is a floor: so far, this event has run ahead of its precedents.
 	</p>
 </section>
 

@@ -17,8 +17,8 @@
 	const figTitle = [
 		'The national harvest, 1961–2024',
 		'The line stumbles at every one of the driest years',
-		'And the hardest losses never reach this chart',
-		'1997 charged twice: drought by day, frost by night'
+		'The worst losses never even reach this chart',
+		'1997: drought by day, frost by night'
 	];
 	const fmt0 = (v) => Math.round(v).toLocaleString('en');
 </script>
@@ -27,7 +27,7 @@
 	id="ch-5"
 	no="Chapter five · the gardens"
 	title="What a dry year takes."
-	standfirst="A shortfall on a rainfall chart is a shortfall in somebody’s garden. The national harvest record shows where the El&nbsp;Niño years landed — and hides where they landed hardest."
+	standfirst="A shortfall on a rainfall chart is a shortfall in somebody’s garden. The national harvest record shows where the El&nbsp;Niño years landed — and misses where they landed hardest."
 />
 
 <ScrollScene
@@ -90,8 +90,8 @@
 				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">The harvest</span>
 				<p>
-					So what does a dry year take, in the official ledger? Here is the national harvest —
-					crop yield, 1961 to 2024. Mostly it climbs: better seed, better roads, better prices.
+					The national harvest, measured as crop yield from 1961 to 2024. Mostly it climbs:
+					better seed, better roads, better prices.
 				</p>
 			</div>
 		</div>
@@ -108,11 +108,11 @@
 		<div class="card-slot" class:active={idx === 2}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">3/4</span>
-				<span class="card-kicker">The honest caveat</span>
+				<span class="card-kicker">What the chart misses</span>
 				<p>
-					The dips look small. But most of Papua New Guinea’s food grows in
+					The dips look small. But most of PNG’s food grows in
 					<span class="hl hl-ink">subsistence gardens</span> that a national statistic barely
-					sees — the hardest losses land off this chart, in exactly the villages the field notes
+					counts. The worst losses are off this chart — in the villages the field notes just
 					described.
 				</p>
 			</div>
@@ -123,8 +123,9 @@
 				<span class="card-kicker">1997, twice over</span>
 				<p>
 					1997 hit twice in one season: <span class="hl hl-warm">drought</span> in the lowlands
-					and <span class="hl hl-cool">frost</span> above the 2,200-metre line — the clear-night
-					mechanism of field note 02. Gardens, and the cuttings to replant them, died together.
+					and <span class="hl hl-cool">frost</span> above 2,200 metres. The gardens died — and
+					so did the cuttings needed to replant them, which is why the hunger outlasted the
+					drought.
 				</p>
 			</div>
 		</div>

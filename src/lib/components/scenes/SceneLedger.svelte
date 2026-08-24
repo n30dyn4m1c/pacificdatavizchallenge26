@@ -16,9 +16,9 @@
 
 	const figTitle = [
 		'Count emissions the way you would count anything',
-		'The world average: 6.6 tonnes a person, a year',
+		'The world average: 6.6 tonnes per person per year',
 		'Papua New Guinea: one tonne',
-		'Small cause, large consequence — the whole ledger'
+		'Almost none of the cause — all of the consequences'
 	];
 	const fmt2 = (v) => v.toFixed(2);
 </script>
@@ -26,8 +26,8 @@
 <ChapterHead
 	id="ch-7"
 	no="Chapter seven · the ledger"
-	title="Papua New Guinea didn’t order this weather."
-	standfirst="The see&#8209;saw is natural. The rising floor beneath it is not — and the ledger of who builds it is short."
+	title="Papua New Guinea didn’t cause this."
+	standfirst="The see&#8209;saw of El&nbsp;Niño is natural. The warming underneath it is not — and almost none of it is made in PNG."
 />
 
 <ScrollScene
@@ -87,9 +87,8 @@
 				<span class="card-step" aria-hidden="true">1/4</span>
 				<span class="card-kicker">Count it out</span>
 				<p>
-					Count emissions the way you’d count anything: one dot for
-					every <strong>100&nbsp;kg</strong> of greenhouse gas a person’s country puts into the
-					sky in a year.
+					One dot for every <strong>100&nbsp;kg</strong> of greenhouse gas emitted per person,
+					per year.
 				</p>
 			</div>
 		</div>
@@ -106,17 +105,18 @@
 				<span class="card-kicker">Papua New Guinea</span>
 				<p>
 					Papua New Guinea: <span class="hl hl-ink">1 tonne</span>. Ten dots — and in fifty
-					years of record it has never passed 1.7.
+					years of record, never more than 1.7.
 				</p>
 			</div>
 		</div>
 		<div class="card-slot" class:active={idx === 3}>
 			<div class="step-card">
 				<span class="card-step" aria-hidden="true">4/4</span>
-				<span class="card-kicker">The point</span>
+				<span class="card-kicker">What it means</span>
 				<p>
-					The see-saw is natural. The rising floor beneath it is not — and it is overwhelmingly
-					built elsewhere. Small cause; large consequence. That is the whole ledger.
+					The warming that sharpens PNG’s droughts is overwhelmingly made elsewhere, and PNG
+					cannot wait for the rest of the world to fix it. What the country <em>can</em> do is
+					be ready — and readiness starts with watching the signal. That is the next chapter.
 				</p>
 			</div>
 		</div>

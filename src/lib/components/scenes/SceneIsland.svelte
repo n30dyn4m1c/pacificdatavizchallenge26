@@ -108,9 +108,9 @@
 				<span class="card-step" aria-hidden="true">1/6</span>
 				<span class="card-kicker">The country</span>
 				<p>
-					First, the country itself: a mainland with a wall of mountains down its spine, two great
-					rivers draining it, and island provinces scattered across its own sea. Now cut it along
-					the dashed line, <strong>A</strong> to <strong>B</strong>, and turn it sideways.
+					PNG is a mainland with a wall of mountains down its spine, two great rivers, and
+					island provinces scattered across its own sea. Cut the country along the dashed
+					line, <strong>A</strong> to <strong>B</strong>, and turn it sideways.
 				</p>
 			</div>
 		</div>
@@ -119,10 +119,9 @@
 				<span class="card-step" aria-hidden="true">2/6</span>
 				<span class="card-kicker">0 m · coast &amp; islands</span>
 				<p>
-					Start at the sea. Coastal and island villages drink rain: tanks, shallow wells, small
-					streams. In an El Niño year those fail <span class="hl hl-warm">first</span> — and on an
-					atoll there is no river to fall back on, only the boat ride to somewhere that still has
-					water.
+					Coastal and island villages drink rain: tanks, shallow wells, small streams. In an
+					El Niño year those fail <span class="hl hl-warm">first</span> — and on an atoll
+					there is no river to fall back on.
 				</p>
 			</div>
 		</div>
@@ -132,9 +131,8 @@
 				<span class="card-kicker">20 m · the river plains</span>
 				<p>
 					On the plains, the rivers are the roads. When the Fly drops, the
-					<span class="hl hl-cool">barges stop</span> — food, fuel and medicine stop with them,
-					and riverside gardens bake in the cracked banks. It happened in 1997; it happened again
-					in 2015.
+					<span class="hl hl-cool">barges stop</span> — and food, fuel and medicine stop with
+					them. It happened in 1997, and again in 2015.
 				</p>
 			</div>
 		</div>
@@ -143,9 +141,9 @@
 				<span class="card-step" aria-hidden="true">4/6</span>
 				<span class="card-kicker">1,600 m · the Highlands, by day</span>
 				<p>
-					Climb to the valleys where most of the nation’s kaukau grows. Gardens here have never
-					needed watering — the cloud does it. In an El Niño year the cloud is gone: weeks of
-					<span class="hl hl-warm">hard sun</span> on thin mountain soil, and the vines wilt.
+					Up in the valleys, where most of the nation’s kaukau (sweet potato) grows, gardens
+					have never needed watering — the cloud does it. In an El Niño year the cloud is
+					gone: weeks of <span class="hl hl-warm">hard sun</span>, and the vines wilt.
 				</p>
 			</div>
 		</div>
@@ -154,10 +152,9 @@
 				<span class="card-step" aria-hidden="true">5/6</span>
 				<span class="card-kicker">2,200 m · the same day, at night</span>
 				<p>
-					Now stay on that mountain until midnight. The same cloudless sky that burned the garden
-					all day now lets the ground’s heat pour out into space. By dawn, gardens above the
-					<span class="hl hl-cool">frost line</span> are silver — and dead. Drought kills by day
-					up here, and by night.
+					The same cloudless sky that burns the gardens by day lets the ground’s heat escape
+					by night. By dawn, gardens above the <span class="hl hl-cool">frost line</span> are
+					frozen — and dead. Drought here kills twice: by day and by night.
 				</p>
 			</div>
 		</div>
@@ -166,10 +163,9 @@
 				<span class="card-step" aria-hidden="true">6/6</span>
 				<span class="card-kicker">The whole island</span>
 				<p>
-					Read the profile end to end: dry tanks at the coast, stranded barges on the plains,
-					scorched vines in the valleys, frost on the peaks. <strong>One climate signal, four
-					different bills</strong> — and in 1997 and 2015, Papua New Guinea paid all of them in
-					the same year.
+					Dry tanks at the coast, stranded barges on the plains, scorched gardens in the
+					valleys, frost on the peaks. <strong>One ocean signal, four different disasters</strong>
+					— and in 1997 and 2015, PNG faced all of them in the same year.
 				</p>
 			</div>
 		</div>
