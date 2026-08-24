@@ -1,17 +1,16 @@
 <script>
 	/**
-	 * RiverDry — field note one: an interactive illustration of a lowland
-	 * river falling through an El Niño dry spell. A slider sets "months
-	 * without real rain" (0–6); the water drops past four thresholds and the
-	 * consequences arrive in order: sandbars, stranded barges, dry pumps,
-	 * the long walk for water. Everything here is an explicitly labelled
-	 * illustration of the documented 1997/2015 mechanism (the Fly River
-	 * barge closures), not a gauge record.
+	 * RiverDry — field note one: a self-running illustration of a lowland
+	 * river falling through an El Niño dry spell. The figure loops through
+	 * "months without real rain" (0–6) on its own; the water drops past four
+	 * thresholds and the consequences arrive in order: sandbars, stranded
+	 * barges, dry pumps, the long walk for water. Everything here is an
+	 * explicitly labelled illustration of the documented 1997/2015 mechanism
+	 * (the Fly River barge closures), not a gauge record.
 	 *
-	 * Accessibility: the slider is a real <input type=range> with
-	 * aria-valuetext; the consequence list is ordinary text, always in the
-	 * DOM. Under ?notap=1 the control disappears and the figure freezes at
-	 * the full-drought state so the story still reads.
+	 * The loop runs only while the figure is on screen. Under
+	 * prefers-reduced-motion or ?notap=1 the figure holds a static
+	 * full-drought frame so the story still reads.
 	 */
 	import { onMount } from 'svelte';
 	import { ink, impact, surfaces } from '$lib/palette.js';
@@ -24,38 +23,37 @@
 	let monthsRaw = $state(0);
 	const months = $derived(ui.noTap ? 6 : monthsRaw);
 
-	// auto-demo: the first time the figure scrolls into view, the slider runs
-	// itself from 0 to 6 months — the reader watches the river fall and learns
-	// the control by example. Any touch on the slider takes over immediately;
-	// skipped under prefers-reduced-motion and ?notap=1.
-	let section;
-	let touched = $state(false);
+	let figure;
 
 	onMount(() => {
 		if (ui.noTap) return;
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			monthsRaw = 6; // static full-drought frame
+			return;
+		}
+		// the loop: fill up to six dry months, hold, then start over
+		const SEQ = [0, 1, 2, 3, 4, 5, 6, 6, 6];
+		let step = 0;
 		let timer = 0;
+		const start = () => {
+			if (timer) return;
+			timer = setInterval(() => {
+				step = (step + 1) % SEQ.length;
+				monthsRaw = SEQ[step];
+			}, 900);
+		};
+		const stop = () => {
+			clearInterval(timer);
+			timer = 0;
+		};
 		const io = new IntersectionObserver(
-			(entries) => {
-				if (!entries.some((e) => e.isIntersecting)) return;
-				io.disconnect();
-				let m = 0;
-				timer = setInterval(() => {
-					if (touched) {
-						clearInterval(timer);
-						return;
-					}
-					m += 1;
-					monthsRaw = m;
-					if (m >= 6) clearInterval(timer);
-				}, 900);
-			},
-			{ threshold: 0.45 }
+			(entries) => (entries.some((e) => e.isIntersecting) ? start() : stop()),
+			{ threshold: 0.3 }
 		);
-		if (section) io.observe(section);
+		if (figure) io.observe(figure);
 		return () => {
 			io.disconnect();
-			clearInterval(timer);
+			stop();
 		};
 	});
 
@@ -83,9 +81,9 @@
 		<p class="kicker" use:reveal>Field note 01 · the rivers</p>
 		<h3 use:reveal={{ delay: 90 }}>How a river dries.</h3>
 		<p class="lede" use:reveal={{ delay: 200 }}>
-			In the lowlands the river is the road, the market and the water supply at once. The slider
-			below runs itself the first time — take it over any time to see what fails, in the order it
-			failed in 1997 and 2015. <em>(An illustration of the mechanism, not a gauge record.)</em>
+			In the lowlands the river is the road, the market and the water supply at once. Watch the
+			dry season advance — and what fails, in the order it failed in 1997 and 2015.
+			<em>(An illustration of the mechanism, not a gauge record.)</em>
 		</p>
 	</header>
 
@@ -174,28 +172,9 @@
 		</div>
 	</div>
 
-	{#if !ui.noTap}
-		<div class="control">
-			<p class="ctl-hint" aria-hidden="true">
-				<span class="ctl-arrow">⟵</span> drag the slider <span class="ctl-arrow">⟶</span>
-			</p>
-			<label for="river-months">
-				Months without real rain: <strong>{months}</strong>
-			</label>
-			<input
-				id="river-months"
-				type="range"
-				min="0"
-				max="6"
-				step="1"
-				bind:value={monthsRaw}
-				onpointerdown={() => (touched = true)}
-				oninput={() => (touched = true)}
-				aria-valuetext={valuetext}
-			/>
-			<div class="range-ends" aria-hidden="true"><span>normal season</span><span>six months dry</span></div>
-		</div>
-	{/if}
+	<p class="loop-note" aria-hidden="true">
+		Months without real rain: <strong>{months}</strong> of 6 — the loop repeats
+	</p>
 </section>
 
 <style>
@@ -296,46 +275,14 @@
 		color: var(--warm);
 	}
 
-	.control {
+	.loop-note {
 		margin-top: 1.25rem;
-		max-width: 34rem;
-	}
-
-	.ctl-hint {
-		display: flex;
-		justify-content: space-between;
-		max-width: none;
-		margin-bottom: 0.3rem;
-		font-size: 0.74rem;
-		font-weight: 700;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--warm);
-	}
-
-	.ctl-arrow {
-		font-size: 0.9rem;
-	}
-
-	.control label {
-		display: block;
-		font-size: 0.9rem;
+		font-size: 0.78rem;
 		font-weight: 600;
-		margin-bottom: 0.4rem;
-	}
-
-	.control input[type='range'] {
-		width: 100%;
-		accent-color: var(--warm);
-		min-height: 44px; /* tap-target floor */
-		cursor: pointer;
-	}
-
-	.range-ends {
-		display: flex;
-		justify-content: space-between;
-		font-size: 0.72rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
 		color: var(--ink-light-muted);
+		font-variant-numeric: tabular-nums;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

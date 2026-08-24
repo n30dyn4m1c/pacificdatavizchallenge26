@@ -1,16 +1,16 @@
 <script>
 	/**
-	 * FrostNight — field note two: an interactive illustration of why an El
-	 * Niño drought freezes highland gardens at night. Two buttons switch the
+	 * FrostNight — field note two: a self-running illustration of why an El
+	 * Niño drought freezes highland gardens at night. The figure loops the
 	 * same mountain night between "an ordinary night" (cloud blanket, heat
 	 * held in, kaukau safe) and "a drought night" (clear sky, the day's heat
 	 * radiates to space, the garden frosts by dawn). Explicitly labelled an
 	 * illustration of the mechanism — the temperatures are typical values,
 	 * not station readings.
 	 *
-	 * Accessibility: the switch is a real radiogroup; the figure's aria-label
-	 * follows the state. Under ?notap=1 the buttons disappear and the figure
-	 * freezes on the drought night, so the story still reads.
+	 * The loop runs only while the figure is on screen; the figure's
+	 * aria-label follows the state. Under prefers-reduced-motion or
+	 * ?notap=1 it holds a static drought-night frame so the story still reads.
 	 */
 	import { onMount } from 'svelte';
 	import { ink, impact, surfaces } from '$lib/palette.js';
@@ -23,38 +23,31 @@
 	let clearRaw = $state(false);
 	const clear = $derived(ui.noTap ? true : clearRaw);
 
-	// auto-demo: the first time the figure scrolls into view it switches
-	// itself from the ordinary night to the drought night — the comparison
-	// plays once, and any tap on the buttons takes over from then on.
-	// Skipped under prefers-reduced-motion and ?notap=1.
 	let figure;
-	let touched = $state(false);
-	const pick = (v) => {
-		clearRaw = v;
-		touched = true;
-	};
 
 	onMount(() => {
 		if (ui.noTap) return;
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			clearRaw = true; // static drought-night frame
+			return;
+		}
 		let timer = 0;
+		const start = () => {
+			if (timer) return;
+			timer = setInterval(() => (clearRaw = !clearRaw), 2800);
+		};
+		const stop = () => {
+			clearInterval(timer);
+			timer = 0;
+		};
 		const io = new IntersectionObserver(
-			(entries) => {
-				if (!entries.some((e) => e.isIntersecting)) return;
-				io.disconnect();
-				// hold the ordinary night for a beat so the reader registers it
-				timer = setTimeout(() => {
-					if (touched) return;
-					clearRaw = true;
-					touched = true; // retire the invite pulse once the demo has run
-				}, 1400);
-			},
-			{ threshold: 0.45 }
+			(entries) => (entries.some((e) => e.isIntersecting) ? start() : stop()),
+			{ threshold: 0.3 }
 		);
 		if (figure) io.observe(figure);
 		return () => {
 			io.disconnect();
-			clearTimeout(timer);
+			stop();
 		};
 	});
 
@@ -82,25 +75,9 @@
 		</p>
 	</header>
 
-	{#if !ui.noTap}
-		<p class="switch-hint" use:reveal={{ delay: 280 }}>
-			It switches itself the first time — tap either night to compare:
-		</p>
-		<div class="switch" role="radiogroup" aria-label="Choose the night">
-			<button class="beat-pill" role="radio" aria-checked={!clear} onclick={() => pick(false)}>
-				☁ an ordinary night
-			</button>
-			<button
-				class="beat-pill"
-				class:beat-idle-pulse={!touched}
-				role="radio"
-				aria-checked={clear}
-				onclick={() => pick(true)}
-			>
-				✳ a drought night
-			</button>
-		</div>
-	{/if}
+	<p class="loop-note" aria-hidden="true">
+		{clear ? '✳ a drought night' : '☁ an ordinary night'} — the loop repeats
+	</p>
 
 	<figure bind:this={figure}>
 		<svg viewBox="0 0 900 430" role="img" aria-label={label}>
@@ -219,28 +196,13 @@
 		color: var(--ink-light-secondary);
 	}
 
-	.switch-hint {
-		margin: 1.1rem 0 0.55rem;
-		font-size: 0.74rem;
-		font-weight: 700;
-		letter-spacing: 0.1em;
+	.loop-note {
+		margin: 1.1rem 0 0.9rem;
+		font-size: 0.78rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
 		text-transform: uppercase;
-		color: var(--ink-light-secondary);
-	}
-
-	.switch {
-		display: flex;
-		gap: 0.6rem;
-		flex-wrap: wrap;
-		margin: 0 0 1.25rem;
-	}
-
-	/* the selected night is unmissable: a solid chip, not a tint */
-	.switch .beat-pill[aria-checked='true'] {
-		border-color: var(--beat-accent);
-		background: var(--beat-accent);
-		color: var(--paper-raised);
-		font-weight: 700;
+		color: var(--ink-light-muted);
 	}
 
 	figure {
