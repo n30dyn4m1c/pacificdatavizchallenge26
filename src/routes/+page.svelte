@@ -49,7 +49,7 @@
 	<title>The Ocean Knows First — El Niño and Papua New Guinea: the warning, the drought, the preparation</title>
 	<meta
 		name="description"
-		content="Papua New Guinea's worst droughts begin 7,000 kilometres away, in the temperature of the Pacific — months before the rain fails. In 2026 that ocean is warming faster than in any of the four strongest El Niños on record, and PNG's own weather service expects the drought to run into 2027. What El Niño does to PNG, and what to do about it — told through the official Pacific climate record."
+		content="Papua New Guinea's worst droughts begin 7,000 kilometres away, in the temperature of the Pacific — months before the rain fails. In 2026 that ocean is running ahead of 1982, 1997, 2015 and 2023 at the same point, and PNG's own weather service expects the drought to run into 2027. What El Niño does to PNG, and what to do about it — told through the official Pacific climate record."
 	/>
 	<!-- social cards: the piece is meant to be shared; give the link a face -->
 	<meta property="og:type" content="website" />
@@ -58,7 +58,7 @@
 	<meta property="og:title" content="The Ocean Knows First — El Niño and Papua New Guinea" />
 	<meta
 		property="og:description"
-		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is the fastest on record — what El Niño does to PNG, and what to do about it."
+		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is running ahead of every great El Niño at the same point — what El Niño does to PNG, and what to do about it."
 	/>
 	<meta
 		property="og:image"
@@ -74,7 +74,7 @@
 	<meta name="twitter:title" content="The Ocean Knows First — El Niño and Papua New Guinea" />
 	<meta
 		name="twitter:description"
-		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is the fastest on record — what El Niño does to PNG, and what to do about it."
+		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is running ahead of every great El Niño at the same point — what El Niño does to PNG, and what to do about it."
 	/>
 	<meta
 		name="twitter:image"
@@ -90,8 +90,8 @@
 		<p>
 			In 1997, the rain over Papua New Guinea failed. Rivers dropped until the barges that supply
 			whole districts stopped running. Gardens wilted from the coast to the high valleys, and on
-			clear drought nights, highland sweet-potato gardens froze. It was the driest year ever
-			measured in the country. In 2015, it happened again.
+			clear drought nights, highland sweet-potato gardens froze. It was the worst drought the
+			country's modern record had measured. In 2015, it happened again.
 		</p>
 		<p>
 			Both times, the first sign was not in PNG’s sky. It was in the temperature of seawater
@@ -100,8 +100,9 @@
 		</p>
 		<p>
 			It is happening a third time. In 2026 that ocean is warming faster than it did in 1982,
-			1997, 2015 or 2023 — the four strongest events on record. PNG’s National Weather Service
-			declared El Niño in May and expects the drought to run into 2027.
+			1997, 2015 or 2023 — the four great El Niños of the modern record — at the same point in
+			their onset years. PNG’s National Weather Service declared El Niño in May and expects the
+			drought to run into 2027.
 		</p>
 		<p>
 			What follows is the whole story, told through the
@@ -119,7 +120,7 @@
 		</div>
 		<div class="tldr-item" use:reveal={{ delay: 110 }}>
 			<p class="tldr-n">Fastest on record</p>
-			<p class="tldr-l">in 2026 the ocean signal outran 1982, 1997, 2015 and 2023</p>
+			<p class="tldr-l">in 2026 the ocean signal outran 1982, 1997, 2015 and 2023 at the same point</p>
 		</div>
 		<div class="tldr-item" use:reveal={{ delay: 220 }}>
 			<p class="tldr-n">To ~{now.calendar.hardestEnd}</p>
@@ -183,13 +184,18 @@
 		Data: the <strong>Pacific Community (SPC) climate-change indicators</strong> for Papua New
 		Guinea (dataflow <code>SPC:DF_CLIMATE_CHANGE(1.0)</code>, via
 		<code>stats.pacificdata.org</code>) — the official dataset of this year's Challenge, used
-		unaltered. El Niño years and chapter nine's monthly series:
-		<strong>NOAA</strong> (Oceanic Niño Index; Niño 3.4, observed through {now.latest.label}).
-		World-average emissions: <strong>EDGAR</strong> (EC-JRC). Coastlines:
-		<strong>Natural Earth</strong>. Drawings of mechanisms are labelled as illustrations; chapter
-		nine's one forward-looking panel is labelled an estimate and checked against the official
-		<strong>NOAA CPC / IRI</strong> and <strong>WMO</strong> outlooks. Live coverage current to
-		<strong>{now.updated.label}</strong>. No cookies, no tracking, fully static.
+		unaltered. One label is corrected, with the reasoning on the record: the dataflow publishes
+		the rainfall-anomaly series in “mm”, but at these magnitudes the values are a relative anomaly
+		index around zero — PNG’s rain runs to thousands of millimetres a year — so the piece plots
+		them as published and describes them as index points; no ranking or correlation is affected.
+		El Niño years and chapter nine's monthly series: <strong>NOAA</strong> (Oceanic Niño Index;
+		Niño 3.4 monthly anomaly, ERSST-based, observed through {now.latest.label}; plus one quoted
+		CPC weekly reading on an OISST basis). World-average emissions: <strong>EDGAR</strong>
+		(EC-JRC). Coastlines: <strong>Natural Earth</strong>. Drawings of mechanisms are labelled as
+		illustrations; chapter nine's one forward-looking panel is a historical analogue, labelled an
+		estimate and checked against the official <strong>NOAA CPC / IRI</strong> and
+		<strong>WMO</strong> outlooks. Live coverage current to <strong>{now.updated.label}</strong>.
+		No cookies, no tracking, fully static.
 	</p>
 </footer>
 

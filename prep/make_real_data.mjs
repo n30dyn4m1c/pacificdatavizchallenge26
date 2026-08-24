@@ -236,11 +236,26 @@ function pearson(pairs) {
 		driest10,
 		driest_elnino_count: driestElnino,
 		mean_rain_elnino: round(mean(elninoYears), 1),
-		mean_rain_other: round(mean(otherYears), 1)
+		mean_rain_other: round(mean(otherYears), 1),
+		// the unit decision, carried in the data itself: the dataflow labels this
+		// series "MM", but the magnitudes are a relative anomaly index around zero
+		// — implausible as millimetres for countries that average thousands of
+		// millimetres a year (see prep/README.md §1). The piece plots the values
+		// as published and describes them as index points; rankings and the
+		// correlation are unaffected by the relabel.
+		rain_series: {
+			name: ind_('RAIN_ANOM').name,
+			published_unit: ind_('RAIN_ANOM').unit,
+			plotted_unit: 'index points',
+			note:
+				'The dataflow publishes this series with unit "MM", but at these magnitudes the ' +
+				'values are a relative anomaly index around zero, not millimetres of rain. The ' +
+				'piece plots the values as published and describes them as index points.'
+		}
 	});
 	console.log(`  · r(ONI, rain) = ${round(r_oni, 2)}  (n=${both.length})`);
 	console.log(`  · driest 10: ${driestElnino} El Niño years — ${driest10.map((d) => d.year + '(' + d.phase[0] + ')').join(' ')}`);
-	console.log(`  · mean rain anomaly: El Niño years ${round(mean(elninoYears), 1)} mm vs other years ${round(mean(otherYears), 1)} mm`);
+	console.log(`  · mean rain anomaly: El Niño years ${round(mean(elninoYears), 1)} pts vs other years ${round(mean(otherYears), 1)} pts`);
 }
 
 // ── chapter 3 — the gardens (crop yield against the drought years) ──────────
@@ -351,7 +366,7 @@ function pearson(pairs) {
 		panels: [
 			panel('SST_ANOM', '°C', 'anomaly'),
 			panel('ST_ANOM', '°C', 'anomaly'),
-			panel('RAIN_ANOM', 'mm', 'anomaly'),
+			panel('RAIN_ANOM', 'index points', 'anomaly'),
 			// published rounded to 0.1 m — flagged so the chart can draw the
 			// published values as points instead of implying a smooth curve
 			panel('SEA_LVL', 'm', 'level', { resolution: 0.1 }),
@@ -377,8 +392,9 @@ function pearson(pairs) {
 		url: 'https://psl.noaa.gov/data/correlation/nina34.anom.data',
 		note:
 			'Monthly mean sea-surface temperature anomaly for the Niño 3.4 region (5°N–5°S, ' +
-			'170°–120°W). Exported with prep/fetch_nino34.py in July 2026; observations run ' +
-			'through June 2026. The only monthly series in the piece.'
+			'170°–120°W), ERSST-based (the PSL teleconnection indices are computed from ERSST.v5). ' +
+			'Exported with prep/fetch_nino34.py; observations run through July 2026. The only ' +
+			'monthly series in the piece.'
 	};
 
 	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -536,7 +552,7 @@ function pearson(pairs) {
 		name: 'NOAA CPC weekly Niño 3.4 index (OISST basis)',
 		url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/lanina/enso_evolution-status-fcsts-web.pdf',
 		note:
-			'Weekly index, quoted — a different product from the monthly series this chart draws, ' +
+			'Weekly index, quoted — a different product on a different SST basis (OISST) from the ' +
 			'so it is marked, not connected to the line.'
 	};
 	{

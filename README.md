@@ -24,12 +24,14 @@ Two interactive field notes (a drying-river slider, a highland frost-night toggl
 
 The charts are the official Challenge dataset: the Pacific Community (SPC) climate-change indicators, dataflow `SPC:DF_CLIMATE_CHANGE(1.0)`, exported from the Pacific Data Hub ([stats.pacificdata.org](https://stats.pacificdata.org/)) and filtered to Papua New Guinea. Annual, national-level observations, used unaltered. No synthetic data presented as observation.
 
+**One unit label is corrected, with the reasoning on the record.** The dataflow publishes the precipitation-anomaly series (`RAIN_ANOM`) in "mm", but at these magnitudes the values are a relative anomaly index around zero — PNG's span runs −26.7…+22.0 while the country averages thousands of millimetres of rain a year, so a national mm-scale anomaly would run to hundreds. The values are plotted as published, the dataflow's own unit is kept as provenance (`published_unit` in `scene_reveal.json`), and the piece describes them as **index points** — on the graphic, in chapter three's prose and in the colophon. Rankings and correlations are invariant to the relabel and unaffected.
+
 Documented companions supply what a national dataset cannot:
 
 - **NOAA CPC Oceanic Niño Index** (`prep/source/oni_cpc.csv`) — names the El Niño years. *Transcribed table; verify against the NOAA page before submission — see `prep/README.md`.*
-- **NOAA PSL Niño 3.4 monthly anomalies** (`prep/source/nino34_monthly.csv`, re-exportable with `prep/fetch_nino34.py`) — chapter 9's monthly series, 1970 → July 2026.
+- **NOAA PSL Niño 3.4 monthly anomalies** (`prep/source/nino34_monthly.csv`, re-exportable with `prep/fetch_nino34.py`) — chapter 9's monthly series, 1970 → July 2026 (ERSST-based, like the other PSL teleconnection indices).
 - **NOAA CPC / IRI and WMO outlooks, early August 2026** — the official expectations quoted beside chapter 9's estimate, with source URLs in the JSON.
-- **NOAA CPC weekly Niño 3.4 index, week centred 15 July 2026 (≈ +2.1 °C)** — one quoted reading, drawn as a ringed marker, never joined to the monthly line (a different product on a different SST basis).
+- **NOAA CPC weekly Niño 3.4 index, week centred 15 July 2026 (≈ +2.1 °C)** — one quoted reading, drawn as a ringed marker, never joined to the monthly line (a different product on a different SST basis: OISST, against the monthly series' ERSST).
 - **EDGAR (EC-JRC)** — the world-average GHG-per-capita reference (≈6.6 t CO₂e, 2023) in chapter 7.
 - **Natural Earth** (public domain) — coastlines and rivers, pre-projected by `prep/make_maps.mjs`.
 

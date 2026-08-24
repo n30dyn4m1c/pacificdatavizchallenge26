@@ -43,15 +43,26 @@
 			The Pacific Community's rainfall-anomaly record for Papua New Guinea (annual, 1979–2025)
 			mirrors the far ocean: when the Oceanic Niño Index spikes upward — El Niño — the rain at
 			home collapses. Eight of the ten driest years in the record are El Niño years; the other
-			two, 1992 and 1993, sit in the trailing warmth of the long 1991–92 event. Averaged across
-			the record, El Niño years run −5.9&nbsp;mm against +3.5&nbsp;mm in all other years, a
-			correlation of −0.64. The great El Niños of chapter two — 1982, 1997, 2015 — are the
-			great droughts of this chart.
+			two, 1992 and 1993, sit in the trailing warmth of the long 1991–92 event.
+		</p>
+		<p>
+			Averaged across the record, El Niño years run −5.9 points against +3.5 points in all
+			other years — a correlation of −0.64. Points, not millimetres: the dataflow publishes this
+			series labelled “mm”, but at these magnitudes the values are a relative anomaly index
+			around zero — Papua New Guinea’s rain runs to thousands of millimetres a year, so a true
+			mm-scale national anomaly would read in hundreds. The relabelling changes no ranking and
+			no correlation; the pattern is the point. And not every El Niño year is a drought year in
+			every province — the monsoon and local geography modulate the rain — but every great El
+			Niño on this record met a great shortfall.
+		</p>
+		<p>
+			The great El Niños of chapter two — 1982, 1997, 2015 — are the great droughts of this
+			chart.
 		</p>
 		{#if data}
 			<DataTable
-				caption="The ten driest years and the state of the far ocean"
-				columns={['Year', 'ENSO phase', 'Rainfall anomaly (mm)']}
+				caption="The ten driest years (1979–2025) by the SPC precipitation-anomaly series, and the state of the far ocean"
+				columns={['Year', 'ENSO phase', 'Rainfall anomaly (index points)']}
 				rows={data.driest10.map((d) => {
 					const yr = data.years.find((y) => y.year === d.year);
 					return [d.year, phaseName[d.phase] ?? d.phase, fmt(yr?.rain)];
@@ -65,7 +76,8 @@
 		<Figure
 			maxHeight={620}
 			title={figTitle[idx]}
-			subtitle="Papua New Guinea rainfall anomaly (mm) below; the Oceanic Niño Index (°C) above, same years, same axis"
+			subtitle="Papua New Guinea rainfall anomaly (index points) below; the Oceanic Niño Index (°C) above, same years, same axis"
+			note="The dataflow publishes this series labelled “mm”; at these magnitudes the values are a relative anomaly index around zero, so the piece plots them as published and calls them index points."
 			source="Rainfall: SPC climate-change indicators · ONI: NOAA CPC"
 		>
 			{#snippet body({ h })}
@@ -77,7 +89,7 @@
 						progress={sweep(progress, N)}
 						mode="light"
 						height={h}
-						ariaLabel="Two mirrored bar charts sharing one time axis from 1979 to 2025: the Oceanic Niño Index above, Papua New Guinea's rainfall anomaly below. Beneath almost every El Niño spike — 1982, 1997, 2015 — the rainfall collapses."
+						ariaLabel="Two mirrored bar charts sharing one time axis from 1979 to 2025: the Oceanic Niño Index above, Papua New Guinea's rainfall-anomaly index below. Beneath almost every El Niño spike — 1982, 1997, 2015 — the rainfall collapses."
 					/>
 				{/if}
 			{/snippet}
@@ -124,9 +136,9 @@
 				<span class="card-kicker">The rule</span>
 				<p>
 					In El Niño years PNG’s rain runs
-					<strong>{data ? data.mean_rain_elnino : '−5.9'}&nbsp;mm</strong> below normal, on
+					<strong>{data ? data.mean_rain_elnino : '−5.9'}&nbsp;points</strong> below normal, on
 					average; in all other years,
-					<strong>+{data ? data.mean_rain_other : '3.5'}&nbsp;mm</strong> above it.
+					<strong>+{data ? data.mean_rain_other : '3.5'}&nbsp;points</strong> above it.
 				</p>
 				<p>Put simply: <strong>when the far ocean warms, store water.</strong></p>
 			</div>

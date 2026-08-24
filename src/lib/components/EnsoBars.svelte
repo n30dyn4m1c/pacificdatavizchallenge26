@@ -36,10 +36,25 @@
 
 	const visibleUpTo = $derived(yrMin + Math.max(0, Math.min(1, progress)) * (yrMax - yrMin));
 	const color = (v) => (!colored ? ghost : v >= 0 ? imp.drought : imp.frost);
+
+	// hover readout: nearest year under the pointer
+	let hoverYear = $state(null);
+	function onMove(e) {
+		const rect = e.currentTarget.getBoundingClientRect();
+		const px = ((e.clientX - rect.left) / rect.width) * Math.max(w, 300);
+		hoverYear = Math.round(x.invert(px));
+	}
+	const PHASE = { elnino: 'El Niño', lanina: 'La Niña', neutral: 'neutral', pending: 'not yet classified' };
 </script>
 
 <div class="wrap" bind:clientWidth={w}>
-	<svg viewBox="0 0 {Math.max(w, 300)} {height}" role="img" aria-label={ariaLabel}>
+	<svg
+		viewBox="0 0 {Math.max(w, 300)} {height}"
+		role="img"
+		aria-label={ariaLabel}
+		onpointermove={onMove}
+		onpointerleave={() => (hoverYear = null)}
+	>
 		<!-- zero line: "an ordinary year" -->
 		<line x1={PAD.l} x2={Math.max(w, 300) - PAD.r} y1={y(0)} y2={y(0)} stroke={inkC.axis} stroke-width="1.4" />
 
@@ -94,7 +109,27 @@
 		{#each years.map((d) => d.year).filter((yr) => yr % 10 === 0) as yr (yr)}
 			<text x={x(yr)} y={height - 8} text-anchor="middle" font-size="12" fill={inkC.muted}>{yr}</text>
 		{/each}
+
+		{#if hoverYear != null}
+			<line x1={x(hoverYear)} x2={x(hoverYear)} y1={PAD.t} y2={height - PAD.b} stroke={inkC.axis} stroke-width="1" />
+		{/if}
 	</svg>
+
+	{#if hoverYear != null}
+		{@const d = years.find((y) => y.year === hoverYear)}
+		<div class="readout" style:color={inkC.secondary}>
+			<strong style:color={inkC.primary}>{hoverYear}</strong>
+			{#if d}
+				<span>
+					{#if d.oni != null}
+						ONI {d.oni > 0 ? '+' : ''}{d.oni.toFixed(1)}&nbsp;°C · {PHASE[d.phase] ?? d.phase}
+					{:else}
+						{PHASE[d.phase] ?? '—'} — the year is still being written
+					{/if}
+				</span>
+			{/if}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -106,5 +141,20 @@
 		display: block;
 		width: 100%;
 		height: auto;
+	}
+	.readout {
+		position: absolute;
+		top: 0.5rem;
+		left: 0.75rem;
+		display: flex;
+		gap: 0.6rem;
+		align-items: baseline;
+		font-size: 0.78rem;
+		font-variant-numeric: tabular-nums;
+		background: color-mix(in srgb, var(--paper, #fff) 92%, transparent);
+		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+		border-radius: 8px;
+		padding: 0.35rem 0.7rem;
+		pointer-events: none;
 	}
 </style>

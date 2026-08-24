@@ -13,7 +13,7 @@
 	 * ?notap=1 it holds a static drought-night frame so the story still reads.
 	 */
 	import { onMount } from 'svelte';
-	import { ink, impact, surfaces } from '$lib/palette.js';
+	import { ink, impact, plants, surfaces } from '$lib/palette.js';
 	import { ui } from '$lib/state.svelte.js';
 	import { reveal } from '$lib/reveal.js';
 
@@ -144,8 +144,8 @@
 			{#each [110, 200, 290, 380, 470, 560, 650, 740, 830] as gx, i (gx)}
 				{@const gy = 318 + (i % 3) * 4 - Math.floor(Math.abs(450 - gx) / 60)}
 				<path d="M{gx - 9} {gy} a9 9 0 0 1 18 0Z" fill={ink.dark.grid} />
-				<!-- the vines: safe ink on an ordinary night, frost-silver on a clear one -->
-				<g stroke={clear ? imp.frost : inkC.secondary} stroke-width="2.2" stroke-linecap="round" fill="none" style="transition: stroke 0.7s">
+				<!-- the vines: leaf-green on an ordinary night, dead brown-black after the frost -->
+				<g stroke={clear ? plants.dark.dead : plants.dark.alive} stroke-width="2.2" stroke-linecap="round" fill="none" style="transition: stroke 0.7s">
 					<path d="M{gx} {gy - 9} q-4 -8 -1 -13 M{gx} {gy - 9} q5 -6 9 -7" />
 				</g>
 			{/each}

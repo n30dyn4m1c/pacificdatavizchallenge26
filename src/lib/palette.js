@@ -158,6 +158,17 @@ export const impact = {
 };
 
 /**
+ * The field-note plants (the kaukau vines in FrostNight): leaf-green while
+ * alive on an ordinary night, dead brown-black after the frost. Illustration
+ * tokens only — they carry no ENSO sign, so they never touch the warm/cool
+ * arms. `dark` is the one the night scene uses; `light` exists for symmetry.
+ */
+export const plants = {
+	dark: { alive: '#639451', dead: '#453528' },
+	light: { alive: '#4f7d3f', dead: '#57432f' }
+};
+
+/**
  * The official PNG-NWS/NARI Drought Early Warning System tiers, in NARI's
  * own vocabulary and escalation order. Colors are the anomaly scale's warm
  * arm read as an ordinal ramp (watch → critical = deepening severity), so

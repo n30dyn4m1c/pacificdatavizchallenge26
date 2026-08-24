@@ -109,7 +109,7 @@
 				<span class="card-step" aria-hidden="true">3/4</span>
 				<span class="card-kicker">The big ones</span>
 				<p>
-					<strong>1982. 1997. 2015. 2023.</strong> The four strongest El Niños of the modern
+					<strong>1982. 1997. 2015. 2023.</strong> The four great El Niños of the modern
 					record. Remember these years — the next chapter puts PNG’s rain underneath them.
 				</p>
 			</div>

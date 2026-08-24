@@ -220,8 +220,8 @@
 		{/if}
 	</svg>
 
-	{#if hoverYear !== null && !compact}
-		<div class="readout" style="color:{inkC.secondary}">
+	{#if hoverYear !== null}
+		<div class="readout" class:compact style="color:{inkC.secondary}; left:{compact ? '2.2rem' : '3rem'}">
 			<strong style="color:{inkC.primary}">{hoverYear}</strong>
 			{#each series as s (s.key)}
 				{@const d = near(s, hoverYear)}
@@ -252,6 +252,13 @@
 		font-size: 0.75rem;
 		font-variant-numeric: tabular-nums;
 		pointer-events: none;
+	}
+	.readout.compact {
+		gap: 0.55rem;
+		font-size: 0.66rem;
+		background: color-mix(in srgb, var(--paper, #fff) 88%, transparent);
+		border-radius: 6px;
+		padding: 0.2rem 0.45rem;
 	}
 	.swatch {
 		display: inline-block;

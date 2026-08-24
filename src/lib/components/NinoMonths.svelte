@@ -181,13 +181,19 @@
 		return out;
 	});
 
-	// hover readout (aligned view): nearest month across all series
-	let hoverM = $state(null);
+	// hover readout: nearest month, in whichever view is showing
+	let hoverM = $state(null); // aligned view: month m = 0..17
+	let hoverR = $state(null); // recent view: index into `recent`
 	function onMove(e) {
-		if (!aligned) return;
 		const rect = e.currentTarget.getBoundingClientRect();
 		const px = ((e.clientX - rect.left) / rect.width) * W;
+		if (!aligned) {
+			hoverR = Math.max(0, Math.min(recent.length - 1, Math.round(xR.invert(px))));
+			hoverM = null;
+			return;
+		}
 		hoverM = Math.max(0, Math.min(SPAN - 1, Math.round(xA.invert(px))));
+		hoverR = null;
 	}
 	const atM = (rows, m) => rows?.find((d) => d.m === m);
 	const fmt = (v) => (v == null ? '—' : (v > 0 ? '+' : '') + v.toFixed(2));
@@ -205,7 +211,10 @@
 		role="img"
 		aria-label={ariaLabel}
 		onpointermove={onMove}
-		onpointerleave={() => (hoverM = null)}
+		onpointerleave={() => {
+			hoverM = null;
+			hoverR = null;
+		}}
 	>
 		<!-- shared frame: zero line + the El Niño threshold -->
 		<line x1={PAD.l} x2={W - PAD.r} y1={y(0)} y2={y(0)} stroke={inkC.axis} stroke-width="1.4" />
@@ -269,6 +278,9 @@
 					style="transition: opacity 0.4s"
 				>{a.text}</text>
 			{/each}
+			{#if hoverR != null}
+				<line x1={xR(hoverR)} x2={xR(hoverR)} y1={PAD.t} y2={svgH - PAD.b} stroke={inkC.axis} />
+			{/if}
 		</g>
 
 		<!-- ── view 2: the four precedents, 2026, and the estimate ──────────── -->
@@ -595,6 +607,17 @@
 			{#if phase >= 2 && atM(fc, hoverM) && atM(current?.months, hoverM) == null}
 				<span><i class="sw dash" style:border-color={colors.accent}></i>est. {fmt(atM(fc, hoverM)?.mean)}</span>
 			{/if}
+		</div>
+	{/if}
+
+	{#if hoverR != null && !aligned && data}
+		{@const d = recent[hoverR]}
+		<div class="readout" style:color={inkC.secondary}>
+			<strong style:color={inkC.primary}>{d.date}</strong>
+			<span
+				><i class="sw line" style:background={d.anomaly >= 0 ? imp.drought : imp.frost}></i>{fmt(d.anomaly)}
+				°C</span
+			>
 		</div>
 	{/if}
 </div>

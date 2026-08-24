@@ -39,12 +39,16 @@
 		<h3>The watchers, in prose</h3>
 		<p>
 			The Pacific Community's record of Papua New Guinea's meteorological monitoring network runs
-			from 1951, when the country reported a single station, to 2026, when it reports six. It is
-			the least dramatic series in the dataset and the most important: every chart in this piece
-			exists because someone kept measuring. And because Papua New Guinea's droughts are made by
-			a far ocean that tips months before the rain fails, watching is not bookkeeping — it is
-			early warning. The current ENSO season is still unclassified; when it tips, the ocean will
-			say so first, and this time someone is listening.
+			from 1951, when the country reported a single station, to 2026, when it reports six. Six is
+			the SPC indicator's own count, not the whole national network: Papua New Guinea's full
+			observing network — manual, automatic and aviation stations — has always been far larger,
+			but few stations keep the continuous, climate-quality records this dataset runs on, and
+			coverage stays sparse. It is the least dramatic series in the dataset and the most
+			important: every chart in this piece exists because someone kept measuring. And because
+			Papua New Guinea's droughts are made by a far ocean that tips months before the rain fails,
+			watching is not bookkeeping — it is early warning. The current ENSO season is still
+			unclassified; when it tips, the ocean will say so first, and this time someone is
+			listening.
 		</p>
 		{#if data}
 			<DataTable
@@ -100,8 +104,8 @@
 				<span class="card-step" aria-hidden="true">2/4</span>
 				<span class="card-kicker">Today</span>
 				<p>
-					Today it reports <strong>six</strong>. Every chart in this piece exists because
-					someone kept measuring.
+					Today it reports <strong>six</strong> — the long-record core of the network. Every
+					chart in this piece exists because someone kept measuring.
 				</p>
 			</div>
 		</div>

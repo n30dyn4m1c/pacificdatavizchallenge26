@@ -88,7 +88,7 @@
 			Month by month, the last three years hold the whole see-saw: the 2023–24 El Niño peaking
 			near +2 °C, a weak La Niña through 2024 and 2025, then a fast reversal in early 2026 — from
 			{now.flip[0].text} °C in {now.flip[0].month} to {now.latest.text} °C by {now.latest.month}.
-			Laid over the {now.events} strongest El Niños of the record, 2026 at {now.anchorMonth} is
+			Laid over the {now.events} great El Niños of the record, 2026 at {now.anchorMonth} is
 			warmer than {#each now.standings as s, i (s.onset)}{i > 0
 					? i === now.standings.length - 1
 						? ' and '
@@ -105,8 +105,9 @@
 			for the {now.scoring.readingLabel} was about {now.scoring.readingText} °C — above anything
 			the four precedents reached by that month. All {now.events} precedents were cooler than
 			2026 at {now.anchorMonth}, which is why paths drawn from their own levels run low. Started
-			from where 2026 actually is, the same {now.events} trajectories put {now.scoring.month} at
-			{now.scoring.anchoredHereText} and peak near {now.anchored.text} °C. The official outlook
+			from where 2026 actually is, the same {now.events} trajectories{#if now.scoring.anchoredHereText}
+			put {now.scoring.month} at {now.scoring.anchoredHereText} and{/if} peak near
+			{now.anchored.text} °C. The official outlook
 			agrees: as of early August 2026 an El Niño Advisory is in effect, continuation into early
 			2027 is put at roughly 97 %, and a very strong peak (+2.0 °C or more) in late 2026 is the
 			central expectation.
@@ -133,8 +134,8 @@
 		<Figure
 			title={figTitle[idx]}
 			subtitle="Niño&nbsp;3.4 anomaly (°C), month by month · observed to {now.latest.label}, plus one cited weekly reading"
-			note="The dashed path and its band are an <strong>estimate</strong> built from the four precedents — not an observation, and not an official forecast. The ringed point is a <strong>quoted weekly index</strong>, a different product: marked, never joined to the line."
-			source="NOAA Physical Sciences Laboratory · checked against the NOAA CPC / IRI outlook and the WMO update, early August 2026"
+			note="The dashed path and its band are an <strong>estimate</strong> built from the four precedents — a historical analogue, not an observation and not an official forecast. The ringed point is a <strong>quoted weekly index</strong> (CPC weekly, OISST basis) — a different product from the monthly ERSST-based line: marked, never joined to it."
+			source="NOAA Physical Sciences Laboratory (monthly Niño 3.4, ERSST-based) · checked against the NOAA CPC / IRI outlook and the WMO update, early August 2026"
 		>
 			{#snippet body({ h })}
 			{#if data}
@@ -179,7 +180,7 @@
 				<span class="card-step" aria-hidden="true">2/{N}</span>
 				<span class="card-kicker">Faster than all four greats</span>
 				<p>
-					Lay 2026 over the {now.events} strongest El Niños, month for month. At
+					Lay 2026 over the {now.events} great El Niños, month for month. At
 					{now.anchorMonth} of their first year, {#each now.standings as s, i (s.onset)}{i > 0
 							? ' '
 							: ''}{s.onset} stood at {s.text}{GLOSS[s.onset] ?? ''}.{/each}

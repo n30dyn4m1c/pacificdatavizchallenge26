@@ -51,10 +51,25 @@
 	const oniColor = (v) => (v >= 0 ? imp.drought : imp.frost);
 	const rainColor = (v) => (v < 0 ? imp.drought : imp.frost);
 	const fmt = (v, p = 1) => (v > 0 ? '+' : '') + v.toFixed(p);
+
+	// hover readout: nearest year under the pointer, values from both bands
+	let hoverYear = $state(null);
+	function onMove(e) {
+		const rect = e.currentTarget.getBoundingClientRect();
+		const px = ((e.clientX - rect.left) / rect.width) * Math.max(w, 300);
+		hoverYear = Math.round(x.invert(px));
+	}
+	const PHASE = { elnino: 'El Niño', lanina: 'La Niña', neutral: 'neutral', pending: 'not yet classified' };
 </script>
 
 <div class="wrap" bind:clientWidth={w}>
-	<svg viewBox="0 0 {Math.max(w, 300)} {height}" role="img" aria-label={ariaLabel}>
+	<svg
+		viewBox="0 0 {Math.max(w, 300)} {height}"
+		role="img"
+		aria-label={ariaLabel}
+		onpointermove={onMove}
+		onpointerleave={() => (hoverYear = null)}
+	>
 		<!-- band titles: the long form ran off the right edge on a phone, so
 		     narrow renders drop to the band name alone (the figure subtitle
 		     above already carries the units) -->
@@ -67,7 +82,7 @@
 		<text x={PAD.l} y={PAD.t + bandH + GAP - 12} font-size="11.5" font-weight="700" fill={inkC.secondary}>
 			{narrow
 				? 'THE RAIN AT HOME · dry down'
-				: 'THE RAIN AT HOME · Papua New Guinea rainfall anomaly (mm)'}
+				: 'THE RAIN AT HOME · Papua New Guinea rainfall anomaly (index points)'}
 		</text>
 
 		<!-- zero baselines -->
@@ -138,7 +153,7 @@
 					text-anchor="middle"
 					font-size="10"
 					fill={inkC.secondary}
-				>{fmt(d.rain)} mm</text>
+				>{fmt(d.rain)} pts</text>
 			{/if}
 		{/each}
 
@@ -152,7 +167,28 @@
 				fill={inkC.muted}
 			>{yr}</text>
 		{/each}
+
+		{#if hoverYear != null}
+			<line x1={x(hoverYear)} x2={x(hoverYear)} y1={PAD.t} y2={height - PAD.b} stroke={inkC.axis} stroke-width="1" opacity="0.7" />
+		{/if}
 	</svg>
+
+	{#if hoverYear != null}
+		{@const d = years.find((y) => y.year === hoverYear)}
+		<div class="readout" style:color={inkC.secondary}>
+			<strong style:color={inkC.primary}>{hoverYear}</strong>
+			{#if d}
+				<span>
+					{#if d.oni != null}
+						ONI {d.oni > 0 ? '+' : ''}{d.oni.toFixed(1)}&nbsp;°C · {PHASE[d.phase] ?? d.phase}
+					{:else}
+						{PHASE[d.phase] ?? '—'} — the year is still being written
+					{/if}
+				</span>
+				<span>rain {d.rain > 0 ? '+' : ''}{d.rain.toFixed(1)}&nbsp;pts</span>
+			{/if}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -164,5 +200,21 @@
 		display: block;
 		width: 100%;
 		height: auto;
+	}
+	.readout {
+		position: absolute;
+		top: 0.5rem;
+		left: 0.75rem;
+		display: flex;
+		gap: 0.7rem;
+		align-items: baseline;
+		flex-wrap: wrap;
+		font-size: 0.78rem;
+		font-variant-numeric: tabular-nums;
+		background: color-mix(in srgb, var(--paper, #fff) 92%, transparent);
+		border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+		border-radius: 8px;
+		padding: 0.35rem 0.7rem;
+		pointer-events: none;
 	}
 </style>

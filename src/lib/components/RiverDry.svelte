@@ -69,8 +69,16 @@
 		};
 	});
 
-	// water surface: normal season y=252 → month six y=322 (bed at ~330)
-	const level = $derived(252 + (322 - 252) * (months / 6));
+	// water surface: normal season y=252 → month six y=331, the exposed bed.
+	// The river falls hard while it is dying, then eases as it nears the bed —
+	// so by the time the barge grounds (month three) the water has already
+	// dropped below its hull, and the last months only drain the center pool.
+	const level = $derived(months <= 3 ? 252 + (62 * months) / 3 : 314 + (17 * (months - 3)) / 3);
+	// the mid-channel sandbar (the barge's grounding point): it shows through
+	// the shallows as the water drops and stands clear from month three on
+	const sandbar = $derived(Math.max(0, Math.min(1, (months - 2.2) / 0.8)));
+	// grounded: the barge settles onto the sandbar (hull bottom ≈ y=312) —
+	// high and dry, with the water lapping at its downstream corner
 	const grounded = $derived(months >= 3);
 
 	const STAGES = [
@@ -129,6 +137,18 @@
 				<path d="M0 420L0 200 Q60 205 110 226 Q150 244 150 331 Q450 349 750 331 Q750 240 800 222 Q850 206 900 202 L900 420 Z"
 					fill={inkC.grid} stroke={inkC.axis} stroke-width="1.2" />
 
+				<!-- mid-channel sandbar: where the barge grounds. Drawn over the
+				     water so it reads as a shoal showing through the shallows as
+				     the river falls; fully clear once the water drops below it. -->
+				<path
+					class="sandbar"
+					d="M350 340 L378 314 Q430 309 482 314 L510 340 Q450 343 350 340 Z"
+					fill="color-mix(in srgb, {inkC.grid} 50%, {surfaces.paper})"
+					stroke="color-mix(in srgb, {inkC.axis} 55%, transparent)"
+					stroke-width="1.2"
+					opacity={sandbar}
+				/>
+
 				<!-- exposed bed cracks once the water is low -->
 				{#if months >= 4}
 					<g class="fade-in" stroke={inkC.secondary} stroke-width="1.4" opacity="0.6">
@@ -152,13 +172,14 @@
 					{months >= 4 ? 'pump: dry' : 'pump intake'}
 				</text>
 
-				<!-- the barge: floats on the surface until the river lets go of it -->
-				<g class="barge" style:transform="translate(430px, {grounded ? 318 : level - 9}px) rotate({grounded ? 7 : 0}deg)">
+				<!-- the barge: floats on the surface until the river lets go of it,
+				     then settles onto the sandbar — aground, not sunk -->
+				<g class="barge" style:transform="translate(430px, {grounded ? 296 : level - 9}px) rotate({grounded ? 7 : 0}deg)">
 					<rect x="-42" y="0" width="84" height="16" rx="3" fill={inkC.primary} />
 					<rect x="-14" y="-14" width="26" height="14" rx="2" fill={inkC.primary} />
 				</g>
 				{#if grounded}
-					<text class="fade-in" x="430" y="296" text-anchor="middle" font-size="13" font-weight="800" fill={imp.drought}>
+					<text class="fade-in" x="430" y="272" text-anchor="middle" font-size="13" font-weight="800" fill={imp.drought}>
 						aground
 					</text>
 				{/if}
@@ -242,6 +263,10 @@
 
 	.water {
 		transition: transform 0.6s ease;
+	}
+
+	.sandbar {
+		transition: opacity 0.5s ease;
 	}
 
 	.barge {
@@ -335,6 +360,7 @@
 
 	@media (prefers-reduced-motion: reduce) {
 		.water,
+		.sandbar,
 		.barge {
 			transition: none;
 		}

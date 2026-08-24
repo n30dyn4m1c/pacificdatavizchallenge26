@@ -16,6 +16,22 @@ per year — covering 22 Pacific countries and territories and 13
 climate-change indicators, with coverage running (for some indicators) back
 to 1850. The CSV is committed so the pipeline is fully reproducible offline.
 
+> ⚠️ **One unit label is corrected, with the reasoning carried into the
+> piece.** The dataflow publishes the precipitation-anomaly series
+> (`RAIN_ANOM`) with unit measure `MM`, but at these magnitudes the values
+> are implausible as millimetres of rain: every country's series hovers
+> around zero within roughly ±20–70 (PNG's spans −26.7…+22.0), while mean
+> annual rainfall across the Pacific runs to thousands of millimetres a year
+> and real mm-scale national anomalies run to hundreds. The series is
+> evidently a relative anomaly index (percentage-of-normal or standardized)
+> regardless of its published unit label. The pipeline therefore passes the
+> values through **real and unaltered**, attaches the dataflow's own unit as
+> `published_unit`, and the piece plots and describes them as **index
+> points** — stated on the graphic, in the prose and in the colophon.
+> Rankings and correlations (which are invariant to any monotone relabel)
+> are unaffected. The pipeline writes the decision into
+> `scene_reveal.json` as `rain_series`.
+
 ### 2. `source/oni_cpc.csv` — the Oceanic Niño Index (NOAA CPC)
 
 The one series in the piece not from the SPC dataflow: for each year
@@ -40,7 +56,8 @@ Chapter nine runs at monthly resolution, and this is its series: the
 **monthly mean SST anomaly for the Niño 3.4 region** (5°N–5°S, 170°–120°W)
 from the NOAA Physical Sciences Laboratory
 (<https://psl.noaa.gov/data/correlation/nina34.anom.data>), 1970 through
-June 2026. `fetch_nino34.py` re-exports it (NOAA marks unobserved months
+July 2026 (the PSL teleconnection indices are **ERSST-based**). `fetch_nino34.py`
+re-exports it (NOAA marks unobserved months
 `-99.99`; the script drops them). When NOAA appends a month, re-run the
 fetch and the pipeline: the "2026 so far" line, the analogue estimate, its
 weights and the timing brackets all recompute.
@@ -50,7 +67,7 @@ estimate** — the piece's only forward-looking numbers, and it is labelled
 as an estimate on the graphic and in the legend. Method, in full: align
 the four great El Niños (1982, 1997, 2015, 2023) by calendar month over
 Jan(onset)–Jun(onset+1); weight each by inverse RMSE against 2026's
-observed January–June; the dashed path is the weighted mean of the four
+observed months to date (January–July); the dashed path is the weighted mean of the four
 trajectories, the band their min–max envelope. Nothing is tuned by hand.
 
 A second, **anchored** variant is computed alongside it
@@ -62,7 +79,7 @@ the level-based path would otherwise be read as a ceiling. The chart's band
 and headline dashed path stay level-based — that is what was actually
 measured — and the anchored path appears only from the chapter's scoring
 card onward, as a lighter dashed line with no band of its own, so the
-graphic never carries two envelopes at once. Its peak (≈ +2.8 °C) is
+graphic never carries two envelopes at once. Its peak (≈ +2.6 °C) is
 quoted in the copy.
 
 > ⚠️ **Two cited numbers in this chapter, and the reason for the
@@ -84,8 +101,9 @@ quoted in the copy.
   replaced the mid-June 2026 outlook, which read "strong".
 - `latest_reading` — the **CPC weekly Niño 3.4 index for the week centred
   15 July 2026, ≈ +2.1 °C**. This is a *different product on a different
-  SST basis* from the monthly series the chart draws, so it is never
-  appended to `nino34_monthly.csv` and never joined to the plotted line:
+  SST basis* (**OISST**) from the monthly **ERSST-based** series the chart
+  draws, so it is never appended to `nino34_monthly.csv` and never joined
+  to the plotted line:
   the scene draws it as a ringed, unconnected marker that names itself as
   a quoted weekly value. The pipeline also records whether it falls above
   the estimate's envelope for the same month (`vs_estimate`) — as of this
