@@ -337,7 +337,7 @@
 	}
 
 	.loop-toggle {
-		min-height: 34px;
+		min-height: 44px; /* tap-target floor */
 		font: 600 0.72rem/1 'Public Sans', system-ui, sans-serif;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;

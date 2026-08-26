@@ -9,8 +9,12 @@ export const ui = $state({
 	 * (beats, hotspots, toggles, selectors) renders nothing, so the
 	 * scroll-only narrative can be proof-read on its own. The scroll must
 	 * always tell the complete story — notap only removes enrichment.
+	 * Read synchronously at module load (not in the layout's onMount) so
+	 * child components mounting before the layout see the flag already set.
 	 */
-	noTap: false,
+	noTap:
+		typeof window !== 'undefined' &&
+		new URLSearchParams(window.location.search).get('notap') === '1',
 	/**
 	 * The reader's current month in Pacific/Port_Moresby time, {y, m(1-12)}.
 	 * Computed CLIENT-SIDE in +layout.svelte — the "you are here" marker has

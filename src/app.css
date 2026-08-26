@@ -481,6 +481,13 @@ a {
 		font-size: 0.76rem;
 	}
 
+	/* chapter nine's cards are the longest in the piece (five dense cards, up
+	   to ~17 lines on a phone); give them a deeper reserve than the default
+	   band so they clear the chart instead of riding over it */
+	#scene-9-now .graphic {
+		padding-bottom: clamp(15rem, 52svh, 27rem);
+	}
+
 	.fig-foot {
 		font-size: 0.66rem;
 	}
@@ -497,6 +504,17 @@ a {
 		color-mix(in srgb, currentColor 2%, transparent)
 	);
 	border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
+}
+
+/* a lazy chart chunk failed to load: a quiet note instead of a forever-empty
+   skeleton — every scene still carries its prose and data-table equivalents */
+.chart-failed {
+	margin: 0;
+	padding: 1.25rem 1.5rem;
+	border-radius: 8px;
+	border: 1px dashed color-mix(in srgb, currentColor 28%, transparent);
+	font-size: 0.85rem;
+	color: var(--ink-light-secondary);
 }
 
 /* one surface for the whole piece */

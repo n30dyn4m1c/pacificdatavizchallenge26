@@ -73,7 +73,7 @@
 						state={idx}
 						height={h}
 						width={w}
-						ariaLabel="Unit chart comparing yearly greenhouse-gas emissions per person: the world average of about 6.6 tonnes shown as 66 dots, against Papua New Guinea's 1.2 tonnes shown as 12 dots."
+						ariaLabel="Unit chart comparing yearly greenhouse-gas emissions per person: the world average of about 6.6 tonnes shown as 66 dots, against Papua New Guinea's {data.latest.value} tonne{data.latest.value === 1 ? '' : 's'} shown as {Math.round(data.latest.value * 10)} dots."
 					/>
 				{/if}
 			{/snippet}

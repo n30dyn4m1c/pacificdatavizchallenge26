@@ -7,9 +7,9 @@
 	 * Sirinumu drawdown and Port Moresby's power rationing). Same contract
 	 * as the 1997/2015 shelf: external links, our summaries.
 	 *
-	 * Kept current by hand — last refreshed 6 Aug 2026, when the Highlands
-	 * frost reports and the move of the official outlook to "very strong" were
-	 * added. The "as of" line in the shelf note below comes from the pipeline
+	 * Kept current by hand — last refreshed 13 Aug 2026, when the mid-August
+	 * CPC discussion moved the official outlook from "very strong" toward
+	 * "historic". The "as of" line in the shelf note below comes from the pipeline
 	 * (now.updated) — update OFFICIAL.as_of in prep/make_real_data.mjs and
 	 * re-run it, and every freshness surface moves together.
 	 */
@@ -96,15 +96,15 @@
 			]
 		},
 		{
-			source: 'NOAA CPC / IRI · WMO',
+			source: 'NOAA CPC · WMO',
 			date: 'August 2026',
-			title: 'The outlook moves from “strong” to “very strong”',
-			url: 'https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/',
+			title: 'The official outlook: “very strong” is now the baseline — “historic” is on the table',
+			url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml',
 			summary:
-				'The far-ocean signal chapter nine reads, updated. Between June and August the official expectation for this event crossed the threshold that 1982, 1997 and 2015 defined.',
+				'The far-ocean signal chapter nine reads, updated. The 13 August discussion moved the official expectation again: not just a very strong event, but a real chance of one that exceeds every El Niño since 1950.',
 			points: [
-				'El Niño Advisory in force; continuation into early 2027 put at roughly 97 %.',
-				'A very strong peak — Niño 3.4 at or above +2.0 °C — is now the central expectation for late 2026.',
+				'El Niño Advisory in force; the chance of a very strong event (Niño 3.4 ≥ +2.0 °C) in the 2026–27 fall–winter is above 90 %.',
+				'CPC puts a 69 % chance on a historic peak for October–December 2026 — a 3-month ONI of +2.5 °C or more, beyond 1982, 1997 and 2015.',
 				'The quoted weekly index reached about +2.1 °C in mid-July; WMO’s August update expects further intensification through October.'
 			]
 		}
@@ -154,7 +154,7 @@
 
 	.shelf {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
 		gap: 1.25rem;
 	}
 

@@ -80,18 +80,24 @@
 		// fetch with a tiny retry (transient drops are the norm on slow mobile
 		// links); only after the retries are spent do we surface the prose
 		// fallback so the scroll flow is never blocked on a failed request.
+		// `dead` guards the retry timers and in-flight responses after unmount.
+		let dead = false;
+		const ac = new AbortController();
 		function loadData(attempt = 0) {
-			fetch(`${base}${dataUrl}`)
+			if (dead) return;
+			fetch(`${base}${dataUrl}`, { signal: ac.signal })
 				.then((r) => {
 					if (!r.ok) throw new Error(r.statusText);
 					return r.json();
 				})
 				.then((d) => {
+					if (dead) return;
 					dataError = false;
 					data = d;
 					ondata?.(d);
 				})
-				.catch(() => {
+				.catch((e) => {
+					if (dead || e?.name === 'AbortError') return;
 					if (attempt < 2) {
 						setTimeout(() => loadData(attempt + 1), 400 * 2 ** attempt);
 					} else {
@@ -99,6 +105,14 @@
 					}
 				});
 		}
+
+		// Ctrl+P from the top of the page: the epilogue's JSON only loads when
+		// the scene approaches, so a top-of-page print would ship it empty.
+		// Best-effort: kick the fetch on beforeprint (idempotent).
+		const onBeforePrint = () => {
+			if (dataUrl && data === null && !dataError) loadData();
+		};
+		window.addEventListener('beforeprint', onBeforePrint);
 
 		let io = null;
 		if (dataUrl) {
@@ -117,9 +131,12 @@
 		}
 
 		return () => {
+			dead = true;
+			ac.abort();
 			scroller.destroy();
 			window.removeEventListener('scroll', onScroll);
 			window.removeEventListener('resize', onResize);
+			window.removeEventListener('beforeprint', onBeforePrint);
 			io?.disconnect();
 		};
 	});
@@ -141,6 +158,10 @@
 			class="scene-prose"
 			class:sr-only={!ui.readerMode && !dataError}
 			class:revealed={ui.readerMode || dataError}
+			/* sr-only is clipped, not removed: without inert, the hidden
+			   data-table summaries inside would stay focusable and keyboard
+			   users would tab into ~9 invisible controls per page */
+			inert={!ui.readerMode && !dataError}
 		>
 			{@render prose({ data })}
 		</div>

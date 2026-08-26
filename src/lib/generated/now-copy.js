@@ -101,7 +101,7 @@ export const now = {
 		"swingback": "June 2027"
 	},
 	"updated": {
-		"date": "2026-08-06",
-		"label": "6 August 2026"
+		"date": "2026-08-13",
+		"label": "13 August 2026"
 	}
 };

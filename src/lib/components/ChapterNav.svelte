@@ -93,7 +93,14 @@
 
 	function jump(id) {
 		open = false;
-		document.getElementById(id)?.scrollIntoView({ block: 'start' });
+		const el = document.getElementById(id);
+		el?.scrollIntoView({ block: 'start' });
+		// move focus with the reader; non-interactive headings need a
+		// tabindex to accept it (preventScroll: the scroll is already done)
+		if (el) {
+			el.setAttribute('tabindex', '-1');
+			el.focus({ preventScroll: true });
+		}
 	}
 </script>
 
@@ -116,7 +123,12 @@
 		<ul id="chapter-list" class="nav-list" hidden={!open}>
 			{#each CHAPTERS as c, i (c.id)}
 				<li>
-					<button class="nav-item" class:here={i === current} onclick={() => jump(c.id)}>
+					<button
+						class="nav-item"
+						class:here={i === current}
+						aria-current={i === current ? 'true' : undefined}
+						onclick={() => jump(c.id)}
+					>
 						<span class="nav-n">{c.n || '—'}</span>
 						<span>{c.name}</span>
 					</button>
@@ -212,9 +224,10 @@
 
 	.nav-item {
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		gap: 0.6rem;
 		width: 100%;
+		min-height: 44px; /* tap-target floor, like every other control */
 		text-align: left;
 		background: none;
 		border: 0;

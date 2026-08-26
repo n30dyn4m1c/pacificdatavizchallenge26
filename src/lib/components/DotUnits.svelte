@@ -2,7 +2,7 @@
 	/**
 	 * DotUnits — the ledger, as things you can count. One dot = 100 kg of
 	 * CO₂-equivalent per person per year. The world average (≈6.6 t → 66
-	 * dots) fills against Papua New Guinea's ≈1.2 t (12 dots). Dots pop in
+	 * dots) fills against Papua New Guinea's ≈1.0 t (10 dots). Dots pop in
 	 * with a tiny stagger — a static, deterministic animation driven purely
 	 * by the `state` the active card sets.
 	 *
@@ -20,7 +20,7 @@
 
 	let {
 		world = { value: 6.6, label: 'World average' },
-		png = { value: 1.2, label: 'Papua New Guinea' },
+		png = { value: 1.0, label: 'Papua New Guinea' },
 		state = 0,
 		mode = 'light',
 		/** measured box from Figure — the grid pitch scales to fill it */

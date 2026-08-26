@@ -516,23 +516,23 @@ function pearson(pairs) {
 
 	// The official outlook the estimate is checked against (cited reference values,
 	// not a dataset — same pattern as the EDGAR world-average number in chapter 7).
-	// Refreshed 6 Aug 2026: between the mid-June outlook and now, the official
-	// expectation moved from "strong" to "very strong", so the check the scene
-	// runs against the estimate had to move with it.
+	// Refreshed 13 Aug 2026 (CPC ENSO Diagnostic Discussion of 13 Aug; WMO update
+	// early Aug): the official expectation has moved again — not just "very strong"
+	// but now a >90 % chance of a very strong event, with a 69 % chance that the
+	// peak exceeds every El Niño since 1950.
 	const OFFICIAL = {
-		name: 'NOAA CPC / IRI ENSO outlook · WMO update, early August 2026',
-		as_of: '2026-08-06',
+		name: 'NOAA CPC ENSO Diagnostic Discussion, 13 Aug 2026 · WMO update, early August 2026',
+		as_of: '2026-08-13',
 		url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml',
 		iri_url: 'https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/',
 		wmo_url: 'https://wmo.int/publication-series/el-ninola-nina-updates',
 		verify:
-			'Cited reference points, read from the published outlooks and the reporting on them; ' +
-			'the build environment cannot reach noaa.gov (see prep/README.md §3). Re-check against ' +
-			'the CPC discussion and the IRI Quick Look before submission.',
+			'Read from the CPC ENSO Diagnostic Discussion of 13 August 2026 and the WMO ' +
+			'update of early August 2026. Re-check when a newer discussion is issued.',
 		points: [
 			'An El Niño Advisory is in effect: El Niño is present and still strengthening.',
-			'Continuation through the 2026–27 season is all but certain — about a 97 % chance it holds into early 2027.',
-			'A very strong peak (Niño 3.4 ≥ +2.0 °C) is now the central expectation, late 2026; reported odds for the Oct–Dec / Nov–Jan window run in the 60–80 % range.',
+			'The chance of a very strong event (Niño 3.4 ≥ +2.0 °C) during the fall and winter of 2026–27 is put at greater than 90 %.',
+			'For October–December 2026, CPC puts a 69 % chance on a historic event — one exceeding the strength of every El Niño since 1950 (a 3-month running ONI of +2.5 °C or more).',
 			'WMO’s August update expects further intensification through August–October 2026.'
 		]
 	};
@@ -541,8 +541,8 @@ function pearson(pairs) {
 	// part of the monthly series: it is the CPC *weekly* index (a different,
 	// higher-frequency product on a different SST basis), quoted as a cited
 	// reference point and drawn as a single labelled marker, never joined to the
-	// monthly line. It earns its place because it is the news: it sits above the
-	// precedent envelope for the same month.
+	// monthly line. It earns its place because it is the news: it sits above
+	// anything the four precedents reached by the same month.
 	const LATEST_READING = {
 		date: '2026-07-15',
 		label: 'week centred 15 Jul 2026',
@@ -553,7 +553,7 @@ function pearson(pairs) {
 		url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/lanina/enso_evolution-status-fcsts-web.pdf',
 		note:
 			'Weekly index, quoted — a different product on a different SST basis (OISST) from the ' +
-			'so it is marked, not connected to the line.'
+			'monthly ERSST-based series the chart draws, so it is marked, not connected to the line.'
 	};
 	{
 		// Score the cited reading honestly. Against the estimate it only counts

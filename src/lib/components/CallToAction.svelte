@@ -384,8 +384,8 @@
 		position: absolute;
 		top: 0.85rem;
 		right: 0.85rem;
-		width: 34px;
-		height: 34px;
+		width: 44px; /* tap-target floor */
+		height: 44px;
 		display: grid;
 		place-items: center;
 		background: none;

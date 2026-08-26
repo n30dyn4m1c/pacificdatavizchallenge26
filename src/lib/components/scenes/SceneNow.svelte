@@ -6,8 +6,9 @@
 	 * 2026), then 2026 laid over the four great onsets, then the honest
 	 * version of "what happens next" — an analogue estimate labelled as an
 	 * estimate, checked against the official CPC/IRI outlook — then the
-	 * chapter marks its own homework against the latest cited reading, and
-	 * finally the calendar it implies. Data: static/data/scene_now.json
+	 * chapter scores the cited weekly reading against the precedents (and
+	 * against the estimate, wherever an estimate for that month actually
+	 * existed), and finally the calendar it implies. Data: static/data/scene_now.json
 	 * (NOAA PSL Niño 3.4 monthly; all derived numbers computed in /prep).
 	 *
 	 * Every number in the copy below comes from `$lib/generated/now-copy.js`,
@@ -31,7 +32,7 @@
 		'The last three years, month by month',
 		`${now.latest.label}: ahead of all four great El Niños`,
 		'What the record says happens next — an estimate',
-		'That estimate has already been beaten',
+		'Already running above every precedent',
 		'The months to prepare for'
 	];
 
@@ -44,7 +45,7 @@
 	// pipeline can't generate, keyed so the standings order stays data-driven
 	const GLOSS = {
 		1982: '',
-		1997: ' — the drought that emptied the rivers',
+		1997: 'the drought that emptied the rivers',
 		2015: '',
 		2023: ''
 	};
@@ -108,9 +109,9 @@
 			from where 2026 actually is, the same {now.events} trajectories{#if now.scoring.anchoredHereText}
 			put {now.scoring.month} at {now.scoring.anchoredHereText} and{/if} peak near
 			{now.anchored.text} °C. The official outlook
-			agrees: as of early August 2026 an El Niño Advisory is in effect, continuation into early
-			2027 is put at roughly 97 %, and a very strong peak (+2.0 °C or more) in late 2026 is the
-			central expectation.
+			agrees: as of mid-August 2026 an El Niño Advisory is in effect, the chance of a very
+			strong event (≥ +2.0&nbsp;°C) through the 2026–27 fall and winter is put above 90 % —
+			with a 69 % chance the peak exceeds every El Niño since 1950.
 		</p>
 		<p>
 			On a calendar, that means the hard months — failing rain, falling rivers, frost-prone
@@ -135,7 +136,7 @@
 			title={figTitle[idx]}
 			subtitle="Niño&nbsp;3.4 anomaly (°C), month by month · observed to {now.latest.label}, plus one cited weekly reading"
 			note="The dashed path and its band are an <strong>estimate</strong> built from the four precedents — a historical analogue, not an observation and not an official forecast. The ringed point is a <strong>quoted weekly index</strong> (CPC weekly, OISST basis) — a different product from the monthly ERSST-based line: marked, never joined to it."
-			source="NOAA Physical Sciences Laboratory (monthly Niño 3.4, ERSST-based) · checked against the NOAA CPC / IRI outlook and the WMO update, early August 2026"
+			source="NOAA Physical Sciences Laboratory (monthly Niño 3.4, ERSST-based) · checked against the NOAA CPC ENSO Diagnostic Discussion, 13 August 2026, and the WMO update of early August 2026"
 		>
 			{#snippet body({ h })}
 			{#if data}
@@ -180,14 +181,14 @@
 				<span class="card-kicker">Faster than all four greats</span>
 				<p>
 					Lay 2026 over the {now.events} great El Niños, month for month. At
-					{now.anchorMonth} of their first year, {#each now.standings as s, i (s.onset)}{i > 0
-							? ' '
-							: ''}{s.onset} stood at {s.text}{GLOSS[s.onset] ?? ''}.{/each}
-					<strong>2026 stands at {now.latest.text} — above all four.</strong> No event in this
-					{now.record.years}-year record has started this fast. The ringed marker by the
-					line’s end is the quoted weekly reading for mid&#8209;{now.scoring.month}: about
-					<strong>{now.scoring.readingText}&nbsp;°C</strong> — a different product from the
-					monthly series, marked, never joined to the line.
+					{now.anchorMonth} of their first year: {#each now.standings as s, i (s.onset)}{i > 0
+							? ', '
+							: ''}{s.onset} {s.text}{GLOSS[s.onset] ? ` (${GLOSS[s.onset]})` : ''}.{/each}
+					<strong>2026 stands at {now.latest.text} — above all four:</strong> no event in this
+					{now.record.years}-year record has started this fast. The ringed marker at the line's
+					end is the quoted weekly reading for mid&#8209;{now.scoring.month} — about
+					<strong>{now.scoring.readingText}&nbsp;°C</strong>, a different product from the
+					monthly series: marked, never joined to the line.
 				</p>
 			</div>
 		</div>
@@ -196,12 +197,12 @@
 				<span class="card-step" aria-hidden="true">3/{N}</span>
 				<span class="card-kicker">What happens next</span>
 				<p>
-					Nobody has measured the rest of 2026 — so the chart continues the red line along the
+					Nobody has measured the rest of 2026, so the chart continues the red line along the
 					only guide that exists: the {now.events} precedents. That path peaks near
 					<strong>{now.estimate.text}&nbsp;°C around {now.estimate.month}</strong>, inside the
 					precedents’ {now.estimate.loText}-to-{now.estimate.hiText} range. It is
 					<em>an estimate, drawn dashed</em> — not an official forecast. The official outlook
-					points the same way: a <span class="hl hl-warm">very strong</span> event (above
+					agrees: a <span class="hl hl-warm">very strong</span> event (above
 					+2.0&nbsp;°C) in late 2026, holding into early 2027.
 				</p>
 			</div>
@@ -231,7 +232,7 @@
 					{now.calendar.hardestEndAnchored}.
 					<span class="hl hl-cool">Around {now.calendar.swingback}</span>: the rain returns —
 					and the first heavy rain on drought-bared slopes brings floods and landslides.
-					<strong>What to do in each of these windows is the last chapter.</strong>
+					<strong>The last chapter is what to do in each of these windows.</strong>
 				</p>
 			</div>
 		</div>

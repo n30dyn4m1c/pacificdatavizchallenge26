@@ -128,7 +128,7 @@ export const ink = {
 	light: {
 		primary: '#1d1a14',
 		secondary: '#55503f',
-		muted: '#8a8578',
+		muted: '#6d685a', //   ≥ 4.5:1 on paper (4.9:1) and paper-raised (5.4:1) — carries tick labels
 		grid: '#e5ddcc',
 		axis: '#c9c0aa'
 	}

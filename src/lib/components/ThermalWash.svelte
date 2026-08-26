@@ -44,7 +44,13 @@
 			stops = [];
 			for (const [id, t] of POINTS) {
 				const node = document.getElementById(id);
-				if (node) stops.push({ y: Math.max(docTop, node.offsetTop ?? 0), t });
+				if (node) {
+					// offsetTop is relative to the nearest positioned ancestor,
+					// not the document — ch-record lives inside a position:
+					// relative .scene and was landing ~130px from the top.
+					const r = node.getBoundingClientRect();
+					stops.push({ y: Math.max(docTop, r.top + window.scrollY), t });
+				}
 			}
 			stops.sort((a, b) => a.y - b.y);
 			paint();
