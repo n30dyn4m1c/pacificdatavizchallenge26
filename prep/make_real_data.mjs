@@ -113,11 +113,11 @@ const oni = oniRows
 
 const ONI_SOURCE = {
 	name: 'Oceanic Niño Index (ONI) — NOAA Climate Prediction Center',
-	url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php',
+	url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/',
 	note:
 		'Peak ONI of the ENSO season developing in each year (Jun–Feb window) and the ' +
-		'CPC episode classification. Transcribed table (see prep/README.md); the only ' +
-		'series in the piece not from the SPC dataflow.'
+		'CPC episode classification, read from the published CPC table (ERSSTv6 basis; ' +
+		'see prep/README.md). The only series in the piece not from the SPC dataflow.'
 };
 
 // ── assemble the focus-country foundation file ──────────────────────────────
@@ -556,12 +556,29 @@ function pearson(pairs) {
 			'so it is marked, not connected to the line.'
 	};
 	{
-		const est = forecast.find((d) => d.m === LATEST_READING.m);
+		// Score the cited reading honestly. Against the estimate it only counts
+		// where an estimate actually existed — months beyond the observation.
+		// Once the monthly series reaches the reading's own month, the
+		// "estimate" there is that very observation (the band is pinned to it),
+		// so a "missed low" comparison would be circular and is omitted.
+		// Against the four precedents at the same calendar month it stays
+		// meaningful at any point in the season, so that one is always kept.
+		const est = forecast.find((d) => d.m === LATEST_READING.m && d.m > lastObs.m);
 		if (est) {
 			LATEST_READING.vs_estimate = {
 				mean: est.mean,
 				hi: est.hi,
 				above_envelope: LATEST_READING.anomaly > est.hi
+			};
+		}
+		const prec = events
+			.map((ev) => ev.months.find((d) => d.m === LATEST_READING.m)?.anomaly)
+			.filter((v) => v != null);
+		if (prec.length) {
+			LATEST_READING.vs_precedents = {
+				m: LATEST_READING.m,
+				precedent_max: round(Math.max(...prec), 2),
+				above_all: LATEST_READING.anomaly > Math.max(...prec)
 			};
 		}
 	}
@@ -667,12 +684,20 @@ function pearson(pairs) {
 					bestOnset: best.onset
 				},
 				anchored: { mean: peakA.mean, text: sign(peakA.mean), label: fullLabel(peakA.m) },
-				// card 4: how the estimate is doing against the latest cited reading
+				// card 4: how the cited reading compares to its month — against the
+				// precedents always; against the estimate only where a projection
+				// for that month actually existed (see LATEST_READING above)
 				scoring: {
 					month: FULL[LATEST_READING.m % 12],
 					reading: LATEST_READING.anomaly,
 					readingText: sign(LATEST_READING.anomaly),
 					readingLabel: LATEST_READING.label,
+					precedentMax: LATEST_READING.vs_precedents?.precedent_max ?? null,
+					precedentMaxText:
+						LATEST_READING.vs_precedents?.precedent_max != null
+							? sign(LATEST_READING.vs_precedents.precedent_max)
+							: null,
+					abovePrecedents: LATEST_READING.vs_precedents?.above_all ?? false,
 					estMean: LATEST_READING.vs_estimate?.mean ?? null,
 					estMeanText: LATEST_READING.vs_estimate?.mean != null ? sign(LATEST_READING.vs_estimate.mean) : null,
 					estHi: LATEST_READING.vs_estimate?.hi ?? null,
@@ -711,8 +736,11 @@ function pearson(pairs) {
 	console.log(`  · anchored peak ${peakA.mean} (${peakA.lo}–${peakA.hi}) at ${mLabel(CURRENT_ONSET, peakA.m)}`);
 	console.log(
 		`  · latest cited reading ${LATEST_READING.anomaly} (${LATEST_READING.label}) — ` +
-			`${LATEST_READING.vs_estimate?.above_envelope ? 'above' : 'inside'} the estimate envelope ` +
-			`(${LATEST_READING.vs_estimate?.mean}, hi ${LATEST_READING.vs_estimate?.hi})`
+			(LATEST_READING.vs_estimate
+				? `${LATEST_READING.vs_estimate.above_envelope ? 'above' : 'inside'} the estimate envelope (${LATEST_READING.vs_estimate.mean}, hi ${LATEST_READING.vs_estimate.hi})`
+				: LATEST_READING.vs_precedents?.above_all
+					? `above every precedent's ${MONTHS[LATEST_READING.m % 12]} (max ${LATEST_READING.vs_precedents.precedent_max}); no estimate comparison — the reading sits at the observed anchor`
+					: 'inside the precedents')
 	);
 	console.log(`  · hardest ${hard[0]?.m}–${hard.at(-1)?.m}, swing-back from m=${swing?.m}`);
 }

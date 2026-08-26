@@ -166,9 +166,15 @@
 	const timing = $derived(data?.timing);
 	// the one cited (weekly) reading — marked, never joined to the monthly line
 	const latest = $derived(data?.latest_reading);
-	// phase 3 scores the estimate: what it expected for the cited month against
-	// what was actually read there
-	const missAt = $derived(latest ? fc.find((d) => d.m === latest.m) : null);
+	// phase 3 scores the estimate — but only where an estimate actually
+	// existed, i.e. months beyond the last observation. At the observation's
+	// own month the "estimate" is pinned to that very data point, so no honest
+	// miss can be drawn there; the cited reading is instead compared against
+	// the precedents (`vs_precedents`), which stays meaningful at any month.
+	const obsEndM = $derived(current?.latest?.m ?? -1);
+	const missAt = $derived(
+		latest && latest.m > obsEndM ? fc.find((d) => d.m === latest.m) : null
+	);
 
 	const mTicks = $derived.by(() => {
 		const names = data?.month_names ?? [];
@@ -318,7 +324,7 @@
 						stroke={surface}
 						stroke-width="3.5"
 					>weighted path peaks ≈ {fmt(timing.peak.mean)} °C · {timing.peak.label}</text>
-					{#if latest?.vs_estimate?.above_envelope && !narrow}
+					{#if latest?.vs_precedents?.above_all && !narrow}
 						<text
 							x={PAD.l + 4}
 							y={PAD.t + 6}
@@ -328,14 +334,14 @@
 							paint-order="stroke"
 							stroke={surface}
 							stroke-width="3.5"
-						>— and 2026 is already above it</text>
+						>— and 2026 is running above any precedent at the same point</text>
 					{/if}
 				{/if}
 			</g>
 
-			<!-- phase 3 — marking the estimate's homework: the range it gave for the
-			     cited month, the gap up to what was actually read there, and the
-			     anchored path that closes most of it -->
+			<!-- phase 3 — marking the estimate's homework, but only where an
+			     estimate for the cited month actually existed (beyond the last
+			     observation); otherwise only the anchored path shows here -->
 			<g class="fade" opacity={phase >= 3 ? 1 : 0}>
 				{#if anchoredLine}
 					<path

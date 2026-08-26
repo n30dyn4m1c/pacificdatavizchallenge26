@@ -16,7 +16,7 @@
 
 	const figTitle = [
 		'The national harvest, 1961–2024',
-		'The line stumbles at every one of the driest years',
+		'The driest years barely dent the national line',
 		'The worst losses never even reach this chart',
 		'1997: drought by day, frost by night'
 	];
@@ -40,12 +40,14 @@
 		<h3>The gardens, in prose</h3>
 		<p>
 			The Pacific Community's national crop-yield record for Papua New Guinea (1961–2024) climbs
-			across the decades, and stumbles at the driest years — 1982, 1993, 1997 and 2015. The dips
-			look modest, and that is itself a finding: most of the country's food grows in subsistence
-			gardens a national yield-per-hectare figure barely sees, so the deepest losses sit off this
-			ledger. 1997 was the hardest year of the record: drought in the lowlands and frost in the
-			Highlands in the same season — the double mechanism the island chapter and its field notes
-			describe — brought one of the country's worst food emergencies in living memory.
+			across the decades. Mark the four driest years — 1982, 1993, 1997 and 2015 — and only 1997
+			leaves a visible dent. That is itself a finding: most of the country's food grows in
+			subsistence gardens a national yield-per-hectare figure barely sees, so a drought that
+			empties village gardens can pass almost unnoticed in the national average. The deepest
+			losses sit off this ledger. 1997 was the hardest year of the record: drought in the
+			lowlands and frost in the Highlands in the same season — the double mechanism the island
+			chapter and its field notes describe — brought one of the country's worst food emergencies
+			in living memory.
 		</p>
 		{#if data}
 			<DataTable
@@ -76,7 +78,7 @@
 						unit="kg/ha"
 						height={h}
 						baseline={null}
-						ariaLabel="Line chart of Papua New Guinea national crop yield from 1961 to 2024, climbing overall and dipping around the four driest years, 1982, 1993, 1997 and 2015."
+						ariaLabel="Line chart of Papua New Guinea national crop yield from 1961 to 2024, climbing overall across six decades. The four driest years, 1982, 1993, 1997 and 2015, are marked; only 1997 shows a visible dip, while the other three barely move the national line."
 					/>
 				{/if}
 			{/snippet}
@@ -100,8 +102,9 @@
 				<span class="card-step" aria-hidden="true">2/4</span>
 				<span class="card-kicker">Mark the dry years</span>
 				<p>
-					Now mark the four driest years: <strong>1982, 1993, 1997, 2015</strong>. The line
-					stumbles at every one.
+					Now mark the four driest years: <strong>1982, 1993, 1997, 2015</strong>. Only 1997
+					dents the line — 1982 and 1993 land mid-climb. A national average can absorb what
+					a village cannot.
 				</p>
 			</div>
 		</div>

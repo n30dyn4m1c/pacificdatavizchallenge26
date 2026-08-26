@@ -46,9 +46,10 @@
 			coverage stays sparse. It is the least dramatic series in the dataset and the most
 			important: every chart in this piece exists because someone kept measuring. And because
 			Papua New Guinea's droughts are made by a far ocean that tips months before the rain fails,
-			watching is not bookkeeping — it is early warning. The current ENSO season is still
-			unclassified; when it tips, the ocean will say so first, and this time someone is
-			listening.
+			watching is not bookkeeping — it is early warning. The ocean has already tipped: the
+			warning is chapter nine, month by month. The one question mark left in this yearly record —
+			the 2025–26 season's classification, which CPC's table has yet to complete — is a filing
+			delay, not a mystery.
 		</p>
 		{#if data}
 			<DataTable

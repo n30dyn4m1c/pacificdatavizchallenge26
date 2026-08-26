@@ -45,7 +45,7 @@
 			The Pacific Community's record of Papua New Guinea's sea-surface-temperature anomaly runs
 			annually from 1850 to 2025. For a century it wobbles near zero; from the late 20th century
 			it climbs; 2025 — at +1.1&nbsp;°C — is the warmest reading in all 176 years. The sea-level
-			record is shorter (satellite era, 1993–2023) and rises about 0.3&nbsp;m across it. And one
+			record is shorter (satellite era, 1993–2023) and rises about 0.2&nbsp;m across it. And one
 			pointed footnote: the local sea is <em>not</em> what dries the gardens — warm local years
 			are actually slightly wetter (correlation +0.48), because Papua New Guinea's rain lives on
 			its warm water. The drought signal is genuinely remote, which is what makes it readable
@@ -104,7 +104,7 @@
 								curve="step"
 								quantized={true}
 								height={h}
-								ariaLabel="Step chart of the sea-level anomaly around Papua New Guinea from 1993 to 2023, published to the nearest 0.1 metres, rising from about minus 0.10 metres to plus 0.20 metres."
+								ariaLabel="Step chart of the sea-level anomaly around Papua New Guinea from 1993 to 2023, published to the nearest 0.1 metres, rising from about minus 0.10 metres to plus 0.10 metres."
 							/>
 						</div>
 						<!-- the giant year counter rides the draw-in, then bows out -->
@@ -152,7 +152,7 @@
 				<span class="card-kicker">Not just warmer</span>
 				<p>
 					Not just warmer — <strong>higher</strong>. Sea level around PNG has risen about
-					<strong>0.3&nbsp;m</strong> since the satellite record began in 1993, which is why
+					<strong>0.2&nbsp;m</strong> since the satellite record began in 1993, which is why
 					king tides and storm surges reach further inland than they used to.
 				</p>
 			</div>

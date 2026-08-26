@@ -35,20 +35,21 @@ to 1850. The CSV is committed so the pipeline is fully reproducible offline.
 ### 2. `source/oni_cpc.csv` — the Oceanic Niño Index (NOAA CPC)
 
 The one series in the piece not from the SPC dataflow: for each year
-1979–2025 (the span of PNG's rainfall record), the **peak ONI of the ENSO
-season developing in that year** (its Jun–Feb window) and the CPC episode
-classification (`elnino` / `lanina` / `neutral`; 2025 is `pending` — that
-season's column was still being written at extraction, which the reveal
-scene renders as an open "?").
+1979–2024 (2025 pending), the **peak ONI of the ENSO
+season developing in that year** (its Jun–Feb window, JJA–NDJ plus the
+following DJF) and the CPC episode classification (`elnino` / `lanina` /
+`neutral`). Read from CPC's published ONI table on **26 August 2026** — now the
+**ERSSTv6** edition (<https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/>;
+the v5 page it replaced redirects there). 2025 stays `pending` because CPC's own
+table has not yet published that season's final DJF (Jan–Feb 2026) value; the
+scene renders an open "?" rather than guessing.
 
-> ⚠️ **Transcribed table — verify before submission.** This file was
-> transcribed from the NOAA CPC ONI record
-> (<https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php>)
-> because the build environment could not reach noaa.gov. The episode
-> classifications are robust; individual peak values should be checked to
-> ±0.1 °C against that page (a five-minute job) and corrected in place —
-> then re-run the pipeline. Nothing else in the repo hardcodes ONI values
-> except the decorative `OniBand` divider.
+> Note on the version change: the earlier commit of this file was transcribed
+> from the ERSSTv5 table. NOAA has since moved the canonical table to ERSSTv6,
+> and individual seasons shift by up to ~±0.3 between versions. The refresh was
+> checked end-to-end: no year's episode class changes, the driest-ten El Niño
+> count stays at 8, and r(ONI, rain) moves only from −0.641 to −0.642. The four
+> headline events read +2.1 (1982), +2.4 (1997), +2.6 (2015), +2.0 (2023).
 
 ### 3. `source/nino34_monthly.csv` — monthly Niño 3.4 anomalies (NOAA PSL)
 

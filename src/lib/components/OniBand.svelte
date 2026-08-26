@@ -7,8 +7,8 @@
 	 * ink). Deliberately austere: a decorative rhythm, never imagery. Purely
 	 * decorative (aria-hidden); the REAL ONI series the reveal scene charts
 	 * lives in prep/source/oni_cpc.csv → static/data/scene_reveal.json. These
-	 * bars are an approximate, observed-only abstraction of the same CPC
-	 * record — no forecast value is included.
+	 * bars are an observed-only abstraction of the same CPC record, kept in
+	 * sync with it — no forecast value is included.
 	 *
 	 * Entrance: the bars grow from the baseline with a small left-to-right
 	 * stagger the first time the band scrolls into view. The grown state is
@@ -19,10 +19,12 @@
 	import { onMount } from 'svelte';
 
 	const ONI = [
-		2.2, -0.6, -1.0, -0.5, 1.2, 0.8, -1.7, 0.1, 0.4, 1.7, 0.1, 0.1, 1.0,
-		-0.9, -0.5, 2.4, -1.5, -1.7, -0.7, -0.1, 0.9, 0.4, 0.6, -0.9, 0.7,
-		-1.6, -0.8, 1.5, -1.4, -0.8, -0.4, -0.4, 0.5, 2.6, -0.3, -0.9, 0.7,
-		0.5, -1.0, -1.0, -0.7, 2.0, -0.6
+		// peak ONI per year, 1982–2024 — regenerated from the CPC ERSSTv6
+		// table in prep/source/oni_cpc.csv (Aug 2026 refresh)
+		2.1, -1.0, -1.1, -0.4, 1.2, 1.5, -1.8, -0.4, 0.4, 1.5, 0.4, 0.3, 1.0,
+		-1.0, -0.4, 2.4, -1.5, -1.5, -0.8, -0.3, 1.2, 0.3, 0.7, -0.9, 0.9,
+		-1.8, -0.9, 1.5, -1.6, -1.0, 0.4, -0.4, 0.8, 2.6, -0.5, -0.8, 1.1,
+		0.8, -1.1, -0.9, -0.9, 2.0, -0.5
 	];
 	const STEP = 8;
 	const MID = 13;

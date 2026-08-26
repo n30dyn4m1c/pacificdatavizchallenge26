@@ -6,7 +6,7 @@
 	 *
 	 *   · months since Papua New Guinea declared the El Niño (1 May 2026)
 	 *   · months until the analogue estimate's expected peak (Nov 2026)
-	 *   · months until the estimated swing back to the rain (May 2027)
+	 *   · months until the estimated swing back to the rain (Jun 2027)
 	 *
 	 * Month resolution is deliberate — it is the resolution the record and
 	 * the estimate actually support, and the counter can never claim a
@@ -20,7 +20,7 @@
 
 	const DECL = { y: 2026, m: 5 }; //   NWS El Niño declaration, 1 May 2026
 	const PEAK = { y: 2026, m: 11 }; //  the estimate's peak month (Nov 2026)
-	const SWING = { y: 2027, m: 5 }; //  the estimated swing back (May 2027)
+	const SWING = { y: 2027, m: 6 }; //  the estimated swing back (Jun 2027)
 	const AS_OF = { y: 2026, m: 8 }; //  the piece's stated as-of date
 
 	const between = (a, b) => (b.y - a.y) * 12 + (b.m - a.m);

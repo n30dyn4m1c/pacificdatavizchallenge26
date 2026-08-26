@@ -28,14 +28,14 @@ The charts are the official Challenge dataset: the Pacific Community (SPC) clima
 
 Documented companions supply what a national dataset cannot:
 
-- **NOAA CPC Oceanic Niño Index** (`prep/source/oni_cpc.csv`) — names the El Niño years. *Transcribed table; verify against the NOAA page before submission — see `prep/README.md`.*
+- **NOAA CPC Oceanic Niño Index** (`prep/source/oni_cpc.csv`) — names the El Niño years. Read from CPC's published ONI table (ERSSTv6 edition) on 26 August 2026 — see `prep/README.md`.
 - **NOAA PSL Niño 3.4 monthly anomalies** (`prep/source/nino34_monthly.csv`, re-exportable with `prep/fetch_nino34.py`) — chapter 9's monthly series, 1970 → July 2026 (ERSST-based, like the other PSL teleconnection indices).
 - **NOAA CPC / IRI and WMO outlooks, early August 2026** — the official expectations quoted beside chapter 9's estimate, with source URLs in the JSON.
 - **NOAA CPC weekly Niño 3.4 index, week centred 15 July 2026 (≈ +2.1 °C)** — one quoted reading, drawn as a ringed marker, never joined to the monthly line (a different product on a different SST basis: OISST, against the monthly series' ERSST).
 - **EDGAR (EC-JRC)** — the world-average GHG-per-capita reference (≈6.6 t CO₂e, 2023) in chapter 7.
 - **Natural Earth** (public domain) — coastlines and rivers, pre-projected by `prep/make_maps.mjs`.
 
-All correlations and rankings (r = +0.48, r = −0.64, the driest-ten list, the analogue weights) are computed by the pipeline (`prep/make_real_data.mjs`), not asserted by hand. Chapter 9's one forward-looking panel is an *analogue estimate*: the four precedents aligned by calendar month and weighted by fit against 2026's observed months, drawn dashed inside their min–max envelope, labelled as an estimate on the graphic, in the legend and in the table view. The chapter also shows that estimate being beaten (the mid-July weekly reading sits above the whole envelope) and draws the anchored variant that starts the same four trajectories from 2026's own level — so the precedents read as a floor, not a ceiling.
+All correlations and rankings (r = +0.48, r = −0.64, the driest-ten list, the analogue weights) are computed by the pipeline (`prep/make_real_data.mjs`), not asserted by hand. Chapter 9's one forward-looking panel is an *analogue estimate*: the four precedents aligned by calendar month and weighted by fit against 2026's observed months, drawn dashed inside their min–max envelope, labelled as an estimate on the graphic, in the legend and in the table view. The chapter also shows 2026 outrunning its precedents — the mid-July weekly reading sits above anything the four precedents reached by the same month — and draws the anchored variant that starts the same four trajectories from 2026's own level — so the precedents read as a floor, not a ceiling. The estimate-vs-reading comparison only runs for months beyond the observation; where the reading shares a month with the observed line, it is scored against the precedents instead.
 
 Chapter 9's prose is generated too: the pipeline writes `src/lib/generated/now-copy.js`, which the components import at build time, so the cards, aria-labels, captions and the closing `BigStat` always quote the same numbers as the chart. Re-running the pipeline after NOAA appends a month updates copy and chart together.
 

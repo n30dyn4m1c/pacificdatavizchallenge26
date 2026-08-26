@@ -45,8 +45,9 @@
 			central equatorial Pacific — far east of Papua New Guinea. Most years it sits near zero.
 			Every few years it tips: upward is El Niño, when the Pacific's warm pool drains east away
 			from Papua New Guinea; downward is La Niña, when warmth piles back west. The great El Niños
-			of the record are 1982, 1997, 2015 and 2023. The season now forming is not yet classified —
-			the chart's last column is an open question mark. (The ONI is NOAA CPC data, the one series
+			of the record are 1982, 1997, 2015 and 2023. The chart's last season, 2025–26, is still an
+			open question mark — CPC's table has yet to complete it. Naming what came after it, month
+			by month, is what chapter nine is for. (The ONI is NOAA CPC data, the one series
 			in this piece not from the SPC dataflow; see /prep.)
 		</p>
 		{#if data}
@@ -73,7 +74,7 @@
 						colored={idx >= 1}
 						marks={idx >= 2 && idx < 3 ? GREATS : []}
 						height={h}
-						ariaLabel="Bar chart of the Oceanic Niño Index from 1979 to 2025. Bars point up in El Niño years — sharply in 1982, 1997, 2015 and 2023 — and down in La Niña years. The 2025 season is not yet classified."
+						ariaLabel="Bar chart of the Oceanic Niño Index from 1979 to 2025. Bars point up in El Niño years — sharply in 1982, 1997, 2015 and 2023 — and down in La Niña years. The 2025–26 season is not yet classified in the published table."
 					/>
 				{/if}
 			{/snippet}
@@ -119,8 +120,9 @@
 				<span class="card-step" aria-hidden="true">4/4</span>
 				<span class="card-kicker">The last column</span>
 				<p>
-					The newest season is still a <strong>?</strong> on this yearly chart. Answering it
-					— month by month — is what chapter nine is for.
+					The 2025–26 season is still a <strong>?</strong> on this yearly chart — CPC's
+					table hasn't finished it. Naming what came next, month by month, is what
+					chapter nine is for.
 				</p>
 			</div>
 		</div>

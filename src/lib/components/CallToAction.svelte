@@ -9,14 +9,14 @@
 	 *    drought and frost, expect the flood after);
 	 *  · THE PREPARATION CALENDAR: the jobs plotted into the months the
 	 *    chapter-nine estimate actually implies (the hard months to ~Mar
-	 *    2027, the swing back ~May–Jun 2027), with a live "you are here"
+	 *    2027, the swing back ~Jun 2027), with a live "you are here"
 	 *    needle driven by the reader's current month;
 	 *  · four commitment ticks, persisted to localStorage only — nothing is
 	 *    sent anywhere (the piece ships no backend and tracks nobody) — plus
 	 *    a one-tap copy-out so the plan can leave the browser as text.
 	 *
 	 * Calendar zones mirror $lib/generated/now-copy.js (`calendar.hardestEnd`
-	 * = Mar 2027, `calendar.swingback` = May–Jun 2027); if the pipeline moves
+	 * = Mar 2027, `calendar.swingback` = Jun 2027); if the pipeline moves
 	 * those dates, move them here with it.
 	 */
 	import { ui } from '$lib/state.svelte.js';
@@ -49,7 +49,7 @@
 		{
 			no: '04',
 			title: 'Expect the flood after',
-			body: 'The drought ends in water. Through the dry months: clear drains and waterways, keep new gardens out of riverbeds, and plan where people and supplies go if slopes slip. Treat the first heavy rain around May–June 2027 as a warning, not a celebration.',
+			body: 'The drought ends in water. Through the dry months: clear drains and waterways, keep new gardens out of riverbeds, and plan where people and supplies go if slopes slip. Treat the first heavy rain around June 2027 as a warning, not a celebration.',
 			at: 11,
 			side: 'bottom'
 		}
@@ -72,7 +72,7 @@
 
 	// zones: [fromIndex, toIndex] inclusive — mirrors now.calendar above
 	const HARD = [0, 10]; //   May 2026 – Mar 2027
-	const SWING = [12, 13]; // May – Jun 2027
+	const SWING = [13, 13]; // Jun 2027 — where the weighted estimate drops below the El Niño threshold
 
 	const W = 940;
 	const H = 190;
@@ -160,7 +160,7 @@
 		<svg
 			viewBox="0 0 {W} {H}"
 			role="img"
-			aria-label="The preparation calendar, May 2026 to July 2027. The hard months run from now to about March 2027 — failing rain, falling rivers, frost nights — with one job in each window: follow the warnings from the declaration onward, store water by August, plant for drought and frost before the expected November peak, and prepare for floods before the rain returns around May 2027."
+			aria-label="The preparation calendar, May 2026 to July 2027. The hard months run from now to about March 2027 — failing rain, falling rivers, frost nights — with one job in each window: follow the warnings from the declaration onward, store water by August, plant for drought and frost before the expected November peak, and prepare for floods before the rain returns around June 2027."
 		>
 			<!-- zone: the hard months -->
 			<rect
@@ -241,12 +241,12 @@
 
 			<!-- the fifth duty: swing-back flood watch -->
 			<g>
-				<circle cx={xOf(12)} cy={62} r="11" fill="var(--paper-raised)" stroke="var(--cool)" stroke-width="1.6" />
+				<circle cx={xOf(13)} cy={62} r="11" fill="var(--paper-raised)" stroke="var(--cool)" stroke-width="1.6" />
 				<path
-					d={`M${xOf(12)} ${54.5} C ${xOf(12) - 4.6} ${61} ${xOf(12) - 5.4} ${64.5} ${xOf(12)} ${67.5} C ${xOf(12) + 5.4} ${64.5} ${xOf(12) + 4.6} ${61} ${xOf(12)} ${54.5} Z`}
+					d={`M${xOf(13)} ${54.5} C ${xOf(13) - 4.6} ${61} ${xOf(13) - 5.4} ${64.5} ${xOf(13)} ${67.5} C ${xOf(13) + 5.4} ${64.5} ${xOf(13) + 4.6} ${61} ${xOf(13)} ${54.5} Z`}
 					fill="var(--cool)"
 				/>
-				<text x={xOf(12) - 10} y={65.5} text-anchor="end" font-size="10.5" font-weight="700" fill="var(--ink-light-primary)">
+				<text x={xOf(13) - 10} y={65.5} text-anchor="end" font-size="10.5" font-weight="700" fill="var(--ink-light-primary)">
 					flood watch
 				</text>
 			</g>

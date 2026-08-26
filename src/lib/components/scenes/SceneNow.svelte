@@ -122,7 +122,7 @@
 		</p>
 		{#if data}
 			<DataTable
-				caption="Niño 3.4 monthly anomaly (°C) by event month: the four precedents, 2026 observed, and the analogue estimate. The estimate reads as a floor — the quoted weekly index for the {now.scoring.readingLabel} (≈ {now.scoring.readingText} °C, a different product, not tabled here) already runs above it."
+				caption="Niño 3.4 monthly anomaly (°C) by event month: the four precedents, 2026 observed, and the analogue estimate. The estimate reads as a floor — the quoted weekly index for the {now.scoring.readingLabel} (≈ {now.scoring.readingText} °C, a different product, not tabled here) already runs above any precedent's same month."
 				columns={['Month (2026 event)', '1982–83', '1997–98', '2015–16', '2023–24', '2026–27']}
 				rows={tableRows(data)}
 			/>
@@ -146,10 +146,9 @@
 					height={h}
 					ariaLabel="Line chart of monthly Niño 3.4 sea-surface temperature anomalies. First the last three years as monthly bars: the 2023–24 El Niño, a weak double La Niña, then a fast rise through the first half of 2026 to {now.latest
 						.text} °C in {now.latest.month}. Then the {now.events} great El Niños of 1982, 1997, 2015 and 2023 aligned by calendar month as gray lines, with 2026 so far as a red line above all of them at {now
-						.latest.month}. A ringed marker just beyond the end of that line carries the quoted weekly index for the {now
-						.scoring.readingLabel} at about {now.scoring.readingText} °C, labelled as a cited weekly reading rather than part of the monthly series. A shaded band and dashed line, labelled as an estimate, continue 2026 along the range of the four precedents to a peak of roughly {now
-						.estimate.text} °C around {now.estimate.label}, declining through mid-2027 — with the {now
-						.scoring.month} weekly reading sitting above that band. A second, lighter dashed path then shows the same four trajectories started from 2026's own level, peaking near {now
+						.latest.month}. A ringed marker at the end of that line carries the quoted weekly index for the {now
+						.scoring.readingLabel} at about {now.scoring.readingText} °C — higher than any of the four precedents stood at the same month — labelled as a cited weekly reading rather than part of the monthly series. A shaded band and dashed line, labelled as an estimate, continue 2026 along the range of the four precedents to a peak of roughly {now
+						.estimate.text} °C around {now.estimate.label}, declining through mid-2027. A second, lighter dashed path then shows the same four trajectories started from 2026's own level, peaking near {now
 						.anchored.text} °C. Bracket annotations mark the hard months from {now.latest
 						.month} 2026 to {now.calendar.hardestEnd} and the swing back to rain around {now.calendar
 						.swingback}."
