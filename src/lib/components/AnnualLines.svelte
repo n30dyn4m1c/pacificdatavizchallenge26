@@ -99,7 +99,10 @@
 		const px = ((e.clientX - rect.left) / rect.width) * Math.max(w, 300);
 		hoverYear = Math.round(x.invert(px));
 	}
-	const near = (s, yr) => s.values.reduce((b, d) => (Math.abs(d.year - yr) < Math.abs(b.year - yr) ? d : b), s.values[0]);
+	const near = (s, yr) =>
+		s.values.length
+			? s.values.reduce((b, d) => (Math.abs(d.year - yr) < Math.abs(b.year - yr) ? d : b))
+			: null;
 </script>
 
 <div class="wrap" bind:clientWidth={w}>

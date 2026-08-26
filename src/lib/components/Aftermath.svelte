@@ -8,6 +8,7 @@
 	 * and landslides, straight after the 2015–16 drought. The hillside is an
 	 * explicitly labelled illustration.
 	 */
+	import { onMount } from 'svelte';
 	import { ink, impact, surfaces } from '$lib/palette.js';
 	import { reveal } from '$lib/reveal.js';
 
@@ -18,6 +19,17 @@
 	const RAIN = Array.from({ length: 26 }, (_, i) => {
 		const h = (i * 2654435761) % 1000;
 		return { x: 20 + i * 34 + (h % 14), delay: -(h % 500) / 250, len: 16 + (h % 12) };
+	});
+
+	// the rain field is infinite CSS motion: run it only while the figure is
+	// on screen (paused off-screen), and never under reduced motion
+	let fig = $state(null);
+	let on = $state(false);
+	onMount(() => {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		const io = new IntersectionObserver(([e]) => (on = e.isIntersecting), { threshold: 0.15 });
+		if (fig) io.observe(fig);
+		return () => io.disconnect();
 	});
 </script>
 
@@ -31,12 +43,12 @@
 		</p>
 	</header>
 
-	<figure>
+	<figure bind:this={fig}>
 		<svg viewBox="0 0 900 380" role="img" aria-label="Illustration of a highland hillside just after a drought breaks: heavy rain falling on bare slopes, a landslip scarring the hillside, and a river flooding the gardens and houses along its banks.">
 			<rect width="900" height="380" rx="8" fill="color-mix(in srgb, {imp.frost} 10%, {surfaces.paper})" />
 
 			<!-- the returning rain -->
-			<g class="rainfield" stroke={imp.frost} stroke-width="2" stroke-linecap="round" opacity="0.75">
+			<g class="rainfield" class:on stroke={imp.frost} stroke-width="2" stroke-linecap="round" opacity="0.75">
 				{#each RAIN as d (d.x)}
 					<line class="rain" x1={d.x} y1="-20" x2={d.x - 6} y2={-20 + d.len} style="animation-delay: {d.delay}s" />
 				{/each}
@@ -119,6 +131,11 @@
 
 	.rain {
 		animation: aftermath-fall 1.6s linear infinite;
+		animation-play-state: paused; /* off-screen the field does no work */
+	}
+
+	.rainfield.on .rain {
+		animation-play-state: running;
 	}
 
 	@keyframes aftermath-fall {

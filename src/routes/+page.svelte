@@ -51,6 +51,10 @@
 		name="description"
 		content="Papua New Guinea's worst droughts begin 7,000 kilometres away, in the temperature of the Pacific — months before the rain fails. In 2026 that ocean is running ahead of 1982, 1997, 2015 and 2023 at the same point, and PNG's own weather service expects the drought to run into 2027. What El Niño does to PNG, and what to do about it — told through the official Pacific climate record."
 	/>
+	<link rel="canonical" href="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/" />
+	<!-- the piece is a single warm-paper theme by design: tell the UA not to
+	     recolor controls for dark mode -->
+	<meta name="color-scheme" content="only light" />
 	<!-- social cards: the piece is meant to be shared; give the link a face -->
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="The Ocean Knows First" />

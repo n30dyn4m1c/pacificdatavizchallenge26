@@ -18,7 +18,7 @@ Nine scroll-pinned chapters, in three acts:
 2. **The consequences** — PNG's rainfall against the ONI (8 of the 10 driest years are El Niño years, r = −0.64), the island in cross-section at every altitude, the harvest record, the floods that follow the drought, and the documented coverage of 1997 and 2015.
 3. **The present** — the long warming record, per-capita emissions (PNG ≈ 1 t vs world ≈ 6.6 t), the monitoring network that called the 2026 event, and chapter nine: the 2026 El Niño month by month against 1982/1997/2015/2023, with a clearly-labelled analogue estimate of the months ahead, checked against the official NOAA CPC/IRI and WMO outlooks. The piece closes on a preparation calendar (hard months to ~March 2027, floods around May–June 2027) with four concrete jobs and a live "you are here" needle.
 
-Two interactive field notes (a drying-river slider, a highland frost-night toggle) illustrate the drought mechanisms; both are labelled illustrations, and `?notap=1` freezes every interactive at its full-drought state so the scroll alone tells the complete story.
+Two interactive field notes (a drying-river animation with a pause control, a highland frost-night toggle) illustrate the drought mechanisms; both are labelled illustrations, and `?notap=1` freezes every interactive at its full-drought state so the scroll alone tells the complete story.
 
 ## Data
 

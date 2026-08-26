@@ -32,7 +32,10 @@
 	let today = $derived(ui.now ?? AS_OF);
 	let here = $derived(`${MONTHS[today.m - 1]} ${today.y}`);
 
-	let dDecl = $derived(between(DECL, today));
+	// ?now= dev overrides can put the reader before the declaration; a
+	// negative "months since" would be nonsense, so clamp at 0 (the event
+	// simply has not started for that reader)
+	let dDecl = $derived(Math.max(0, between(DECL, today)));
 	let dPeak = $derived(between(today, PEAK));
 	let dSwing = $derived(between(today, SWING));
 </script>

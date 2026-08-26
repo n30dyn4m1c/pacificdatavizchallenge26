@@ -37,6 +37,7 @@
 	const nWorld = $derived(Math.round(world.value * 10));
 	const nPng = $derived(Math.round(png.value * 10));
 	const rows = $derived(Math.ceil(nWorld / COLS));
+	const pngRows = $derived(Math.max(1, Math.ceil(nPng / COLS)));
 
 	// The ledger used to draw at a fixed 26px pitch, which left a 66-dot
 	// comparison marooned in the top-left corner of a 1150 × 700 frame. The
@@ -87,7 +88,7 @@
 			{png.label}
 			<strong style:color={state >= 2 ? record : inkC.muted}>{fmt(png.value)} t</strong>
 		</p>
-		<svg viewBox="0 0 {gridW} {GAP}" style:width="{gridW}px" aria-hidden="true">
+		<svg viewBox="0 0 {gridW} {pngRows * GAP}" style:width="{gridW}px" aria-hidden="true">
 			{#each Array.from({ length: nPng }) as _, i (i)}
 				{@const p = dotXY(i, GAP)}
 				<circle

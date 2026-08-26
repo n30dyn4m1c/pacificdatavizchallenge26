@@ -94,6 +94,7 @@
 	const KEY = 'ocean-knows-first-plan-v1';
 	let done = $state([false, false, false, false]);
 	let copied = $state(false);
+	let copyTimer = 0;
 
 	function load() {
 		try {
@@ -129,7 +130,10 @@
 		try {
 			await navigator.clipboard.writeText(text);
 			copied = true;
-			setTimeout(() => (copied = false), 2400);
+			// a stray reset firing after unmount is harmless (state nobody
+			// reads), but keep the timer owned and cancellable anyway
+			clearTimeout(copyTimer);
+			copyTimer = setTimeout(() => (copied = false), 2400);
 		} catch {
 			/* clipboard refused (permissions/insecure context) — no-op */
 		}

@@ -4,7 +4,7 @@
 	 * number and one line of caption. The pudding-style "let the stat land"
 	 * beat. On approach, the numeral counts up to its value once — a small
 	 * physical arrival for the piece's three biggest numbers ("8 / 10",
-	 * "+1.1 °C", June's reading). Inert without JS, under
+	 * "+1.1 °C", the latest Niño 3.4 reading). Inert without JS, under
 	 * prefers-reduced-motion, and in prerendered HTML: those render the
 	 * final value directly and never see the counter.
 	 */
@@ -49,6 +49,7 @@
 	onMount(() => {
 		if (!hasNum || !el) return;
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		let raf = 0;
 		const io = new IntersectionObserver(
 			(entries) => {
 				if (!entries.some((e) => e.isIntersecting)) return;
@@ -59,15 +60,18 @@
 				const step = (now) => {
 					const q = Math.min(1, (now - t0) / DUR);
 					k = 1 - Math.pow(1 - q, 3);
-					if (q < 1) requestAnimationFrame(step);
+					if (q < 1) raf = requestAnimationFrame(step);
 				};
-				requestAnimationFrame(step);
+				raf = requestAnimationFrame(step);
 			},
 			// fire as the stat settles into view, not a screen early
 			{ rootMargin: '0px 0px -14% 0px', threshold: 0.25 }
 		);
 		io.observe(el);
-		return () => io.disconnect();
+		return () => {
+			io.disconnect();
+			cancelAnimationFrame(raf);
+		};
 	});
 </script>
 

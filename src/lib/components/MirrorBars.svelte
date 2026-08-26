@@ -39,7 +39,9 @@
 	// two bands, each its own diverging scale around zero
 	const bandH = $derived((height - PAD.t - PAD.b - GAP) / 2);
 	const oniExt = $derived(Math.max(...years.map((d) => Math.abs(d.oni ?? 0))) * 1.15 || 1);
-	const rainExt = $derived(Math.max(...years.map((d) => Math.abs(d.rain))) * 1.15 || 1);
+	const rainExt = $derived(
+		Math.max(...years.map((d) => (d.rain == null ? 0 : Math.abs(d.rain)))) * 1.15 || 1
+	);
 	const yOni = $derived(scaleLinear([-oniExt, oniExt], [PAD.t + bandH, PAD.t]));
 	const yRain = $derived(scaleLinear([-rainExt, rainExt], [PAD.t + bandH + GAP + bandH, PAD.t + bandH + GAP]));
 

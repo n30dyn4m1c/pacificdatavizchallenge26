@@ -583,11 +583,12 @@ function pearson(pairs) {
 		}
 	}
 
-	// June standings: 2026 against each great event at the same point in the year.
-	const juneM = lastObs.m;
-	const june = events.map((ev) => ({
+	// anchor standings: 2026 against each great event at the same point in the
+	// year (the month of the last observation — not always June).
+	const anchorM = lastObs.m;
+	const anchorStandings = events.map((ev) => ({
 		onset: ev.onset,
-		value: ev.months.find((d) => d.m === juneM)?.anomaly ?? null
+		value: ev.months.find((d) => d.m === anchorM)?.anomaly ?? null
 	}));
 
 	write('scene_now.json', {
@@ -600,7 +601,7 @@ function pearson(pairs) {
 		recent,
 		events: events.map(({ onset, label, peak, months }) => ({ onset, label, peak, months })),
 		current: { onset: CURRENT_ONSET, months: current, latest: { ...lastObs, date: nino.at(-1).date } },
-		june_standings: june,
+		anchor_standings: anchorStandings,
 		analogue: {
 			weights,
 			forecast,
@@ -621,7 +622,9 @@ function pearson(pairs) {
 				: null,
 			swingback: swing
 				? { from: swing.m, to: SPAN - 1,
-				    label: `${mLabel(CURRENT_ONSET, swing.m)} – ${mLabel(CURRENT_ONSET, SPAN - 1)}` }
+				    label: swing.m === SPAN - 1
+				    	? mLabel(CURRENT_ONSET, swing.m)
+				    	: `${mLabel(CURRENT_ONSET, swing.m)} – ${mLabel(CURRENT_ONSET, SPAN - 1)}` }
 				: null,
 			hardest_anchored: hardA.length
 				? { from: hardA[0].m, to: hardA.at(-1).m,
@@ -660,7 +663,7 @@ function pearson(pairs) {
 				flip: [step(trough), step(mid), step(lastObs)],
 				// card 2: the four precedents at the same point in their onset years,
 				// coldest first — the order the card reads them in
-				standings: june
+				standings: anchorStandings
 					.filter((d) => d.value != null)
 					.map((d) => ({ onset: d.onset, value: d.value, text: sign(d.value) }))
 					.sort((a, b) => a.value - b.value),
@@ -731,7 +734,7 @@ function pearson(pairs) {
 
 	console.log(`  · Niño 3.4 monthly: ${nino.length} months ${nino[0].date} → ${nino.at(-1).date}`);
 	console.log(`  · analogue weights: ${weights.map((w) => `${w.onset}=${w.weight} (rmse ${w.rmse})`).join('  ')}`);
-	console.log(`  · June standings: 2026=${lastObs.anomaly} vs ${june.map((d) => `${d.onset}=${d.value}`).join(' ')}`);
+	console.log(`  · anchor standings (${MONTHS[anchorM % 12]}): 2026=${lastObs.anomaly} vs ${anchorStandings.map((d) => `${d.onset}=${d.value}`).join(' ')}`);
 	console.log(`  · estimate peak ${peakF.mean} (${peakF.lo}–${peakF.hi}) at ${mLabel(CURRENT_ONSET, peakF.m)}`);
 	console.log(`  · anchored peak ${peakA.mean} (${peakA.lo}–${peakA.hi}) at ${mLabel(CURRENT_ONSET, peakA.m)}`);
 	console.log(
