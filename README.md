@@ -74,8 +74,13 @@ src/
 prep/
   make_real_data.mjs      builds static/data/*.json and src/lib/generated/now-copy.js
   make_maps.mjs           builds static/data/scene_map.json from Natural Earth
+  make_turtle.py          builds the Challenge's turtle mark (static/turtle*.png,
+                          static/favicon-*.png) from the favicon the site and
+                          past entries use — verified black-on-transparent,
+                          alpha upscaled ×2 for the page, white variant recoloured
   fetch_nino34.py         re-exports the NOAA PSL Niño 3.4 monthly series
-  source/                 raw CSVs (SPC export, ONI, Niño 3.4)
+  source/                 raw CSVs (SPC export, ONI, Niño 3.4) and the turtle
+                          favicon frame (pdc-turtle-256.png)
 static/data/              generated JSON consumed by the client
 ```
 
@@ -85,6 +90,7 @@ static/data/              generated JSON consumed by the client
 npm install
 node prep/make_real_data.mjs   # rebuild static/data/*.json from the source CSVs
 node prep/make_maps.mjs        # rebuild static/data/scene_map.json (downloads Natural Earth on first run)
+python3 prep/make_turtle.py    # rebuild the turtle mark from prep/source/pdc-turtle-256.png
 npm run dev                    # local, base ''
 npm run build                  # static build in build/
 BASE_PATH=/repo-name npm run build   # as deployed to Pages

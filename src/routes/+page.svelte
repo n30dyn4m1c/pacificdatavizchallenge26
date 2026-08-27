@@ -19,6 +19,7 @@
 	 */
 	import Hero from '$lib/components/Hero.svelte';
 	import { reveal } from '$lib/reveal.js';
+	import { base } from '$app/paths';
 	// chapter nine's headline numbers, written by prep/make_real_data.mjs — the
 	// BigStat and the colophon quote the same values the chapter does, and both
 	// follow automatically when NOAA appends a month
@@ -179,6 +180,14 @@
 </main>
 
 <footer class="colophon surface-light no-print">
+	<!-- the Challenge's mark closes the piece where its entry is declared -->
+	<img
+		class="colophon-mark"
+		src="{base}/turtle.png"
+		alt="Pacific Data Viz Challenge turtle logo"
+		width="512"
+		height="512"
+	/>
 	<div class="colophon-band"><OniBand /></div>
 	<p>
 		<strong>The Ocean Knows First</strong> · an entry for the Pacific Data Viz Challenge 2026
@@ -268,6 +277,14 @@
 		font-size: 0.8rem;
 		color: var(--ink-light-secondary);
 		border-top: 1px solid var(--ink-light-grid);
+	}
+
+	/* the Challenge's turtle, in black on paper, signing the entry */
+	.colophon-mark {
+		display: block;
+		height: 4.25rem;
+		width: auto;
+		margin: 0 auto 0.9rem;
 	}
 
 	.colophon p {

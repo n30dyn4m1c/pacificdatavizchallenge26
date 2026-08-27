@@ -39,14 +39,22 @@ const CHECKS = [
 	'Prepare for the predictable',
 	'Store water now',
 	'Expect the flood after',
-	'The whole record.'
+	'The whole record.',
+	// the Challenge's turtle mark, in the hero and the colophon (app.html's
+	// favicon links point at the same files)
+	'/turtle-white.png',
+	'/turtle.png'
 ];
 
 const ASSETS = [
 	'build/share/og.png',
 	'build/data/scene_map.json',
 	'build/data/scene_now.json',
-	'build/data/scene_record.json'
+	'build/data/scene_record.json',
+	'build/turtle.png',
+	'build/turtle-white.png',
+	'build/favicon-light.png',
+	'build/favicon-dark.png'
 ];
 
 let missing = 0;

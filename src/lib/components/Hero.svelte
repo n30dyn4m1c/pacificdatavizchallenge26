@@ -23,6 +23,7 @@
 	 * not decoration, it is this month's number.
 	 */
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import OniBand from '$lib/components/OniBand.svelte';
 	import OceanCover from '$lib/components/OceanCover.svelte';
 	import { impact } from '$lib/palette.js';
@@ -109,6 +110,17 @@
 	</div>
 
 	<div class="hero-inner">
+		<!-- the Challenge's own mark (prep/make_turtle.py): the white turtle
+		     over the night ocean, as the entry's badge. Decorative — the
+		     kicker names the Challenge in words. -->
+		<img
+			class="hero-mark"
+			src="{base}/turtle-white.png"
+			alt=""
+			width="512"
+			height="512"
+			aria-hidden="true"
+		/>
 		<p class="kicker">Pacific Data Viz Challenge 2026 · Papua New Guinea</p>
 		<h1 class="display">
 			The <span class="hl hl-cool">ocean</span> knows <span class="hl hl-warm">first</span>
@@ -219,6 +231,16 @@
 	/* opening choreography: each block settles up into place, once */
 	.hero-inner > * {
 		animation: hero-up 0.9s cubic-bezier(0.16, 0.6, 0.24, 1) both;
+	}
+
+	/* the Challenge's turtle, white on the night ocean — first thing to
+	   land in the opening choreography, before the kicker */
+	.hero-mark {
+		display: block;
+		height: clamp(3.4rem, 7vw, 4.75rem);
+		width: auto;
+		margin-bottom: 1.15rem;
+		opacity: 0.96;
 	}
 
 	.kicker {
@@ -413,6 +435,11 @@
 			background: #fff;
 			color: #1d1a14;
 			min-height: auto;
+		}
+
+		/* the white mark would vanish on the printed page */
+		.hero-mark {
+			display: none;
 		}
 
 		.hero-inner > h1 {
