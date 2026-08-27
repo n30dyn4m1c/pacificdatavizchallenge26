@@ -20,11 +20,11 @@ same file with the constant RGB flipped, alpha untouched.
                                      /themes/custom/pacific_dataviz/favicon-light.png)
     static/turtle.png                black mark, 512×512 — for paper surfaces
     static/turtle-white.png          white mark, 512×512 — for the dark cover
-    static/favicon-light.png         black mark, 256×256 — light browser chrome
-    static/favicon-dark.png          white mark, 256×256 — dark browser chrome
 
-All four are written as greyscale+alpha PNGs (colour type 4): the mark has
-one colour, so RGBA would spend three bytes per pixel repeating it.
+The mark is used inside the piece only (hero badge, colophon sign) — the
+browser-tab favicon stays the piece's own favicon.svg. Both files are
+greyscale+alpha PNGs (colour type 4): the mark has one colour, so RGBA
+would spend three bytes per pixel repeating it.
 
 Run: python3 prep/make_turtle.py
 Exits non-zero if the source does not verify as the black-on-transparent
@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "prep" / "source" / "pdc-turtle-256.png"
 OUT = ROOT / "static"
 # page marks display at ≤ ~10rem, so ×2 (512) leaves retina headroom at a
-# quarter of the ×4 weight; favicons stay at the source's native 256
+# quarter of the ×4 weight
 PAGE_SCALE = 2
 
 
@@ -198,14 +198,10 @@ def main():
     for name, grey in (
         ("turtle.png", 0),
         ("turtle-white.png", 255),
-        ("favicon-light.png", 0),
-        ("favicon-dark.png", 255),
     ):
-        favicon = name.startswith("favicon")
-        data, size = (alpha, (w, h)) if favicon else (big, (bw, bh))
-        png = encode_ga_png(size[0], size[1], grey, data)
+        png = encode_ga_png(bw, bh, grey, big)
         (OUT / name).write_bytes(png)
-        print(f"wrote static/{name}  {size[0]}×{size[1]}  {len(png)} bytes")
+        print(f"wrote static/{name}  {bw}×{bh}  {len(png)} bytes")
 
 
 if __name__ == "__main__":

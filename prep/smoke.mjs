@@ -52,9 +52,7 @@ const ASSETS = [
 	'build/data/scene_now.json',
 	'build/data/scene_record.json',
 	'build/turtle.png',
-	'build/turtle-white.png',
-	'build/favicon-light.png',
-	'build/favicon-dark.png'
+	'build/turtle-white.png'
 ];
 
 let missing = 0;
