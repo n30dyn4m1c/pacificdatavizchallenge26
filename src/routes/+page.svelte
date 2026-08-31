@@ -211,10 +211,9 @@
 		No cookies, no tracking, fully static.
 	</p>
 	<p>
-		Built under the author's creative direction with AI assistance: <strong>Claude</strong>
-		(implementation, data pipeline, copy drafting); <strong>Kimi K3</strong> and
-		<strong>GLM</strong> (visual design); <strong>Grok</strong>, <strong>DeepSeek</strong> and
-		<strong>GLM</strong> (fact-checking and editorial review).
+		Built under the author's creative direction with AI assistance from <strong>Claude</strong>,
+		<strong>Kimi K3</strong>, <strong>GLM</strong>, <strong>Grok</strong> and
+		<strong>DeepSeek</strong>.
 	</p>
 </footer>
 
