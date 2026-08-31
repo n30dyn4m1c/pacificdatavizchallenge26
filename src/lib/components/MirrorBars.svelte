@@ -7,8 +7,9 @@
 	 * warm color means the same thing in both bands — "El Niño side" — so the
 	 * eye can walk a red spike straight down into the rain shortfall beneath
 	 * it. Progress sweeps the years in; marked years get a connector and label.
-	 * 2025's ONI is null in the source ("pending") and renders as an open ?
-	 * marker — the record's still-being-written last column.
+	 * A year whose ONI is null (the source used to mark 2025 "pending")
+	 * renders as an open ? marker; 2025 has since been classified, so the
+	 * fallback is dormant.
 	 */
 	import { scaleLinear } from 'd3-scale';
 	import { ink, impact } from '$lib/palette.js';

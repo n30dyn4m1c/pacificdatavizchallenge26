@@ -543,11 +543,16 @@ function pearson(pairs) {
 	// reference point and drawn as a single labelled marker, never joined to the
 	// monthly line. It earns its place because it is the news: it sits above
 	// anything the four precedents reached by the same month.
+	// Refreshed 31 Aug 2026 from CPC's published weekly table
+	// (wksst9120.for): the last published week is centred 19 Aug 2026, +2.6 °C —
+	// the reading now stands beyond the observed monthly line, so the estimate
+	// comparison (below) is live for the first time.
 	const LATEST_READING = {
-		date: '2026-07-15',
-		label: 'week centred 15 Jul 2026',
-		m: 6, // July of the onset year, on the aligned axis
-		anomaly: 2.1,
+		date: '2026-08-19',
+		label: 'week centred 19 Aug 2026',
+		m: 7, // August of the onset year, on the aligned axis
+		anomaly: 2.6,
+		when: 'late August', // how the copy names the reading's moment
 		kind: 'weekly',
 		name: 'NOAA CPC weekly Niño 3.4 index (OISST basis)',
 		url: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/lanina/enso_evolution-status-fcsts-web.pdf',
@@ -692,6 +697,7 @@ function pearson(pairs) {
 				// for that month actually existed (see LATEST_READING above)
 				scoring: {
 					month: FULL[LATEST_READING.m % 12],
+					when: LATEST_READING.when,
 					reading: LATEST_READING.anomaly,
 					readingText: sign(LATEST_READING.anomaly),
 					readingLabel: LATEST_READING.label,
@@ -720,11 +726,13 @@ function pearson(pairs) {
 				},
 				// the piece's one "as of" line — every surface that states a
 				// freshness date (chapter nine's dateline, the live shelf note,
-				// the colophon) reads it from here, so they cannot disagree
+				// the colophon) reads it from here, so they cannot disagree.
+				// It is the later of the cited outlook and the cited reading.
 				updated: {
-					date: OFFICIAL.as_of,
+					date: LATEST_READING.date > OFFICIAL.as_of ? LATEST_READING.date : OFFICIAL.as_of,
 					label: (() => {
-						const [y, mo, dd] = OFFICIAL.as_of.split('-').map(Number);
+						const [y, mo, dd] = (LATEST_READING.date > OFFICIAL.as_of ? LATEST_READING.date : OFFICIAL.as_of)
+							.split('-').map(Number);
 						return `${dd} ${FULL[mo - 1]} ${y}`;
 					})()
 				}

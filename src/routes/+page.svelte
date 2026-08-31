@@ -119,7 +119,7 @@
 	<SceneLedger />
 	<SceneWatchers />
 
-	<BigStat kicker={now.latest.label} stat="{now.latest.text} °C" caption="the far ocean at {now.latest.month} — warmer than 1982, 1997, 2015 or 2023 stood at the same point. By mid-{now.scoring.month} the weekly reading was about {now.scoring.readingText} °C." accent="warm" />
+	<BigStat kicker={now.latest.label} stat="{now.latest.text} °C" caption="the far ocean at {now.latest.month} — warmer than 1982, 1997, 2015 or 2023 stood at the same point. By {now.scoring.when} the weekly reading was about {now.scoring.readingText} °C." accent="warm" />
 
 	<SceneNow />
 	<TheClock />

@@ -47,9 +47,9 @@
 			important: every chart in this piece exists because someone kept measuring. And because
 			Papua New Guinea's droughts are made by a far ocean that tips months before the rain fails,
 			watching is not bookkeeping — it is early warning. The ocean has already tipped: the
-			warning is chapter nine, month by month. The one question mark left in this yearly record —
-			the 2025–26 season's classification, which CPC's table has yet to complete — is a filing
-			delay, not a mystery.
+			warning is chapter nine, month by month. The one open line in this yearly record — the
+			2025–26 season — is now classified too: a weak La Niña, peaking at −0.6, the last dip
+			before the ocean tipped.
 		</p>
 		{#if data}
 			<DataTable

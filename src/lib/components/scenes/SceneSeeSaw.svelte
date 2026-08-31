@@ -3,8 +3,9 @@
 	 * Chapter 2 — the see-saw. The Oceanic Niño Index as a sticky bar chart;
 	 * four step cards teach it: what the measurement is, what the tips mean
 	 * (colors arrive), the four great El Niños (labels arrive), and the
-	 * still-unwritten current season ("?"). Data: static/data/scene_reveal.json
-	 * (SPC rainfall + the NOAA ONI companion; this chapter uses the ONI side).
+	 * newest season (2025–26, now classified: a weak La Niña). Data:
+	 * static/data/scene_reveal.json (SPC rainfall + the NOAA ONI companion;
+	 * this chapter uses the ONI side).
 	 */
 	import ScrollScene from '$lib/components/ScrollScene.svelte';
 	import ChapterHead from '$lib/components/ChapterHead.svelte';
@@ -20,7 +21,7 @@
 		'One number a year, for nearly half a century',
 		'Up is El Niño. Down is La Niña.',
 		'Four times, it tipped hard: 1982, 1997, 2015, 2023',
-		'The newest season is still being written'
+		'The newest season: a weak La Niña'
 	];
 	const phaseName = { elnino: 'El Niño', lanina: 'La Niña', neutral: 'neutral', pending: '—' };
 </script>
@@ -45,10 +46,10 @@
 			central equatorial Pacific — far east of Papua New Guinea. Most years it sits near zero.
 			Every few years it tips: upward is El Niño, when the Pacific's warm pool drains east away
 			from Papua New Guinea; downward is La Niña, when warmth piles back west. The great El Niños
-			of the record are 1982, 1997, 2015 and 2023. The chart's last season, 2025–26, is still an
-			open question mark — CPC's table has yet to complete it. Naming what came after it, month
-			by month, is what chapter nine is for. (The ONI is NOAA CPC data, the one series
-			in this piece not from the SPC dataflow; see /prep.)
+			of the record are 1982, 1997, 2015 and 2023. The chart's newest season, 2025–26, is
+			now complete in CPC's table too: a weak La Niña, peaking at −0.6. Naming what came
+			after it, month by month, is what chapter nine is for. (The ONI is NOAA CPC data, the
+			one series in this piece not from the SPC dataflow; see /prep.)
 		</p>
 		{#if data}
 			<DataTable
@@ -74,7 +75,7 @@
 						colored={idx >= 1}
 						marks={idx >= 2 && idx < 3 ? GREATS : []}
 						height={h}
-						ariaLabel="Bar chart of the Oceanic Niño Index from 1979 to 2025. Bars point up in El Niño years — sharply in 1982, 1997, 2015 and 2023 — and down in La Niña years. The 2025–26 season is not yet classified in the published table."
+						ariaLabel="Bar chart of the Oceanic Niño Index from 1979 to 2025. Bars point up in El Niño years — sharply in 1982, 1997, 2015 and 2023 — and down in La Niña years. The newest season, 2025–26, closed as a weak La Niña, peaking at −0.6."
 					/>
 				{/if}
 			{/snippet}
@@ -120,8 +121,9 @@
 				<span class="card-step" aria-hidden="true">4/4</span>
 				<span class="card-kicker">The last column</span>
 				<p>
-					The 2025–26 season is still a <strong>?</strong> on this yearly chart — CPC's
-					table hasn't finished it. Naming what came next, month by month, is what
+					The 2025–26 season has since been classified — a
+					<span class="hl hl-cool">weak La Niña</span>, peaking at −0.6, the last dip
+					before the 2026 El Niño. Naming what came next, month by month, is what
 					chapter nine is for.
 				</p>
 			</div>

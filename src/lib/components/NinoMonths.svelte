@@ -380,9 +380,9 @@
 					/>
 					{#if !narrow}
 						<text
-							x={xA(latest.m) - 9}
+							x={xA(latest.m) + 14}
 							y={(y(missAt.hi) + y(latest.anomaly)) / 2 + 4}
-							text-anchor="end"
+							text-anchor="start"
 							font-size="11"
 							font-weight="700"
 							fill={imp.drought}

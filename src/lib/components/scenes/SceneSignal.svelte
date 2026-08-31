@@ -46,7 +46,7 @@
 			two, 1992 and 1993, sit in the trailing warmth of the long 1991–92 event.
 		</p>
 		<p>
-			Averaged across the record, El Niño years run −5.9 points against +3.5 points in all
+			Averaged across the record, El Niño years run −5.9 points against +3.8 points in all
 			other years — a correlation of −0.64. Points, not millimetres: the dataflow publishes this
 			series labelled “mm”, but at these magnitudes the values are a relative anomaly index
 			around zero — Papua New Guinea’s rain runs to thousands of millimetres a year, so a true
@@ -138,7 +138,7 @@
 					In El Niño years PNG’s rain runs
 					<strong>{data ? data.mean_rain_elnino : '−5.9'}&nbsp;points</strong> below normal, on
 					average; in all other years,
-					<strong>+{data ? data.mean_rain_other : '3.5'}&nbsp;points</strong> above it.
+					<strong>+{data ? data.mean_rain_other : '3.8'}&nbsp;points</strong> above it.
 				</p>
 				<p>Put simply: <strong>when the far ocean warms, store water.</strong></p>
 			</div>

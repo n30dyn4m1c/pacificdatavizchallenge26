@@ -108,7 +108,7 @@
 			points: [
 				'El Niño Advisory in force; the chance of a very strong event (Niño 3.4 ≥ +2.0 °C) in the 2026–27 fall–winter is above 90 %.',
 				'CPC puts a 69 % chance on a historic peak for October–December 2026 — a 3-month ONI of +2.5 °C or more, beyond 1982, 1997 and 2015.',
-				'The quoted weekly index reached about +2.1 °C in mid-July; WMO’s August update expects further intensification through October.'
+				'The quoted weekly index reached about +2.6 °C by late August — above the whole range the precedents imply for the month; WMO’s August update expects further intensification through October.'
 			]
 		}
 	];

@@ -80,20 +80,21 @@ export const now = {
 		"label": "November 2026"
 	},
 	"scoring": {
-		"month": "July",
-		"reading": 2.1,
-		"readingText": "+2.10",
-		"readingLabel": "week centred 15 Jul 2026",
-		"precedentMax": 1.35,
-		"precedentMaxText": "+1.35",
+		"month": "August",
+		"when": "late August",
+		"reading": 2.6,
+		"readingText": "+2.60",
+		"readingLabel": "week centred 19 Aug 2026",
+		"precedentMax": 1.49,
+		"precedentMaxText": "+1.49",
 		"abovePrecedents": true,
-		"estMean": null,
-		"estMeanText": null,
-		"estHi": null,
-		"estHiText": null,
-		"aboveEnvelope": false,
-		"anchoredHere": null,
-		"anchoredHereText": null
+		"estMean": 1.19,
+		"estMeanText": "+1.19",
+		"estHi": 1.49,
+		"estHiText": "+1.49",
+		"aboveEnvelope": true,
+		"anchoredHere": 1.9,
+		"anchoredHereText": "+1.90"
 	},
 	"calendar": {
 		"hardestEnd": "March 2027",
@@ -101,7 +102,7 @@ export const now = {
 		"swingback": "June 2027"
 	},
 	"updated": {
-		"date": "2026-08-13",
-		"label": "13 August 2026"
+		"date": "2026-08-19",
+		"label": "19 August 2026"
 	}
 };

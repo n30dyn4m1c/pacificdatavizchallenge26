@@ -104,7 +104,8 @@
 		<p>
 			The estimate should be read as a floor, not a ceiling. The quoted weekly Niño 3.4 index
 			for the {now.scoring.readingLabel} was about {now.scoring.readingText} °C — above anything
-			the four precedents reached by that month. All {now.events} precedents were cooler than
+			the four precedents reached by that month{#if now.scoring.aboveEnvelope}, and above the
+			whole range the estimate allowed for it{/if}. All {now.events} precedents were cooler than
 			2026 at {now.anchorMonth}, which is why paths drawn from their own levels run low. Started
 			from where 2026 actually is, the same {now.events} trajectories{#if now.scoring.anchoredHereText}
 			put {now.scoring.month} at {now.scoring.anchoredHereText} and{/if} peak near
@@ -147,8 +148,9 @@
 					height={h}
 					ariaLabel="Line chart of monthly Niño 3.4 sea-surface temperature anomalies. First the last three years as monthly bars: the 2023–24 El Niño, a weak double La Niña, then a fast rise through the first half of 2026 to {now.latest
 						.text} °C in {now.latest.month}. Then the {now.events} great El Niños of 1982, 1997, 2015 and 2023 aligned by calendar month as gray lines, with 2026 so far as a red line above all of them at {now
-						.latest.month}. A ringed marker at the end of that line carries the quoted weekly index for the {now
-						.scoring.readingLabel} at about {now.scoring.readingText} °C — higher than any of the four precedents stood at the same month — labelled as a cited weekly reading rather than part of the monthly series. A shaded band and dashed line, labelled as an estimate, continue 2026 along the range of the four precedents to a peak of roughly {now
+						.latest.month}. A ringed marker just past the end of the observed line carries the quoted weekly index for the {now
+						.scoring.readingLabel} at about {now.scoring.readingText} °C — higher than any of the four precedents stood at the same month{now.scoring
+						.aboveEnvelope ? ', and above the whole range the estimate allowed for it' : ''} — labelled as a cited weekly reading rather than part of the monthly series. A shaded band and dashed line, labelled as an estimate, continue 2026 along the range of the four precedents to a peak of roughly {now
 						.estimate.text} °C around {now.estimate.label}, declining through mid-2027. A second, lighter dashed path then shows the same four trajectories started from 2026's own level, peaking near {now
 						.anchored.text} °C. Bracket annotations mark the hard months from {now.latest
 						.month} 2026 to {now.calendar.hardestEnd} and the swing back to rain around {now.calendar
@@ -185,8 +187,8 @@
 							? ', '
 							: ''}{s.onset} {s.text}{GLOSS[s.onset] ? ` (${GLOSS[s.onset]})` : ''}.{/each}
 					<strong>2026 stands at {now.latest.text} — above all four:</strong> no event in this
-					{now.record.years}-year record has started this fast. The ringed marker at the line's
-					end is the quoted weekly reading for mid&#8209;{now.scoring.month} — about
+					{now.record.years}-year record has started this fast. The ringed marker, just past
+					the line's end, is the quoted weekly reading for {now.scoring.when} — about
 					<strong>{now.scoring.readingText}&nbsp;°C</strong>, a different product from the
 					monthly series: marked, never joined to the line.
 				</p>
@@ -213,9 +215,16 @@
 				<span class="card-kicker">Already too low</span>
 				<p>
 					Treat that band as a <span class="hl hl-warm">floor, not a ceiling</span>.
-					{now.scoring.month}’s weekly reading — about
-					<strong>{now.scoring.readingText}&nbsp;°C</strong> — already sits above anything the
-					four precedents reached by that month. Re-run the same four paths from 2026’s own
+					{#if now.scoring.estMeanText}
+						The estimate for {now.scoring.month} was {now.scoring.estMeanText}, inside a
+						range up to {now.scoring.estHiText} — and the quoted weekly reading, about
+						<strong>{now.scoring.readingText}&nbsp;°C</strong>, sits above the whole band.
+					{:else}
+						{now.scoring.month}’s weekly reading — about
+						<strong>{now.scoring.readingText}&nbsp;°C</strong> — already sits above anything
+						the four precedents reached by that month.
+					{/if}
+					Re-run the same four paths from 2026’s own
 					level and they peak near <strong>{now.anchored.text}&nbsp;°C</strong> — the lighter
 					dashed line. Plan for at least the precedents, and possibly more.
 				</p>

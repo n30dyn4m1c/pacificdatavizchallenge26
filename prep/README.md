@@ -35,14 +35,21 @@ to 1850. The CSV is committed so the pipeline is fully reproducible offline.
 ### 2. `source/oni_cpc.csv` — the Oceanic Niño Index (NOAA CPC)
 
 The one series in the piece not from the SPC dataflow: for each year
-1979–2024 (2025 pending), the **peak ONI of the ENSO
+1979–2025, the **peak ONI of the ENSO
 season developing in that year** (its Jun–Feb window, JJA–NDJ plus the
 following DJF) and the CPC episode classification (`elnino` / `lanina` /
 `neutral`). Read from CPC's published ONI table on **26 August 2026** — now the
 **ERSSTv6** edition (<https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/>;
-the v5 page it replaced redirects there). 2025 stays `pending` because CPC's own
-table has not yet published that season's final DJF (Jan–Feb 2026) value; the
-scene renders an open "?" rather than guessing.
+the v5 page it replaced redirects there). The 2025–26 season, left `pending`
+on 26 August, was **completed on 31 August 2026** from the same live table:
+its final value (DJF 2026, −0.4) is published, the season peaked at **−0.6**
+(SON/OND/NDJ 2025), and it is classified **weak La Niña** — the same
+convention the table's own marginal events follow (2016 and 2024 both read
+`lanina` at −0.5), and the classification the piece's chapter nine already
+describes ("a weak La Niña through 2024 and 2025"). Completing the year
+moves r(ONI, rain) from −0.640 (n=46) to −0.642 (n=47), still −0.64 at one
+decimal, and the "other years" rainfall mean from +3.5 to +3.8 points; the
+driest-ten list is unchanged (8 El Niño years).
 
 > Note on the version change: the earlier commit of this file was transcribed
 > from the ERSSTv5 table. NOAA has since moved the canonical table to ERSSTv6,
@@ -83,15 +90,21 @@ card onward, as a lighter dashed line with no band of its own, so the
 graphic never carries two envelopes at once. Its peak (≈ +2.6 °C) is
 quoted in the copy.
 
-> ⚠️ **Two cited numbers in this chapter, and the reason for the
-> warning.** The build environment's egress policy blocks `noaa.gov`,
-> `iri.columbia.edu` and `wmo.int`, so `fetch_nino34.py` could not be
-> re-run and the two blocks below were read from the published outlooks
-> and the reporting on them rather than fetched. Both carry their source
-> URLs in `scene_now.json` and an `as_of` / `verify` field. Re-check them
-> — and re-run the fetch, which will append July 2026 onwards to the
-> monthly series and recompute everything downstream — from a network
-> that can reach NOAA, before submission.
+> ⚠️ **Two cited numbers in this chapter, and how they were checked.**
+> The build environment's egress policy blocks `noaa.gov`, `iri.columbia.edu`
+> and `wmo.int`, so `fetch_nino34.py` could not be re-run and the `official`
+> block below was read from the published outlooks and the reporting on them
+> rather than fetched (it carries its source URLs in `scene_now.json` and an
+> `as_of` / `verify` field). The `latest_reading` block, by contrast, was
+> **verified live on 31 August 2026** from CPC's published weekly SST table
+> (<https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for>): the last
+> published week is centred **19 August 2026, +2.6 °C**. The monthly series
+> still ends at July 2026 — PSL has not yet published August — so the
+> observed line, the analogue weights and the timing brackets are unchanged;
+> only the cited reading moved, and it now sits beyond the observation, so
+> the estimate-vs-reading comparison is live for the first time. Re-check
+> both blocks when a newer discussion (10 September 2026) or monthly value
+> lands.
 
 - `official` — the **NOAA CPC / IRI outlook and the WMO update of early
   August 2026**: El Niño Advisory in effect; continuation into early 2027
@@ -101,10 +114,11 @@ quoted in the copy.
   percentage); further intensification expected through Aug–Oct. This
   replaced the mid-June 2026 outlook, which read "strong".
 - `latest_reading` — the **CPC weekly Niño 3.4 index for the week centred
-  15 July 2026, ≈ +2.1 °C**. This is a *different product on a different
-  SST basis* (**OISST**) from the monthly **ERSST-based** series the chart
-  draws, so it is never appended to `nino34_monthly.csv` and never joined
-  to the plotted line:
+  19 August 2026, +2.6 °C** (read from `wksst9120.for` on 31 August 2026;
+  the week centred 12 August read +2.7 °C). This is a *different product on
+  a different SST basis* (**OISST**) from the monthly **ERSST-based** series
+  the chart draws, so it is never appended to `nino34_monthly.csv` and never
+  joined to the plotted line:
   the scene draws it as a ringed, unconnected marker that names itself as
   a quoted weekly value. The pipeline also records whether it falls above
   the estimate's envelope for the same month (`vs_estimate`) — as of this

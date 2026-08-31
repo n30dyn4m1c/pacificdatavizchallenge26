@@ -4,8 +4,8 @@
 	 * Niño Index: El Niño up, La Niña down. Starts as neutral gray ("just a
 	 * wiggly measurement"), takes the piece's two meaning colors when
 	 * `colored` flips, and labels the marked years directly. A year whose ONI
-	 * is still unclassified (2025, `oni: null`) renders as an open "?" — the
-	 * record's still-being-written last column.
+	 * is null (the source used to mark 2025 "pending") renders as an open "?";
+	 * 2025 has since been classified, so the fallback is dormant.
 	 */
 	import { scaleLinear } from 'd3-scale';
 	import { ink, impact, series as seriesColors } from '$lib/palette.js';
