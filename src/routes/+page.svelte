@@ -212,8 +212,9 @@
 	</p>
 	<p>
 		Built under the author's creative direction with AI assistance: <strong>Claude</strong>
-		(implementation, data pipeline, copy drafting) and <strong>Grok</strong>,
-		<strong>DeepSeek</strong> and <strong>GLM</strong> (fact-checking and editorial review).
+		(implementation, data pipeline, copy drafting); <strong>Kimi K3</strong> and
+		<strong>GLM</strong> (visual design); <strong>Grok</strong>, <strong>DeepSeek</strong> and
+		<strong>GLM</strong> (fact-checking and editorial review).
 	</p>
 </footer>
 
