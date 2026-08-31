@@ -80,7 +80,7 @@
 				</p>
 				<p class="source-line">
 					Source: {data.source.name} ({data.source.dataflow}), {data.source.hub} — the official
-					dataset of the Pacific Data Viz Challenge 2026. El Niño years: {data.oni_source.name}.
+					dataset of the Pacific Dataviz Challenge 2026. El Niño years: {data.oni_source.name}.
 				</p>
 			{/if}
 		</div>

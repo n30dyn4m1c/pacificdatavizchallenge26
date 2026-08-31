@@ -71,6 +71,8 @@
 
 <svelte:window onscroll={onWindowScroll} />
 
+<a class="skip-link no-print" href="#main">Skip to story</a>
+
 {#if !ui.noTap && (scrolled || ui.readerMode)}
 	<button
 		class="reader-toggle no-print"
@@ -93,6 +95,27 @@
 <div class="grain no-print" aria-hidden="true"></div>
 
 <style>
+	.skip-link {
+		position: absolute;
+		left: 0.75rem;
+		top: 0.75rem;
+		z-index: 200;
+		transform: translateY(-200%);
+		background: var(--paper-raised);
+		color: var(--ink-light-primary);
+		padding: 0.55rem 0.9rem;
+		border-radius: 999px;
+		font: 600 0.8rem/1 'Public Sans', system-ui, sans-serif;
+		text-decoration: none;
+		box-shadow: 0 2px 10px rgba(29, 26, 20, 0.15);
+	}
+
+	.skip-link:focus {
+		transform: none;
+		outline: 2px solid var(--accent-light);
+		outline-offset: 3px;
+	}
+
 	.reader-toggle {
 		position: fixed;
 		top: max(0.75rem, env(safe-area-inset-top));
