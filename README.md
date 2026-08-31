@@ -51,6 +51,8 @@ Light editorial scrollytelling (pudding.cool register): one warm paper surface, 
 - Two lanes, never an overlay: on wide screens the card column owns a reserved lane (`--card-lane`) and the graphic starts where it ends; below 900 px the pin splits vertically, graphic on top, card at the foot.
 - `src/lib/palette.js` is the single source of truth for every colour.
 
+**AI disclosure.** Built with AI assistance from **Claude** (Anthropic), **Kimi K3**, **GLM**, **Grok**, and **DeepSeek** — across implementation, the data pipeline, copy drafting, visual design, and fact-checking. All under the author's creative direction: chapter structure, data judgement (e.g. the rainfall-anomaly unit correction, the analogue-estimate methodology), and final review are the author's own.
+
 ## Accessibility & performance
 
 - Every chapter has a prose equivalent in the accessibility tree, visually revealed by the "Read scene text" toggle.

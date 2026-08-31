@@ -210,6 +210,11 @@
 		<strong>WMO</strong> outlooks. Live coverage current to <strong>{now.updated.label}</strong>.
 		No cookies, no tracking, fully static.
 	</p>
+	<p>
+		Built under the author's creative direction with AI assistance from <strong>Claude</strong>,
+		<strong>Kimi K3</strong>, <strong>GLM</strong>, <strong>Grok</strong> and
+		<strong>DeepSeek</strong>.
+	</p>
 </footer>
 
 <style>
