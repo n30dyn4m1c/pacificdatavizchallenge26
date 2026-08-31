@@ -127,10 +127,26 @@
 	.kicker { animation-delay: 0.05s; color: var(--ink-dark-secondary); opacity: 0.9; }
 	.hero-inner > h1 { font-size: clamp(3rem, 11vw, 7rem); margin: 0.35em 0 0.3em; text-wrap: balance; animation-delay: 0.18s; }
 	.standfirst { font-size: clamp(1.05rem, 2.4vw, 1.3rem); color: var(--ink-dark-secondary); max-width: 34em; text-wrap: pretty; animation-delay: 0.48s; }
-	.byline { font-size: 0.8rem; color: var(--ink-dark-muted); margin-top: 0.25rem; margin-bottom: 0; animation-delay: 0.64s; }
+	.byline {
+		font-size: 0.8rem;
+		color: var(--ink-dark-muted);
+		margin-top: 0.35rem;
+		margin-bottom: 0;
+		max-width: 36em;
+		text-wrap: balance;
+		animation-delay: 0.64s;
+	}
 	.meta { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dark-muted); margin: 0.9rem 0 0; animation-delay: 0.76s; }
 	@keyframes hero-up { from { opacity: 0; transform: translateY(26px); } }
-	.hero .hl { background-color: transparent; background-repeat: no-repeat; background-size: 0% 100%; animation: hl-wipe 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+	.hero .hl {
+		padding: 0 0.08em;
+		border-radius: 0.08em;
+		font-weight: inherit;
+		background-color: transparent;
+		background-repeat: no-repeat;
+		background-size: 0% 100%;
+		animation: hl-wipe 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+	}
 	.hero .hl-cool { background-image: linear-gradient(color-mix(in srgb, var(--hl-cool) 30%, transparent), color-mix(in srgb, var(--hl-cool) 30%, transparent)); animation-delay: 0.85s; }
 	.hero .hl-warm { background-image: linear-gradient(color-mix(in srgb, var(--hl-warm) 32%, transparent), color-mix(in srgb, var(--hl-warm) 32%, transparent)); animation-delay: 1.1s; }
 	@keyframes hl-wipe { to { background-size: 100% 100%; } }
