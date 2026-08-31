@@ -18,6 +18,19 @@
 
 	const ITEMS = [
 		{
+			source: 'NARI · Drought Update',
+			date: 'February 2026',
+			title: 'Drought early-warning status: Jiwaka on Alert, five provinces on Watch',
+			url: 'https://www.nari.gov.pg/wp-content/uploads/2026/03/Drought-Update_February_2026.pdf',
+			summary:
+				'The official drought early-warning system, mid-escalation — the same DEWS tiers chapter four maps, filling in for 2026.',
+			points: [
+				'Jiwaka moved to Drought Alert; Chimbu, Enga, Hela, the NCD and Western Highlands on Drought Watch.',
+				'Seasonal outlooks showed below-average rain over the Highlands and Western Province.',
+				'Standing advice: plant the drought-resistant crops — sweet potato, cassava, taro, banana varieties.'
+			]
+		},
+		{
 			source: 'PNG National Weather Service',
 			date: 'May–June 2026',
 			title: 'El Niño declared in the tropical Pacific',
@@ -44,6 +57,19 @@
 			]
 		},
 		{
+			source: 'PNG Today / EMTV',
+			date: 'June 2026',
+			title: 'Port Moresby faces extended power rationing as Sirinumu Dam falls',
+			url: 'https://news.pngfacts.com/2026/06/png-capital-port-moresby-faces-extended.html',
+			summary:
+				'The capital’s version of the drying river: the dam that waters and powers Port Moresby, drawn down under a rain that has not come.',
+			points: [
+				'Sirinumu Dam under controlled drawdown; output cut across the whole Rouna hydro cascade.',
+				'Load shedding in the capital; diesel generation brought in to cover the hydro shortfall.',
+				'Conservation measures flagged for up to ten months — the forecast length of the event.'
+			]
+		},
+		{
 			source: 'PNG National Weather Service · via The National',
 			date: 'July 2026',
 			title: 'Drought warning for six Highlands provinces — and a drought that runs into 2027',
@@ -57,19 +83,6 @@
 			]
 		},
 		{
-			source: 'NARI · Drought Update',
-			date: 'February 2026',
-			title: 'Drought early-warning status: Jiwaka on Alert, five provinces on Watch',
-			url: 'https://www.nari.gov.pg/wp-content/uploads/2026/03/Drought-Update_February_2026.pdf',
-			summary:
-				'The official drought early-warning system, mid-escalation — the same DEWS tiers chapter four maps, filling in for 2026.',
-			points: [
-				'Jiwaka moved to Drought Alert; Chimbu, Enga, Hela, the NCD and Western Highlands on Drought Watch.',
-				'Seasonal outlooks showed below-average rain over the Highlands and Western Province.',
-				'Standing advice: plant the drought-resistant crops — sweet potato, cassava, taro, banana varieties.'
-			]
-		},
-		{
 			source: 'The National',
 			date: '2026',
 			title: 'El Niño signs hit Highlands: drought-induced conditions threaten food security',
@@ -80,19 +93,6 @@
 				'Frost reported over food gardens at Gembogl (Chimbu), upper Mendi and Imbonggu (Southern Highlands) and parts of Hela.',
 				'Falling water levels alongside the frost — the drought–frost pair of chapters four and five.',
 				'Reporting puts roughly 1.9 million people at risk from the persistent highland dry spell.'
-			]
-		},
-		{
-			source: 'PNG Today / EMTV',
-			date: 'June 2026',
-			title: 'Port Moresby faces extended power rationing as Sirinumu Dam falls',
-			url: 'https://news.pngfacts.com/2026/06/png-capital-port-moresby-faces-extended.html',
-			summary:
-				'The capital’s version of the drying river: the dam that waters and powers Port Moresby, drawn down under a rain that has not come.',
-			points: [
-				'Sirinumu Dam under controlled drawdown; output cut across the whole Rouna hydro cascade.',
-				'Load shedding in the capital; diesel generation brought in to cover the hydro shortfall.',
-				'Conservation measures flagged for up to ten months — the forecast length of the event.'
 			]
 		},
 		{

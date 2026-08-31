@@ -30,7 +30,7 @@
 		{ id: 'ch-6', n: 'Six', name: 'The long record' },
 		{ id: 'ch-7', n: 'Seven', name: 'The ledger' },
 		{ id: 'ch-8', n: 'Eight', name: 'The watchers' },
-		{ id: 'ch-9', n: 'Nine', name: 'Now' },
+		{ id: 'ch-9', n: 'Nine', name: 'Now', live: true },
 		{ id: 'ch-ask', n: '', name: 'What to do' },
 		{ id: 'ch-record', n: '', name: 'The whole record' }
 	];
@@ -131,6 +131,12 @@
 					>
 						<span class="nav-n">{c.n || '—'}</span>
 						<span>{c.name}</span>
+						{#if c.live}
+							<span class="nav-live" title="Live chapter — the 2026 signal">
+								<span class="nav-live-dot" aria-hidden="true"></span>
+								live
+							</span>
+						{/if}
 					</button>
 				</li>
 			{/each}
@@ -254,6 +260,29 @@
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
 		color: var(--ink-light-muted);
+	}
+
+	.nav-live {
+		margin-left: auto;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.28rem;
+		padding: 0.12rem 0.42rem 0.1rem;
+		border-radius: 999px;
+		font-size: 0.58rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--accent-light);
+		background: color-mix(in srgb, var(--accent-light) 12%, transparent);
+	}
+
+	.nav-live-dot {
+		width: 0.42rem;
+		height: 0.42rem;
+		border-radius: 50%;
+		background: var(--accent-light);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-light) 22%, transparent);
 	}
 
 	.nav-toggle:focus-visible,
