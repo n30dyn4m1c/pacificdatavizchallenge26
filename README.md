@@ -4,7 +4,7 @@
 ![SvelteKit](https://img.shields.io/badge/SvelteKit-Svelte%205-FF3E00.svg)
 [![Live](https://img.shields.io/badge/Live-GitHub%20Pages-222222.svg)](https://n30dyn4m1c.github.io/pacificdatavizchallenge26/)
 
-**An interactive scrollytelling entry for the Pacific Data Viz Challenge 2026**, built on the official SPC climate record for Papua New Guinea.
+**An interactive scrollytelling entry for the Pacific Dataviz Challenge 2026**, built on the official SPC climate record for Papua New Guinea.
 
 Papua New Guinea's worst droughts begin seven thousand kilometres away, in the temperature of the equatorial Pacific — months before the rain fails. The piece explains that signal, shows what it does to PNG at every altitude (dry tanks, stranded barges, scorched gardens, highland frost, then floods when the rain returns), and reads the El Niño now developing in 2026 against its four strongest precedents. It ends with a practical preparation calendar: what to do, and when.
 
