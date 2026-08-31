@@ -72,7 +72,7 @@ while size > 40:
         break
     size -= 2
 
-d.text((margin, 80), "PACIFIC DATA VIZ CHALLENGE 2026", font=f_kick, fill=INK_3)
+d.text((margin, 80), "PACIFIC DATAVIZ CHALLENGE 2026", font=f_kick, fill=INK_3)
 d.text((margin - 3, 128), title, font=f_title, fill=INK)
 d.text(
     (margin, 250),
