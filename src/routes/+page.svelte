@@ -70,8 +70,8 @@
 		<p>
 			It is happening a third time. In 2026 that ocean is warming faster than it did in 1982,
 			1997, 2015 or 2023 — the four great El Niños of the modern record — at the same point in
-			their onset years. PNG’s National Weather Service declared El Niño in May and expects the
-			drought to run into 2027.
+			their onset years. PNG’s National Weather Service declared El Niño in June, after a first
+			advisory on 1 May, and expects the drought to run into 2027.
 		</p>
 		<p>
 			What follows is the whole story, told through the

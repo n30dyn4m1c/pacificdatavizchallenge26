@@ -4,7 +4,8 @@
 	 * inside the event. Three month-resolution counters computed from the
 	 * reader's actual current month (ui.now, PNG time):
 	 *
-	 *   · months since Papua New Guinea declared the El Niño (1 May 2026)
+	 *   · months since Papua New Guinea declared the El Niño (June 2026;
+	 *     the first advisory that started the clock's story was 1 May 2026)
 	 *   · months until the analogue estimate's expected peak (Nov 2026)
 	 *   · months until the estimated swing back to the rain (Jun 2027)
 	 *
@@ -18,7 +19,7 @@
 	import { reveal } from '$lib/reveal.js';
 	import { now } from '$lib/generated/now-copy.js';
 
-	const DECL = { y: 2026, m: 5 }; //   NWS El Niño declaration, 1 May 2026
+	const DECL = { y: 2026, m: 6 }; //   NWS El Niño declaration (June 2026; first advisory 1 May)
 	const PEAK = { y: 2026, m: 11 }; //  the estimate's peak month (Nov 2026)
 	const SWING = { y: 2027, m: 6 }; //  the estimated swing back (Jun 2027)
 	const AS_OF = { y: 2026, m: 8 }; //  the piece's stated as-of date
@@ -45,7 +46,7 @@
 	<div class="tiles" use:reveal={{ delay: 90 }}>
 		<div class="tile">
 			<p class="n">{dDecl}<span class="u">&nbsp;{dDecl === 1 ? 'month' : 'months'}</span></p>
-			<p class="l">since the declaration — Papua New Guinea declared this El Niño on 1 May 2026</p>
+			<p class="l">since the declaration — Papua New Guinea declared this El Niño in June 2026, after the 1 May advisory</p>
 		</div>
 		<div class="tile hot">
 			<p class="n">

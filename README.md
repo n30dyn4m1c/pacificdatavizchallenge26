@@ -55,9 +55,9 @@ Light editorial scrollytelling (pudding.cool register): one warm paper surface, 
 
 ## Accessibility & performance
 
-- Every chapter has a prose equivalent in the accessibility tree, visually revealed by the "Read scene text" toggle.
+- Every chapter has a prose equivalent in the accessibility tree — visually hidden and read by screen readers, promoted to a visible fallback if a scene's data fails to load.
 - `prefers-reduced-motion` removes all self-running motion (rain, wash, pulses, count-ups, tweens); scroll-driven state changes remain.
-- Charts carry `role="img"` labels that follow their state, plus collapsible data-table fallbacks.
+- Charts carry `role="img"` labels that follow their state, plus data-table fallbacks inside the prose layer.
 - External links load nothing on the page — no embeds, no trackers.
 - Per-scene JSON is small and fetched lazily as scenes approach; the epilogue prints to one page.
 

@@ -15,15 +15,6 @@
 
 	let { children } = $props();
 
-	// The reader-mode toggle only affects scene prose, and the first scene is
-	// a viewport below the hero — so on the opening screen the button would
-	// do nothing visible. It stays hidden until the reader scrolls toward
-	// content it can act on (and stays visible while reader mode is on).
-	let scrolled = $state(false);
-	const onWindowScroll = () => {
-		scrolled = window.scrollY > window.innerHeight * 0.5;
-	};
-
 	// palette.js → CSS custom properties (single source of truth stays in JS)
 	const rootVars = `:root{
 		--ocean:${surfaces.ocean};--ocean-raised:${surfaces.oceanRaised};
@@ -69,19 +60,7 @@
 	{@html `<style>${rootVars}</style>`}
 </svelte:head>
 
-<svelte:window onscroll={onWindowScroll} />
-
 <a class="skip-link no-print" href="#main">Skip to story</a>
-
-{#if !ui.noTap && (scrolled || ui.readerMode)}
-	<button
-		class="reader-toggle no-print"
-		aria-pressed={ui.readerMode}
-		onclick={() => (ui.readerMode = !ui.readerMode)}
-	>
-		{ui.readerMode ? 'Hide' : 'Show'} plain-text version
-	</button>
-{/if}
 
 <ChapterNav />
 
@@ -112,37 +91,6 @@
 
 	.skip-link:focus {
 		transform: none;
-		outline: 2px solid var(--accent-light);
-		outline-offset: 3px;
-	}
-
-	.reader-toggle {
-		position: fixed;
-		top: max(0.75rem, env(safe-area-inset-top));
-		right: max(0.75rem, env(safe-area-inset-right));
-		z-index: 100;
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px; /* tap-target floor */
-		font: 600 0.72rem/1 'Public Sans', system-ui, sans-serif;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink-light-primary);
-		/* opaque enough to stay legible where it floats over scene headers */
-		background: color-mix(in srgb, var(--paper-raised) 90%, transparent);
-		border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
-		border-radius: 999px;
-		padding: 0.55rem 0.9rem;
-		cursor: pointer;
-		backdrop-filter: blur(6px);
-		box-shadow: 0 2px 10px rgba(29, 26, 20, 0.15);
-	}
-
-	.reader-toggle:hover {
-		border-color: currentColor;
-	}
-
-	.reader-toggle:focus-visible {
 		outline: 2px solid var(--accent-light);
 		outline-offset: 3px;
 	}

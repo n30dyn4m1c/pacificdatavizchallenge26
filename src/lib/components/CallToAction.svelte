@@ -56,7 +56,7 @@
 	];
 
 	// ── the preparation calendar ────────────────────────────────────────────
-	const START = { y: 2026, m: 5 }; // May 2026, the declaration month
+	const START = { y: 2026, m: 5 }; // May 2026, the first-advisory month
 	const N_MONTHS = 15; //           May 2026 … Jul 2027
 	const MONTHS_SHORT = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 	const MONTHS_LONG = [
@@ -200,7 +200,7 @@
 		<svg
 			viewBox="0 0 {W} {H}"
 			role="img"
-			aria-label="The preparation calendar, May 2026 to July 2027. The hard months run from now to about March 2027 — failing rain, falling rivers, frost nights — with one job in each window: follow the warnings from the declaration onward, store water by August, plant for drought and frost before the expected November peak, and prepare for floods before the rain returns around June 2027."
+			aria-label="The preparation calendar, May 2026 to July 2027. The hard months run from now to about March 2027 — failing rain, falling rivers, frost nights — with one job in each window: follow the warnings from the first advisory onward, store water by August, plant for drought and frost before the expected November peak, and prepare for floods before the rain returns around June 2027."
 		>
 			<!-- zone: the hard months -->
 			<rect
@@ -220,7 +220,10 @@
 				fill="color-mix(in srgb, var(--cool) 11%, transparent)"
 				rx="8"
 			/>
-			<text x={Math.max(xOf(SWING[0]) - 4, W - 128)} y="24" font-size="11.5" font-weight="700" fill="var(--cool)">
+			<!-- end-anchored at the axis's right end: the label ("June 2027 ·
+			     the swing back") is wider than the zone it names, so anchoring
+			     it from the right is what keeps it inside the viewBox -->
+			<text x={W - PAD_R + 12} y="24" text-anchor="end" font-size="11.5" font-weight="700" fill="var(--cool)">
 				{now.calendar.swingback.split('–')[0]} · the swing back
 			</text>
 

@@ -7,11 +7,14 @@
 	 * Sirinumu drawdown and Port Moresby's power rationing). Same contract
 	 * as the 1997/2015 shelf: external links, our summaries.
 	 *
-	 * Kept current by hand — last refreshed 13 Aug 2026, when the mid-August
-	 * CPC discussion moved the official outlook from "very strong" toward
-	 * "historic". The "as of" line in the shelf note below comes from the pipeline
-	 * (now.updated) — update OFFICIAL.as_of in prep/make_real_data.mjs and
-	 * re-run it, and every freshness surface moves together.
+	 * Kept current by hand — last refreshed 31 Aug 2026, when every link was
+	 * re-verified (the declaration and rationing clips now cite The
+	 * National's on-the-record coverage rather than a login-walled post and
+	 * an aggregator) after the mid-August CPC discussion moved the official
+	 * outlook from "very strong" toward "historic". The "as of" line in the
+	 * shelf note below comes from the pipeline (now.updated) — update
+	 * OFFICIAL.as_of in prep/make_real_data.mjs and re-run it, and every
+	 * freshness surface moves together.
 	 */
 	import { reveal } from '$lib/reveal.js';
 	import { now } from '$lib/generated/now-copy.js';
@@ -31,16 +34,16 @@
 			]
 		},
 		{
-			source: 'PNG National Weather Service',
-			date: 'May–June 2026',
+			source: 'PNG National Weather Service · via The National',
+			date: 'June 2026',
 			title: 'El Niño declared in the tropical Pacific',
-			url: 'https://www.facebook.com/pngmet/posts/-official-media-release-el-ni%C3%B1o-declared-in-the-tropical-pacificthe-papua-new-gu/1298727142436444/',
+			url: 'https://www.thenational.com.pg/el-nino-to-influence-weather-patterns/',
 			summary:
-				'The official declaration: after a first advisory on 1 May 2026 and three consecutive months of oceanic and atmospheric monitoring, the national service called the event.',
+				'The official confirmation, on the record: after a first advisory on 1 May 2026, the national service’s director confirmed in June that El Niño conditions are established — and named what they will do to the country.',
 			points: [
-				'El Niño typically shifts rain toward the central Pacific — and away from Papua New Guinea.',
-				'Below-normal rainfall expected nationwide while conditions persist.',
-				'The declaration is the signal this piece is about: it arrived months ahead of the worst.'
+				'Sea-surface temperatures, atmospheric circulation and model guidance all show conditions established, likely to persist to at least the end of the year.',
+				'Highlands, southern-coastal and drought-prone areas named for reduced rainfall; about half the models put the peak near 1997–98 or 2015–16.',
+				'Water, food, health, hydropower and transport named at risk; agencies and communities urged to review preparedness and act early.'
 			]
 		},
 		{
@@ -57,16 +60,16 @@
 			]
 		},
 		{
-			source: 'PNG Today / EMTV',
+			source: 'The National',
 			date: 'June 2026',
-			title: 'Port Moresby faces extended power rationing as Sirinumu Dam falls',
-			url: 'https://news.pngfacts.com/2026/06/png-capital-port-moresby-faces-extended.html',
+			title: 'Power to be rationed — water shortage forces load-shedding',
+			url: 'https://www.thenational.com.pg/power-to-be-rationed-water-shortage-forces-load-shedding/',
 			summary:
 				'The capital’s version of the drying river: the dam that waters and powers Port Moresby, drawn down under a rain that has not come.',
 			points: [
-				'Sirinumu Dam under controlled drawdown; output cut across the whole Rouna hydro cascade.',
-				'Load shedding in the capital; diesel generation brought in to cover the hydro shortfall.',
-				'Conservation measures flagged for up to ten months — the forecast length of the event.'
+				'PNG Power began load-shedding in the capital — about ten months of it, matching the forecast length of the event.',
+				'Sirinumu Dam, the city’s raw-water source, has dropped; releases are managed to keep the Rouna hydro chain and city water going.',
+				'Diesel generation covers the shortfall; the prime minister directed provinces and districts to prepare for a long dry season.'
 			]
 		},
 		{

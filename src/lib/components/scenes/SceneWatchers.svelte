@@ -68,7 +68,7 @@
 		<Figure
 			title={figTitle[idx]}
 			subtitle={idx === 3
-				? 'Six climate-quality stations — and on 1 May 2026 this network called the event, five months before the forecast peak'
+				? 'Six climate-quality stations — and on 1 May 2026 this network issued the first warning, five months before the forecast peak'
 				: 'Meteorological monitoring stations reported, 1951–2026'}
 			source="SPC climate-change indicators (METEO_MONITOR_NET) · official Challenge dataset"
 		>

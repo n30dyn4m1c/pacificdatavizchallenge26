@@ -11,12 +11,12 @@
 	 *   - data:     the scene's JSON, lazy-loaded when the scene approaches
 	 *     the viewport (never at page load)
 	 * `prose` is the scene's prose equivalent: always in the accessibility
-	 * tree, visually revealed by the global reader-mode toggle.
+	 * tree (visually hidden — nothing inside is focusable), and promoted
+	 * to a visible fallback when the scene's data cannot be loaded.
 	 */
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import scrollama from 'scrollama';
-	import { ui } from '$lib/state.svelte.js';
 
 	let {
 		id,
@@ -152,17 +152,12 @@
 	aria-label={title}
 >
 	{#if prose}
-		<!-- on a spent data fetch, the prose is promoted from the a11y-only
-		     layer to a visible fallback so the scene still tells its story -->
-		<div
-			class="scene-prose"
-			class:sr-only={!ui.readerMode && !dataError}
-			class:revealed={ui.readerMode || dataError}
-			/* sr-only is clipped, not removed: without inert, the hidden
-			   data-table summaries inside would stay focusable and keyboard
-			   users would tab into ~9 invisible controls per page */
-			inert={!ui.readerMode && !dataError}
-		>
+		<!-- visually hidden but fully readable by assistive tech; on a spent
+		     data fetch it is promoted to a visible fallback so the scene
+		     still tells its story. Nothing inside may be focusable — the
+		     data-table fallbacks render as plain tables (no toggle button),
+		     so hiding the prose never strands keyboard focus. -->
+		<div class="scene-prose" class:sr-only={!dataError} class:revealed={dataError}>
 			{@render prose({ data })}
 		</div>
 	{/if}
