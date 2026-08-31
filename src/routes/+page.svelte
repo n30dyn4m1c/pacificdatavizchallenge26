@@ -20,9 +20,6 @@
 	import Hero from '$lib/components/Hero.svelte';
 	import { reveal } from '$lib/reveal.js';
 	import { base } from '$app/paths';
-	// chapter nine's headline numbers, written by prep/make_real_data.mjs — the
-	// BigStat and the colophon quote the same values the chapter does, and both
-	// follow automatically when NOAA appends a month
 	import { now } from '$lib/generated/now-copy.js';
 	import BigStat from '$lib/components/BigStat.svelte';
 	import OniBand from '$lib/components/OniBand.svelte';
@@ -53,10 +50,7 @@
 		content="Papua New Guinea's worst droughts begin 7,000 kilometres away, in the temperature of the Pacific — months before the rain fails. In 2026 that ocean is running ahead of 1982, 1997, 2015 and 2023 at the same point, and PNG's own weather service expects the drought to run into 2027. What El Niño does to PNG, and what to do about it — told through the official Pacific climate record."
 	/>
 	<link rel="canonical" href="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/" />
-	<!-- the piece is a single warm-paper theme by design: tell the UA not to
-	     recolor controls for dark mode -->
 	<meta name="color-scheme" content="only light" />
-	<!-- social cards: the piece is meant to be shared; give the link a face -->
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="The Ocean Knows First" />
 	<meta property="og:url" content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/" />
@@ -65,33 +59,27 @@
 		property="og:description"
 		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is running ahead of every great El Niño at the same point — what El Niño does to PNG, and what to do about it."
 	/>
-	<meta
-		property="og:image"
-		content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/share/og.png"
-	/>
+	<meta property="og:image" content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/share/og.png" />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
-	<meta
-		property="og:image:alt"
-		content="Title card: The Ocean Knows First, above a bar chart of El Niño and La Niña years with 2026 the tallest bar."
-	/>
+	<meta property="og:image:alt" content="Title card: The Ocean Knows First, above a bar chart of El Niño and La Niña years with 2026 the tallest bar." />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="The Ocean Knows First — El Niño and Papua New Guinea" />
-	<meta
-		name="twitter:description"
-		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is running ahead of every great El Niño at the same point — what El Niño does to PNG, and what to do about it."
-	/>
-	<meta
-		name="twitter:image"
-		content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/share/og.png"
-	/>
+	<meta name="twitter:description" content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is running ahead of every great El Niño at the same point — what El Niño does to PNG, and what to do about it." />
+	<meta name="twitter:image" content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/share/og.png" />
 </svelte:head>
 
-<main>
+<main id="main">
 	<Hero />
 
-	<!-- the cold open: 1997, in prose, before a single chart -->
 	<section class="intro" aria-label="Introduction">
+		<p class="problem">
+			<strong>The problem.</strong> Papua New Guinea’s worst droughts are announced months early
+			by a stretch of equatorial ocean seven thousand kilometres away — yet the warning is still
+			easy to miss until gardens freeze and rivers stop. This piece answers that with the official
+			Pacific climate record: it shows where the signal lives, what it does at every altitude in
+			PNG, and a dated preparation calendar for the 2026–27 El Niño now underway.
+		</p>
 		<p>
 			In 1997, the rain over Papua New Guinea failed. Rivers dropped until the barges that supply
 			whole districts stopped running. Gardens wilted from the coast to the high valleys, and on
@@ -117,7 +105,6 @@
 		<div class="intro-band" aria-hidden="true"><OniBand /></div>
 	</section>
 
-	<!-- the whole piece in three numbers, for the ten-second reader -->
 	<section class="tldr" aria-label="The story in three numbers">
 		<div class="tldr-item" use:reveal>
 			<p class="tldr-n">8 / 10</p>
@@ -180,18 +167,11 @@
 </main>
 
 <footer class="colophon surface-light no-print">
-	<!-- the Challenge's mark closes the piece where its entry is declared -->
-	<img
-		class="colophon-mark"
-		src="{base}/turtle.png"
-		alt="Pacific Data Viz Challenge turtle logo"
-		width="512"
-		height="512"
-	/>
+	<img class="colophon-mark" src="{base}/turtle.png" alt="Pacific Dataviz Challenge turtle mark" width="512" height="512" />
 	<div class="colophon-band"><OniBand /></div>
 	<p>
-		<strong>The Ocean Knows First</strong> · an entry for the Pacific Data Viz Challenge 2026
-		(interactive category).
+		<strong>The Ocean Knows First</strong> · Neo Malesa, Port Moresby · interactive entry for the
+		<a href="https://pacificdatavizchallenge.org/">Pacific Dataviz Challenge 2026</a>.
 	</p>
 	<p>
 		Data: the <strong>Pacific Community (SPC) climate-change indicators</strong> for Papua New
@@ -225,18 +205,19 @@
 		font-size: clamp(1.05rem, 2.3vw, 1.22rem);
 		line-height: 1.7;
 	}
-
-	.intro p {
-		margin-bottom: 1.2em;
+	.intro p { margin-bottom: 1.2em; }
+	.problem {
+		padding: 0.85rem 1rem;
+		border-left: 3px solid var(--accent-light);
+		background: color-mix(in srgb, var(--paper-raised) 80%, transparent);
+		border-radius: 0 10px 10px 0;
 	}
-
 	.intro-band {
 		display: flex;
 		justify-content: center;
 		padding: 2rem 0 0;
 		color: var(--ink-light-axis);
 	}
-
 	.tldr {
 		max-width: 62rem;
 		margin: 0 auto;
@@ -249,12 +230,7 @@
 		border-radius: 14px;
 		overflow: hidden;
 	}
-
-	.tldr-item {
-		background: var(--paper-raised);
-		padding: 1.2rem 1.3rem 1.1rem;
-	}
-
+	.tldr-item { background: var(--paper-raised); padding: 1.2rem 1.3rem 1.1rem; }
 	.tldr-n {
 		font-family: Fraunces, Georgia, serif;
 		font-weight: 900;
@@ -263,42 +239,15 @@
 		margin: 0 0 0.35em;
 		max-width: none;
 	}
-
-	.tldr-l {
-		font-size: 0.86rem;
-		line-height: 1.5;
-		color: var(--ink-light-secondary);
-		margin: 0;
-	}
-
-	@media (max-width: 700px) {
-		.tldr {
-			grid-template-columns: 1fr;
-		}
-	}
-
+	.tldr-l { font-size: 0.86rem; line-height: 1.5; color: var(--ink-light-secondary); margin: 0; }
+	@media (max-width: 700px) { .tldr { grid-template-columns: 1fr; } }
 	.colophon {
 		padding: 2.5rem 1.5rem 3.5rem;
 		font-size: 0.8rem;
 		color: var(--ink-light-secondary);
 		border-top: 1px solid var(--ink-light-grid);
 	}
-
-	/* the Challenge's turtle, in black on paper, signing the entry */
-	.colophon-mark {
-		display: block;
-		height: 4.25rem;
-		width: auto;
-		margin: 0 auto 0.9rem;
-	}
-
-	.colophon p {
-		max-width: 44rem;
-		margin: 0 auto 0.75em;
-	}
-
-	.colophon-band {
-		color: var(--ink-light-axis);
-		margin-bottom: 1.75rem;
-	}
+	.colophon-mark { display: block; height: 4.25rem; width: auto; margin: 0 auto 0.9rem; }
+	.colophon p { max-width: 44rem; margin: 0 auto 0.75em; }
+	.colophon-band { color: var(--ink-light-axis); margin-bottom: 1.75rem; }
 </style>
