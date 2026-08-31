@@ -70,12 +70,20 @@
 				<!-- the day's heat leaving for space: nothing above to hold it -->
 				<g stroke={imp.frost} stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85">
 					<path d="M660 175 q6 -14 0 -28 q-6 -14 0 -28" />
-					<path d="M715 45 q6 -14 0 -28" />
+					<path d="M715 70 q6 -14 0 -28" />
 					<path d="M762 195 q6 -14 0 -28 q-6 -14 0 -28" />
 				</g>
-				<text x="988" y="128" text-anchor="end" font-size="13" font-weight="700" fill={imp.frost}>
-					no cloud — the day’s heat escapes to space
-				</text>
+				<text
+					x="988"
+					y="30"
+					text-anchor="end"
+					font-size="13"
+					font-weight="700"
+					fill={imp.frost}
+					paint-order="stroke"
+					stroke={surfaces.ocean}
+					stroke-width="4"
+				>no cloud — the day’s heat escapes to space</text>
 			</g>
 		{/if}
 
