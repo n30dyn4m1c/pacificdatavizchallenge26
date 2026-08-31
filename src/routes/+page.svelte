@@ -1,22 +1,4 @@
 <script>
-	/**
-	 * The Ocean Knows First — the page spine. A light, editorial scrollytelling
-	 * journey in nine chapters plus field notes: the map of the two oceans,
-	 * the ENSO see-saw, the rain that mirrors it, the island in cross-section
-	 * (coast → rivers → Highlands day and night), the harvest record, the
-	 * 176-year warming record beneath, the emissions ledger, the watchers
-	 * who read the signal early — and chapter nine, the present: the 2026
-	 * El Niño month by month against its four precedents, with the piece's
-	 * one labelled estimate of the months ahead. Between chapters: two
-	 * interactive field notes (the drying river, the frost night), the
-	 * aftermath (the floods that follow), two paper trails of real coverage
-	 * (1997/2015 archives, and 2026 live), and the closing ask — prepare for
-	 * the predictable. Every scrolly chapter is a sticky graphic with white
-	 * step cards over it (ScrollScene + /lib/scrolly.js). Data: the official
-	 * SPC record plus documented companions (NOAA ONI, NOAA PSL Niño 3.4
-	 * monthly, Natural Earth geometry — see /prep); illustrations and the
-	 * one estimate are labelled as such.
-	 */
 	import Hero from '$lib/components/Hero.svelte';
 	import { reveal } from '$lib/reveal.js';
 	import { base } from '$app/paths';
@@ -45,20 +27,14 @@
 
 <svelte:head>
 	<title>The Ocean Knows First — El Niño and Papua New Guinea: the warning, the drought, the preparation</title>
-	<meta
-		name="description"
-		content="Papua New Guinea's worst droughts begin 7,000 kilometres away, in the temperature of the Pacific — months before the rain fails. In 2026 that ocean is running ahead of 1982, 1997, 2015 and 2023 at the same point, and PNG's own weather service expects the drought to run into 2027. What El Niño does to PNG, and what to do about it — told through the official Pacific climate record."
-	/>
+	<meta name="description" content="Papua New Guinea's worst droughts begin 7,000 kilometres away, in the temperature of the Pacific — months before the rain fails. In 2026 that ocean is running ahead of 1982, 1997, 2015 and 2023 at the same point, and PNG's own weather service expects the drought to run into 2027. What El Niño does to PNG, and what to do about it — told through the official Pacific climate record." />
 	<link rel="canonical" href="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/" />
 	<meta name="color-scheme" content="only light" />
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="The Ocean Knows First" />
 	<meta property="og:url" content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/" />
 	<meta property="og:title" content="The Ocean Knows First — El Niño and Papua New Guinea" />
-	<meta
-		property="og:description"
-		content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is running ahead of every great El Niño at the same point — what El Niño does to PNG, and what to do about it."
-	/>
+	<meta property="og:description" content="PNG's worst droughts are announced by the ocean, months ahead. In 2026 the signal is running ahead of every great El Niño at the same point — what El Niño does to PNG, and what to do about it." />
 	<meta property="og:image" content="https://n30dyn4m1c.github.io/pacificdatavizchallenge26/share/og.png" />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
@@ -125,12 +101,7 @@
 	<SceneSeeSaw />
 	<SceneSignal />
 
-	<BigStat
-		kicker="Since 1979"
-		stat="8 / 10"
-		caption="of Papua New Guinea’s ten driest years were El Niño years. The other two came in the aftermath of one."
-		accent="warm"
-	/>
+	<BigStat kicker="Since 1979" stat="8 / 10" caption="of Papua New Guinea’s ten driest years were El Niño years. The other two came in the aftermath of one." accent="warm" />
 
 	<SceneIsland />
 	<RiverDry />
@@ -141,22 +112,12 @@
 
 	<SceneLongRecord />
 
-	<BigStat
-		kicker="2025"
-		stat="+1.1 °C"
-		caption="the sea around Papua New Guinea last year — the warmest in 176 years of record."
-		accent="warm"
-	/>
+	<BigStat kicker="2025" stat="+1.1 °C" caption="the sea around Papua New Guinea last year — the warmest in 176 years of record." accent="warm" />
 
 	<SceneLedger />
 	<SceneWatchers />
 
-	<BigStat
-		kicker={now.latest.label}
-		stat="{now.latest.text} °C"
-		caption="the far ocean at {now.latest.month} — warmer than 1982, 1997, 2015 or 2023 stood at the same point. By mid-{now.scoring.month} the weekly reading was about {now.scoring.readingText} °C."
-		accent="warm"
-	/>
+	<BigStat kicker={now.latest.label} stat="{now.latest.text} °C" caption="the far ocean at {now.latest.month} — warmer than 1982, 1997, 2015 or 2023 stood at the same point. By mid-{now.scoring.month} the weekly reading was about {now.scoring.readingText} °C." accent="warm" />
 
 	<SceneNow />
 	<TheClock />
@@ -176,19 +137,28 @@
 	<p>
 		Data: the <strong>Pacific Community (SPC) climate-change indicators</strong> for Papua New
 		Guinea (dataflow <code>SPC:DF_CLIMATE_CHANGE(1.0)</code>, via
-		<code>stats.pacificdata.org</code>) — the official dataset of this year's Challenge, used
-		unaltered. One label is corrected, with the reasoning on the record: the dataflow publishes
-		the rainfall-anomaly series in “mm”, but at these magnitudes the values are a relative anomaly
-		index around zero — PNG’s rain runs to thousands of millimetres a year — so the piece plots
-		them as published and describes them as index points; no ranking or correlation is affected.
-		El Niño years and chapter nine's monthly series: <strong>NOAA</strong> (Oceanic Niño Index;
-		Niño 3.4 monthly anomaly, ERSST-based, observed through {now.latest.label}; plus one quoted
-		CPC weekly reading on an OISST basis). World-average emissions: <strong>EDGAR</strong>
-		(EC-JRC). Coastlines: <strong>Natural Earth</strong>. Drawings of mechanisms are labelled as
-		illustrations; chapter nine's one forward-looking panel is a historical analogue, labelled an
-		estimate and checked against the official <strong>NOAA CPC / IRI</strong> and
-		<strong>WMO</strong> outlooks. Live coverage current to <strong>{now.updated.label}</strong>.
-		No cookies, no tracking, fully static.
+		<a href="https://stats.pacificdata.org/">stats.pacificdata.org</a>) — the official dataset of
+		this year's Challenge, used unaltered. Official series plotted: rainfall anomalies; mean
+		sea-surface temperature anomalies; mean surface temperature anomalies; sea-level anomalies;
+		crop yield; greenhouse-gas emission per capita; meteorological monitoring network. One label
+		is corrected, with the reasoning on the record: the dataflow publishes the rainfall-anomaly
+		series in “mm”, but at these magnitudes the values are a relative anomaly index around zero —
+		PNG’s rain runs to thousands of millimetres a year — so the piece plots them as published and
+		describes them as index points; no ranking or correlation is affected.
+		El Niño years and chapter nine's monthly series: <strong>NOAA</strong>
+		(<a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/">Oceanic Niño Index</a>;
+		<a href="https://psl.noaa.gov/data/correlation/nina34.anom.data">Niño 3.4 monthly anomaly</a>,
+		ERSST-based, observed through {now.latest.label}; plus one quoted CPC weekly reading on an
+		OISST basis). World-average emissions:
+		<a href="https://edgar.jrc.ec.europa.eu/report_2024">EDGAR (EC-JRC)</a>.
+		Coastlines: <a href="https://www.naturalearthdata.com/">Natural Earth</a>.
+		Drawings of mechanisms are labelled as illustrations; chapter nine's one forward-looking panel
+		is a historical analogue, labelled an estimate and checked against the official
+		<a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml">NOAA CPC</a>
+		/ <a href="https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/">IRI</a>
+		and <a href="https://wmo.int/publication-series/el-ninola-nina-updates">WMO</a> outlooks.
+		Live coverage current to <strong>{now.updated.label}</strong>.
+		No cookies, no tracking, fully static. This URL is intended to remain public through 31 August 2029.
 	</p>
 	<p>
 		Built under my creative direction with AI assistance from <strong>Claude</strong>,
