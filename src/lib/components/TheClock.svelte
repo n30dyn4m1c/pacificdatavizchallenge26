@@ -121,6 +121,14 @@
 		color: var(--cool);
 	}
 
+	/* The big number clears AA as large text, but the unit beside it is set at
+	   0.45em — small text, so it needs 4.5:1 and --cool (#2a78d6) only reaches
+	   4.34:1 on paper-raised. One notch darker for this one small run; the
+	   palette's cool arm is unchanged everywhere it carries a chart series. */
+	.cool-tile .n .u {
+		color: #2b73c9;
+	}
+
 	.note {
 		font-size: 0.74rem;
 		color: var(--ink-light-muted);

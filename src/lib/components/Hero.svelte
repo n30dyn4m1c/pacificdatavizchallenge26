@@ -136,7 +136,20 @@
 		text-wrap: balance;
 		animation-delay: 0.64s;
 	}
-	.meta { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dark-muted); margin: 0.9rem 0 0; animation-delay: 0.76s; }
+	/* the global `p { max-width: 36em }` is a reading measure — at this line's
+	   0.72rem that is only 415px, which orphans "read" onto a second line on
+	   every desktop. It is a one-line caption, not a paragraph: let it use the
+	   column it is centred in, and balance the wrap where it still has to. */
+	.meta {
+		font-size: 0.72rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink-dark-muted);
+		margin: 0.9rem 0 0;
+		max-width: none;
+		text-wrap: balance;
+		animation-delay: 0.76s;
+	}
 	@keyframes hero-up { from { opacity: 0; transform: translateY(26px); } }
 	.hero .hl {
 		padding: 0 0.08em;

@@ -81,18 +81,20 @@
 		<div class="intro-band" aria-hidden="true"><OniBand /></div>
 	</section>
 
-	<section class="tldr" aria-label="The story in three numbers">
-		<div class="tldr-item" use:reveal>
-			<p class="tldr-n">8 / 10</p>
-			<p class="tldr-l">of PNG’s driest years since 1979 were El Niño years</p>
-		</div>
-		<div class="tldr-item" use:reveal={{ delay: 110 }}>
-			<p class="tldr-n">Fastest on record</p>
-			<p class="tldr-l">in 2026 the ocean signal outran 1982, 1997, 2015 and 2023 at the same point</p>
-		</div>
-		<div class="tldr-item" use:reveal={{ delay: 220 }}>
-			<p class="tldr-n">To ~{now.calendar.hardestEnd}</p>
-			<p class="tldr-l">the hard months ahead — and what to do in them is the last chapter</p>
+	<section class="tldr-wrap" aria-label="The story in three numbers">
+		<div class="tldr">
+			<div class="tldr-item" use:reveal>
+				<p class="tldr-n">8 / 10</p>
+				<p class="tldr-l">of PNG’s driest years since 1979 were El Niño years</p>
+			</div>
+			<div class="tldr-item" use:reveal={{ delay: 110 }}>
+				<p class="tldr-n">Fastest on record</p>
+				<p class="tldr-l">in 2026 the ocean signal outran 1982, 1997, 2015 and 2023 at the same point</p>
+			</div>
+			<div class="tldr-item" use:reveal={{ delay: 220 }}>
+				<p class="tldr-n">To ~{now.calendar.hardestEnd}</p>
+				<p class="tldr-l">the hard months ahead — and what to do in them is the last chapter</p>
+			</div>
 		</div>
 	</section>
 
@@ -188,10 +190,15 @@
 		padding: 2rem 0 0;
 		color: var(--ink-light-axis);
 	}
-	.tldr {
+	/* the outer padding belongs to the section, NOT to the bordered grid:
+	   the grid paints its own background as the 1px gap between cards, so
+	   any padding on it shows up as a dead grey band inside the border */
+	.tldr-wrap {
 		max-width: 62rem;
 		margin: 0 auto;
 		padding: 0 1.5rem clamp(2.5rem, 7vh, 4rem);
+	}
+	.tldr {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 1px;

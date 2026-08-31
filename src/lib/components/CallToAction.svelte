@@ -139,8 +139,33 @@
 		}
 	}
 
+	/**
+	 * On a phone the calendar is a 940-unit graphic in a ~300px port, so the
+	 * default scroll position (month one, May 2026) hides the very thing the
+	 * panel exists to show: where the reader is standing now. Open it centred
+	 * on the needle instead — the reader can still swipe either way.
+	 */
+	let calScroll = $state(null);
+	function centreOnToday() {
+		const box = calScroll;
+		if (!box) return;
+		const over = box.scrollWidth - box.clientWidth;
+		if (over <= 0) return; //           wide screen: nothing to scroll
+		const frac = xOf(todayIdx) / W; //  needle position in graphic units
+		box.scrollLeft = Math.max(
+			0,
+			Math.min(over, frac * box.scrollWidth - box.clientWidth / 2)
+		);
+	}
+
 	$effect(() => {
 		if (typeof window !== 'undefined') load();
+	});
+
+	$effect(() => {
+		// re-runs when the needle moves (ui.now settles after mount)
+		todayIdx;
+		if (typeof window !== 'undefined') requestAnimationFrame(centreOnToday);
 	});
 
 	const nDone = $derived(done.filter(Boolean).length);
@@ -160,7 +185,18 @@
 
 	<!-- ── the preparation calendar ──────────────────────────────────────────── -->
 	<figure class="cal" use:reveal>
-		<div class="cal-scroll">
+		<p class="cal-hint" aria-hidden="true">Swipe the calendar &rarr;</p>
+		<!-- Below ~720px the calendar is wider than the screen and scrolls. A
+		     scrollable box that only a mouse or a finger can reach fails WCAG
+		     2.1.1, so the port is focusable and named; arrow keys then pan it.
+		     `bind:this` lets it open on the reader's own month (centreOnToday). -->
+		<div
+			class="cal-scroll"
+			bind:this={calScroll}
+			tabindex="0"
+			role="group"
+			aria-label="Preparation calendar, scrollable"
+		>
 		<svg
 			viewBox="0 0 {W} {H}"
 			role="img"
@@ -333,17 +369,57 @@
 		height: auto;
 	}
 
+	/* the swipe hint only exists where the calendar actually swipes */
+	.cal-hint {
+		display: none;
+	}
+
 	/* below ~720px the 940-unit calendar stops being legible, so it keeps its
 	   size and swipes horizontally instead of shrinking into noise */
 	@media (max-width: 720px) {
+		.cal-hint {
+			display: block;
+			margin: 0 0 0.5rem;
+			font-size: 0.7rem;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--ink-light-muted);
+		}
+
 		.cal-scroll {
 			overflow-x: auto;
 			-webkit-overflow-scrolling: touch;
+			/* the clipped edges are the affordance: fade them so a cut-off
+			   graphic reads as "there is more this way", not as a bug */
+			-webkit-mask-image: linear-gradient(
+				to right,
+				transparent 0,
+				#000 14px,
+				#000 calc(100% - 14px),
+				transparent 100%
+			);
+			mask-image: linear-gradient(
+				to right,
+				transparent 0,
+				#000 14px,
+				#000 calc(100% - 14px),
+				transparent 100%
+			);
 		}
 
 		.cal-scroll svg {
 			min-width: 640px;
 		}
+	}
+
+	.cal-scroll:focus-visible {
+		outline: 2px solid var(--accent-light);
+		outline-offset: 3px;
+		border-radius: 6px;
+		/* the edge fade would eat its own focus ring */
+		-webkit-mask-image: none;
+		mask-image: none;
 	}
 
 	.cal-foot {
